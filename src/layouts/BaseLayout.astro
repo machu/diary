@@ -1,0 +1,24 @@
+---
+import "@/styles/globals.css";
+import Header from "@/components/Header.astro";
+const { title = "まちゅダイアリー", description = "tDiaryから移行したAstroブログ" } = Astro.props as {
+  title?: string;
+  description?: string;
+};
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <Header />
+    <main class="container py-6">
+      <slot />
+    </main>
+  </body>
+  
+</html>
+

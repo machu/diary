@@ -1,0 +1,44 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const all = await getCollection("posts");
+  return all.map((entry) => {
+    const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
+    const date = slug.slice(0, 8);
+    const part = slug.slice(8); // pNN
+    return {
+      params: { date, part },
+      props: { entry },
+    };
+  });
+}
+
+const { entry } = Astro.props as {
+  entry: Awaited<ReturnType<typeof getCollection>>[number];
+};
+const { Content } = await entry.render();
+const dateParam = Astro.params.date!;
+const displayDate = `${dateParam.slice(0, 4)}-${dateParam.slice(4, 6)}-${dateParam.slice(6, 8)}`;
+---
+<BaseLayout title={entry.data.title}>
+  <article class="prose prose-zinc dark:prose-invert max-w-none">
+    <header class="mb-6">
+      <h1 class="mb-2 text-2xl font-semibold">{entry.data.title}</h1>
+      {(entry.data.tags?.length ?? 0) > 0 && (
+        <div class="mb-1 flex flex-wrap gap-1">
+          {entry.data.tags!.map((t) => (
+            <a
+              href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+              class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
+              >#{t}</a
+            >
+          ))}
+        </div>
+      )}
+      <p class="text-xs text-muted-foreground">{displayDate}</p>
+    </header>
+    <Content />
+  </article>
+</BaseLayout>

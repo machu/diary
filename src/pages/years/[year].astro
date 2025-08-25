@@ -1,0 +1,73 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const all = await getCollection("posts");
+  const ys = new Set<number>();
+  for (const p of all) ys.add(p.data.date.getFullYear());
+  return Array.from(ys).map((y) => ({ params: { year: String(y) } }));
+}
+
+const year = Number(Astro.params.year);
+const all = await getCollection("posts");
+const inYear = all.filter((p) => p.data.date.getFullYear() === year);
+
+// Group by YYYYMMDD for this year
+const fmt = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}${m}${day}`;
+};
+
+const byDate = new Map<string, typeof inYear>();
+for (const p of inYear) {
+  const key = fmt(p.data.date);
+  const list = byDate.get(key) ?? [];
+  list.push(p);
+  byDate.set(key, list);
+}
+const days = Array.from(byDate.entries()).toSorted((a, b) => b[0].localeCompare(a[0]));
+---
+<BaseLayout title={`${year}年のアーカイブ`}>
+  <h1 class="mb-4 text-xl font-semibold">{year}年のアーカイブ</h1>
+  <ul class="space-y-6">
+    {days.map(([d, list]) => (
+      <li>
+        <h2 class="mb-1 text-base font-medium">
+          {(() => { const disp = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`; return (
+            <a href={`/posts/${d}/`} class="hover:underline">{disp}</a>
+          ); })()}
+          <span class="ml-2 text-xs text-muted-foreground">{list.length}件</span>
+        </h2>
+        <ul class="ml-4 space-y-1">
+          {list
+            .toSorted((a, b) => a.slug.localeCompare(b.slug))
+            .map((entry) => {
+              const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
+              const part = slug.slice(8); // pNN
+              const url = `/posts/${d}/${part}`;
+              const tags = entry.data.tags ?? [];
+              return (
+                <li class="text-sm">
+                  <a href={url} class="hover:underline">{entry.data.title}</a>
+                  {tags.length > 0 && (
+                    <span class="ml-2 inline-flex flex-wrap gap-1 align-middle">
+                      {tags.map((t) => (
+                        <a
+                          href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+                          class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
+                          >#{t}</a
+                        >
+                      ))}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+        </ul>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

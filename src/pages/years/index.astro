@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection("posts");
+const counts = new Map<number, number>();
+for (const p of all) {
+  const y = p.data.date.getFullYear();
+  counts.set(y, (counts.get(y) ?? 0) + 1);
+}
+const years = Array.from(counts.entries()).toSorted((a, b) => b[0] - a[0]);
+---
+<BaseLayout title="年別アーカイブ">
+  <h1 class="mb-4 text-xl font-semibold">年別アーカイブ</h1>
+  <ul class="columns-2 gap-4 sm:columns-3 md:columns-4">
+    {years.map(([y, n]) => (
+      <li class="break-inside-avoid">
+        <a href={`/years/${y}`} class="hover:underline">
+          {y}年 <span class="ml-1 text-xs text-muted-foreground">({n})</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+

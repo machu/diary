@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const all = await getCollection("posts");
+  // Unique date keys by YYYYMMDD
+  const fmt = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}${m}${day}`;
+  };
+  const byDate = new Map<string, typeof all>();
+  for (const p of all) {
+    const key = fmt(p.data.date);
+    const list = byDate.get(key) ?? [];
+    list.push(p);
+    byDate.set(key, list);
+  }
+  return Array.from(byDate.entries()).map(([date, list]) => ({
+    params: { date },
+    props: { posts: list.toSorted((a, b) => a.slug.localeCompare(b.slug)) },
+  }));
+}
+
+const { posts } = Astro.props as {
+  posts: Awaited<ReturnType<typeof getCollection>>;
+};
+const dateParam = Astro.params.date!;
+const displayDate = `${dateParam.slice(0, 4)}-${dateParam.slice(4, 6)}-${dateParam.slice(6, 8)}`;
+---
+<BaseLayout title={`まちゅダイアリー - ${displayDate}`}>
+  <h1 class="mb-4 text-xl font-semibold">{displayDate} のエントリ</h1>
+  <ul class="space-y-4">
+    {posts.map((entry) => {
+      const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
+      const part = slug.slice(8); // pNN
+      const url = `/posts/${Astro.params.date}/${part}`;
+      const tags = entry.data.tags ?? [];
+      return (
+        <li>
+          <div class="flex items-center justify-between gap-2">
+            <a href={url} class="min-w-0 flex-1 hover:underline">
+              <h2 class="truncate font-medium">{entry.data.title}</h2>
+            </a>
+            {tags.length > 0 && (
+              <div class="shrink-0 flex flex-wrap gap-1 justify-end">
+                {tags.map((t) => (
+                  <a
+                    href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+                    class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
+                    >#{t}</a
+                  >
+                ))}
+              </div>
+            )}
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</BaseLayout>

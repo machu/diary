@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { normalizeTag } from "@/lib/tags";
+
+const all = await getCollection("posts");
+const counts = new Map<string, number>();
+for (const p of all) {
+  for (const t of p.data.tags ?? []) {
+    const key = normalizeTag(t);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+}
+const tags = Array.from(counts.entries()).toSorted((a, b) => b[1] - a[1]);
+---
+<BaseLayout title="タグ">
+  <h1 class="mb-4 text-xl font-semibold">タグ一覧</h1>
+  <ul class="columns-2 gap-4 sm:columns-3 md:columns-4">
+    {tags.map(([tag, n]) => (
+      <li class="mb-2 break-inside-avoid">
+        <a
+          href={`/tags/${encodeURIComponent(tag)}`}
+          class="inline-flex items-center rounded-full border bg-muted px-2 py-1 text-xs text-muted-foreground hover:bg-muted/80"
+        >
+          #{tag}
+          <span class="ml-1 rounded-full bg-muted-foreground/10 px-1 text-[10px] text-muted-foreground">{n}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

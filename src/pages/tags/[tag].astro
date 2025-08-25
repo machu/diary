@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { normalizeTag } from "@/lib/tags";
+
+export async function getStaticPaths() {
+  const all = await getCollection("posts");
+  const tags = new Set<string>();
+  for (const p of all) for (const t of p.data.tags ?? []) tags.add(normalizeTag(t));
+  return Array.from(tags).map((t) => ({ params: { tag: t } }));
+}
+
+const tag = normalizeTag(Astro.params.tag!);
+const posts = (await getCollection(
+  "posts",
+  (p) => (p.data.tags ?? []).some((t) => normalizeTag(t) === tag)
+))
+  .toSorted((a, b) => +b.data.date - +a.data.date);
+
+const yyyymmdd = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}${m}${day}`;
+};
+const yyyy_mm_dd = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+---
+<BaseLayout title={`タグ: ${tag}`}>
+  <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
+  <ul class="space-y-4">
+    {posts.map((entry) => {
+      const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
+      const dateYmd = yyyymmdd(entry.data.date);
+      const dateDisplay = yyyy_mm_dd(entry.data.date);
+      const part = slug.slice(8); // pNN
+      const url = `/posts/${dateYmd}/${part}`;
+      const tags = entry.data.tags ?? [];
+      return (
+        <li>
+          <div class="flex items-center justify-between gap-2">
+            <a href={url} class="min-w-0 flex-1 hover:underline">
+              <h2 class="truncate font-medium">{entry.data.title}</h2>
+            </a>
+            {tags.length > 0 && (
+              <div class="shrink-0 flex flex-wrap gap-1 justify-end">
+                {tags.map((t) => (
+                  <a
+                    href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
+                    class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
+                    >#{t}</a
+                  >
+                ))}
+              </div>
+            )}
+          </div>
+          <p class="mt-1 text-xs text-muted-foreground">{dateDisplay}</p>
+        </li>
+      );
+    })}
+  </ul>
+</BaseLayout>
