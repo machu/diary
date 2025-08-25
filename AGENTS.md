@@ -134,7 +134,20 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
 - Naming: Astro components in PascalCase (`Header.astro`); React UI files follow upstream lower-case style (`button.tsx`, `dropdown-menu.tsx`). Utilities use lowerCamelCase. Posts use `YYYYMMDDpNN` segments.
 
 ## Testing Guidelines
-- No automated tests yet. For new logic, place pure helpers in `src/lib` and consider adding Vitest later. Keep content-only changes separate from behavior changes for easier review.
+- ユニット → 出力検証 → 最小E2Eの順で導入。
+- 既存の歴史データは極力触らず、テストはフィクスチャ/モック中心に。
+- コンテンツ（Markdown）変更と振る舞い（コード）変更は分けてコミット。
+
+## テスト戦略 / 実装状況
+
+- ツール: Vitest（`vitest.config.ts`。`@/` エイリアス対応、Node環境、mocksリセット）。
+- スクリプト: `pnpm test` でユニットテスト実行。
+- 実装済みユニット:
+  - `tests/tags.test.ts`: タグ正規化（trim + 小文字化）と等価判定。
+  - `tests/redirect.test.ts`: 旧URL → 新URLの301（単一/複数/未存在）と `getStaticPaths`。`astro:content` をモック。
+- 今後の拡張（案）:
+  - ビルド出力検証: `dist/**/*.html` をパースし、日付表示形式（`YYYY-MM-DD`）、タグ小文字リンク、ページネーション、段組タグ一覧などを検証。
+  - E2E（必要最小）: `/diary/YYYYMMDD.html` の 301、トップ/ページ送り、タグ遷移など主要導線のみ。
 
 ## Commit & Pull Request Guidelines
 - Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`.

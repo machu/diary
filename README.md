@@ -110,6 +110,20 @@ pnpm lint         # ESLint（Astro/TS/Tailwind）
 - まだ自動テストはありません。新規ロジックは `src/lib` に純粋関数として切り出すことを推奨。将来的にVitest導入を検討。
 - コンテンツ（Markdown）の変更と振る舞い（コード）変更は分けてコミット。
 
+## テスト戦略 / 実装状況
+
+- 方針: ユニット（高速）→ ビルド出力検証 → 必要最小限のE2E。
+- ツール: Vitest（ユニット/結合）、必要に応じて Playwright（E2E）。
+- 実装済み（ユニット）:
+  - タグ正規化: `tests/tags.test.ts`（`normalizeTag`, `equalsTag`）。
+  - 旧URLリダイレクト: `tests/redirect.test.ts`（単一/複数/未存在の分岐、`getStaticPaths`）。
+    - `astro:content` をモックし、`getCollection` を制御して検証。
+- 設定: `vitest.config.ts`（`@/` エイリアス解決済み、Node環境、mocksリセット）。
+- 実行: `pnpm test`（CI想定）。
+- 次段階（案）:
+  - ビルド出力検証: `pnpm build` 後に `dist/**/*.html` をパースして日付表記、タグ小文字リンク、ページネーションを確認。
+  - E2E: `/diary/YYYYMMDD.html` の 301 と Location、トップ→エントリ、タグバッジの遷移などハッピーパスのみ。
+
 ## コミット/PR 指針
 
 - コミット: 簡潔・現在形・スコープ限定（例: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`）
