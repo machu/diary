@@ -1,0 +1,20 @@
+---
+import { normalizeTag } from "@/lib/tags";
+
+const {
+  tags = [],
+  badgeClass =
+    "inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80",
+} = Astro.props as {
+  tags?: string[];
+  badgeClass?: string;
+};
+---
+{tags.map((t) => (
+  <a
+    href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
+    class={badgeClass}
+    >#{t}</a
+  >
+))}
+

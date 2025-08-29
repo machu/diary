@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { normalizeTag } from "@/lib/tags";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
+import TagBadges from "@/components/TagBadges.astro";
 
 export async function getStaticPaths() {
   const all = await getCollection("posts");
@@ -35,13 +36,7 @@ const posts = (await getCollection(
             </a>
             {tags.length > 0 && (
               <div class="shrink-0 flex flex-wrap gap-1 justify-end">
-                {tags.map((t) => (
-                  <a
-                    href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
-                    class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
-                    >#{t}</a
-                  >
-                ))}
+                <TagBadges tags={tags} />
               </div>
             )}
           </div>
