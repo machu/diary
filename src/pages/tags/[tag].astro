@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { normalizeTag } from "@/lib/tags";
+import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 
 export async function getStaticPaths() {
   const all = await getCollection("posts");
@@ -17,28 +18,14 @@ const posts = (await getCollection(
 ))
   .toSorted((a, b) => +b.data.date - +a.data.date);
 
-const yyyymmdd = (d: Date) => {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}${m}${day}`;
-};
-const yyyy_mm_dd = (d: Date) => {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-};
+// date helpers are provided by @/lib/dates
 ---
 <BaseLayout title={`タグ: ${tag}`}>
   <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
   <ul class="space-y-4">
     {posts.map((entry) => {
-      const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
-      const dateYmd = yyyymmdd(entry.data.date);
-      const dateDisplay = yyyy_mm_dd(entry.data.date);
-      const part = slug.slice(8); // pNN
-      const url = `/posts/${dateYmd}/${part}`;
+      const dateDisplay = toDisplayDate(entry.data.date);
+      const url = buildEntryUrl(entry.data.date, entry.slug);
       const tags = entry.data.tags ?? [];
       return (
         <li>
