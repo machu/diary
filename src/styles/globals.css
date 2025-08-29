@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  サイト共通CSS変数（HSL表記）とダークテーマ用の上書き
+  - TailwindのCSS変数を用いて、テーマ切り替えを容易に
+*/
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -35,6 +39,7 @@
     --radius: 0.5rem;
   }
 
+  /* ダークモードは body などに .dark クラスを付与して適用 */
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;

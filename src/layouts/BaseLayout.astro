@@ -1,6 +1,11 @@
 ---
 import "@/styles/globals.css";
 import Header from "@/components/Header.astro";
+/**
+ * サイト共通レイアウト
+ * - `<Header />` を含むページのベース枠
+ * - `title`/`description` は `<head>` に反映
+ */
 const { title = "まちゅダイアリー", description = "tDiaryから移行したAstroブログ" } = Astro.props as {
   title?: string;
   description?: string;
@@ -21,4 +26,3 @@ const { title = "まちゅダイアリー", description = "tDiaryから移行し
   </body>
   
 </html>
-

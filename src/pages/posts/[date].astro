@@ -5,6 +5,12 @@ import { buildEntryUrl, ymdToDisplay, groupByDateYmd } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
 import TagBadges from "@/components/TagBadges.astro";
 
+/**
+ * 日付別一覧ページ（/posts/YYYYMMDD/）
+ * - 同一日のエントリをスラグ順（pNN）に並べて表示
+ * - getStaticPaths は全投稿を日付キー（YYYYMMDD）でグルーピング
+ */
+
 export async function getStaticPaths() {
   const all = await getCollection("posts");
   const byDate = groupByDateYmd(all);
@@ -14,9 +20,11 @@ export async function getStaticPaths() {
   }));
 }
 
+/** テンプレートに渡される当日エントリ配列 */
 const { posts } = Astro.props as {
   posts: Awaited<ReturnType<typeof getCollection>>;
 };
+/** ルートパラメータ（YYYYMMDD）と表示用日付（YYYY-MM-DD） */
 const dateParam = Astro.params.date!;
 const displayDate = ymdToDisplay(dateParam);
 ---

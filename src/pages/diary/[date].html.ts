@@ -2,12 +2,22 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { groupByDateYmd, toYmd, getPartFromSlug } from "@/lib/dates";
 
+/**
+ * 旧URL（/diary/YYYYMMDD.html）の静的パス生成
+ * - 全投稿を日付キーでグルーピングし、存在する日付のHTMLを用意
+ */
 export const getStaticPaths = async () => {
   const all = await getCollection("posts");
   const byDate = groupByDateYmd(all);
   return Array.from(byDate.keys()).map((date) => ({ params: { date } }));
 };
 
+/**
+ * 旧URLアクセス時の301リダイレクト
+ * - 同日が1件: `/posts/YYYYMMDD/pNN` へ
+ * - 同日が複数: `/posts/YYYYMMDD/` へ
+ * - 見つからない: 404
+ */
 export const GET: APIRoute = async ({ params, redirect }) => {
   const date = params.date!; // YYYYMMDD
   const all = await getCollection("posts");

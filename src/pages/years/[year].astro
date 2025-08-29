@@ -5,6 +5,11 @@ import { buildEntryUrl, groupByDateYmd, ymdToDisplay } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
 import TagBadges from "@/components/TagBadges.astro";
 
+/**
+ * 年別ページ（/years/:year）
+ * - 指定年の投稿を日付（YYYYMMDD）単位でグルーピング
+ * - 各日付内はスラグ順（pNN）で表示
+ */
 export async function getStaticPaths() {
   const all = await getCollection("posts");
   const ys = new Set<number>();
@@ -12,6 +17,7 @@ export async function getStaticPaths() {
   return Array.from(ys).map((y) => ({ params: { year: String(y) } }));
 }
 
+/** 指定年の投稿を取得して日付キーでまとめる */
 const year = Number(Astro.params.year);
 const all = await getCollection("posts");
 const inYear = all.filter((p) => p.data.date.getFullYear() === year);

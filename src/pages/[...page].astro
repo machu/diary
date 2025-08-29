@@ -5,6 +5,11 @@ import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import { PAGE_SIZE } from "@/lib/constants";
 import TagBadges from "@/components/TagBadges.astro";
 
+/**
+ * トップページ（最新エントリのページネーション）
+ * - getStaticPaths で全投稿を最新順に分割し、"/", "/2" ... の静的パスを生成
+ * - 1ページあたりの件数は `PAGE_SIZE` を参照
+ */
 export async function getStaticPaths() {
   const all = await getCollection("posts");
   // Sort newest first by frontmatter date
@@ -24,6 +29,7 @@ export async function getStaticPaths() {
   }));
 }
 
+/** ページテンプレートへ渡されるプロパティ */
 const { pageNum, pageSize, total, slice } = Astro.props as {
   pageNum: number;
   pageSize: number;

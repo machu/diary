@@ -5,6 +5,11 @@ import { normalizeTag } from "@/lib/tags";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import TagBadges from "@/components/TagBadges.astro";
 
+/**
+ * タグ詳細ページ（/tags/:tag）
+ * - タグは normalizeTag でトリム＋小文字化したスラグ
+ * - getStaticPaths で全投稿からタグ集合を構築
+ */
 export async function getStaticPaths() {
   const all = await getCollection("posts");
   const tags = new Set<string>();
@@ -12,6 +17,7 @@ export async function getStaticPaths() {
   return Array.from(tags).map((t) => ({ params: { tag: t } }));
 }
 
+/** ルートパラメータのタグを正規化し、該当エントリを最新順で抽出 */
 const tag = normalizeTag(Astro.params.tag!);
 const posts = (await getCollection(
   "posts",

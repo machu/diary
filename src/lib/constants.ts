@@ -1,2 +1,4 @@
-export const PAGE_SIZE = 30; // トップページのページネーション件数
-
+/**
+ * トップページのページネーション件数
+ */
+export const PAGE_SIZE = 30;
