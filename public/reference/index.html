@@ -1,0 +1,2415 @@
+<!DOCTYPE html><script>
+  const getThemePreference = () => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+  const isDark = getThemePreference() === "dark";
+  document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+
+  if (typeof localStorage !== "undefined") {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+</script> <html lang="ja"> <head><meta charset="UTF-8"><meta name="description" content="Astro description"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.13.4"><title>まちゅダイアリー</title><style data-vite-dev-id="/Users/machu/src/astro/src/styles/globals.css">*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}/*
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
+*//*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+html,
+:host {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4; /* 3 */
+  font-family: Helvetica Neue, Verdana, Arial, BIZ UDPGothic, Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo, sans-serif; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  letter-spacing: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+input:where([type='button']),
+input:where([type='reset']),
+input:where([type='submit']) {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+[hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+  * {
+  border-color: hsl(var(--border));
+}
+  body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+@media (min-width: 1400px) {
+
+  .container {
+    max-width: 1400px;
+  }
+}
+.prose {
+  color: var(--tw-prose-body);
+  max-width: 65ch;
+}
+.prose :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+.prose :where([class~="lead"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-lead);
+  font-size: 1.25em;
+  line-height: 1.6;
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+}
+.prose :where(a):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-links);
+  text-decoration: underline;
+  font-weight: 500;
+}
+.prose :where(strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-bold);
+  font-weight: 600;
+}
+.prose :where(a strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(blockquote strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(thead th strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(ol):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: decimal;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1.625em;
+}
+.prose :where(ol[type="A"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: upper-alpha;
+}
+.prose :where(ol[type="a"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: lower-alpha;
+}
+.prose :where(ol[type="A" s]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: upper-alpha;
+}
+.prose :where(ol[type="a" s]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: lower-alpha;
+}
+.prose :where(ol[type="I"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: upper-roman;
+}
+.prose :where(ol[type="i"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: lower-roman;
+}
+.prose :where(ol[type="I" s]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: upper-roman;
+}
+.prose :where(ol[type="i" s]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: lower-roman;
+}
+.prose :where(ol[type="1"]):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: decimal;
+}
+.prose :where(ul):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  list-style-type: disc;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-inline-start: 1.625em;
+}
+.prose :where(ol > li):not(:where([class~="not-prose"],[class~="not-prose"] *))::marker {
+  font-weight: 400;
+  color: var(--tw-prose-counters);
+}
+.prose :where(ul > li):not(:where([class~="not-prose"],[class~="not-prose"] *))::marker {
+  color: var(--tw-prose-bullets);
+}
+.prose :where(dt):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+  margin-top: 1.25em;
+}
+.prose :where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-color: var(--tw-prose-hr);
+  border-top-width: 1px;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+.prose :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--tw-prose-quotes);
+  border-inline-start-width: 0.25rem;
+  border-inline-start-color: var(--tw-prose-quote-borders);
+  quotes: "\201C""\201D""\2018""\2019";
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  padding-inline-start: 1em;
+}
+.prose :where(blockquote p:first-of-type):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
+  content: open-quote;
+}
+.prose :where(blockquote p:last-of-type):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+  content: close-quote;
+}
+.prose :where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 800;
+  font-size: 2.25em;
+  margin-top: 0;
+  margin-bottom: 0.8888889em;
+  line-height: 1.1111111;
+}
+.prose :where(h1 strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 900;
+  color: inherit;
+}
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 700;
+  font-size: 1.5em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.3333333;
+}
+.prose :where(h2 strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 800;
+  color: inherit;
+}
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.6;
+}
+.prose :where(h3 strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 700;
+  color: inherit;
+}
+.prose :where(h4):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+}
+.prose :where(h4 strong):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 700;
+  color: inherit;
+}
+.prose :where(img):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.prose :where(picture):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  display: block;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.prose :where(video):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.prose :where(kbd):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--tw-prose-kbd);
+  box-shadow: 0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%), 0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%);
+  font-size: 0.875em;
+  border-radius: 0.3125rem;
+  padding-top: 0.1875em;
+  padding-inline-end: 0.375em;
+  padding-bottom: 0.1875em;
+  padding-inline-start: 0.375em;
+}
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-code);
+  font-weight: 600;
+  font-size: 0.875em;
+}
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
+  content: "`";
+}
+.prose :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+  content: "`";
+}
+.prose :where(a code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(h1 code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(h2 code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+  font-size: 0.875em;
+}
+.prose :where(h3 code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+  font-size: 0.9em;
+}
+.prose :where(h4 code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(blockquote code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(thead th code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: inherit;
+}
+.prose :where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-pre-code);
+  background-color: var(--tw-prose-pre-bg);
+  overflow-x: auto;
+  font-weight: 400;
+  font-size: 0.875em;
+  line-height: 1.7142857;
+  margin-top: 1.7142857em;
+  margin-bottom: 1.7142857em;
+  border-radius: 0.375rem;
+  padding-top: 0.8571429em;
+  padding-inline-end: 1.1428571em;
+  padding-bottom: 0.8571429em;
+  padding-inline-start: 1.1428571em;
+}
+.prose :where(pre code):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  background-color: transparent;
+  border-width: 0;
+  border-radius: 0;
+  padding: 0;
+  font-weight: inherit;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+}
+.prose :where(pre code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
+  content: none;
+}
+.prose :where(pre code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+  content: none;
+}
+.prose :where(table):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  width: 100%;
+  table-layout: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-size: 0.875em;
+  line-height: 1.7142857;
+}
+.prose :where(thead):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--tw-prose-th-borders);
+}
+.prose :where(thead th):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-headings);
+  font-weight: 600;
+  vertical-align: bottom;
+  padding-inline-end: 0.5714286em;
+  padding-bottom: 0.5714286em;
+  padding-inline-start: 0.5714286em;
+}
+.prose :where(tbody tr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--tw-prose-td-borders);
+}
+.prose :where(tbody tr:last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-bottom-width: 0;
+}
+.prose :where(tbody td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  vertical-align: baseline;
+}
+.prose :where(tfoot):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  border-top-width: 1px;
+  border-top-color: var(--tw-prose-th-borders);
+}
+.prose :where(tfoot td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  vertical-align: top;
+}
+.prose :where(th, td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  text-align: start;
+}
+.prose :where(figure > *):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose :where(figcaption):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  color: var(--tw-prose-captions);
+  font-size: 0.875em;
+  line-height: 1.4285714;
+  margin-top: 0.8571429em;
+}
+.prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-lead: #4b5563;
+  --tw-prose-links: #111827;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: #d1d5db;
+  --tw-prose-hr: #e5e7eb;
+  --tw-prose-quotes: #111827;
+  --tw-prose-quote-borders: #e5e7eb;
+  --tw-prose-captions: #6b7280;
+  --tw-prose-kbd: #111827;
+  --tw-prose-kbd-shadows: 17 24 39;
+  --tw-prose-code: #111827;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: #d1d5db;
+  --tw-prose-td-borders: #e5e7eb;
+  --tw-prose-invert-body: #d1d5db;
+  --tw-prose-invert-headings: #fff;
+  --tw-prose-invert-lead: #9ca3af;
+  --tw-prose-invert-links: #fff;
+  --tw-prose-invert-bold: #fff;
+  --tw-prose-invert-counters: #9ca3af;
+  --tw-prose-invert-bullets: #4b5563;
+  --tw-prose-invert-hr: #374151;
+  --tw-prose-invert-quotes: #f3f4f6;
+  --tw-prose-invert-quote-borders: #374151;
+  --tw-prose-invert-captions: #9ca3af;
+  --tw-prose-invert-kbd: #fff;
+  --tw-prose-invert-kbd-shadows: 255 255 255;
+  --tw-prose-invert-code: #fff;
+  --tw-prose-invert-pre-code: #d1d5db;
+  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-invert-th-borders: #4b5563;
+  --tw-prose-invert-td-borders: #374151;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.prose :where(picture > img):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.prose :where(ol > li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-start: 0.375em;
+}
+.prose :where(ul > li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-start: 0.375em;
+}
+.prose :where(.prose > ul > li p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+.prose :where(.prose > ul > li > p:first-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 1.25em;
+}
+.prose :where(.prose > ul > li > p:last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-bottom: 1.25em;
+}
+.prose :where(.prose > ol > li > p:first-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 1.25em;
+}
+.prose :where(.prose > ol > li > p:last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-bottom: 1.25em;
+}
+.prose :where(ul ul, ul ol, ol ul, ol ol):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+.prose :where(dl):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+.prose :where(dd):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0.5em;
+  padding-inline-start: 1.625em;
+}
+.prose :where(hr + *):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+}
+.prose :where(h2 + *):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+}
+.prose :where(h3 + *):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+}
+.prose :where(h4 + *):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+}
+.prose :where(thead th:first-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-start: 0;
+}
+.prose :where(thead th:last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-end: 0;
+}
+.prose :where(tbody td, tfoot td):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-top: 0.5714286em;
+  padding-inline-end: 0.5714286em;
+  padding-bottom: 0.5714286em;
+  padding-inline-start: 0.5714286em;
+}
+.prose :where(tbody td:first-child, tfoot td:first-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-start: 0;
+}
+.prose :where(tbody td:last-child, tfoot td:last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  padding-inline-end: 0;
+}
+.prose :where(figure):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.prose :where(.prose > :first-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0;
+}
+.prose :where(.prose > :last-child):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-bottom: 0;
+}
+.prose-cyan {
+  --tw-prose-links: #0891b2;
+  --tw-prose-invert-links: #06b6d4;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.visible {
+  visibility: visible;
+}
+.static {
+  position: static;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.sticky {
+  position: sticky;
+}
+.left-2 {
+  left: 0.5rem;
+}
+.top-0 {
+  top: 0px;
+}
+.z-10 {
+  z-index: 10;
+}
+.z-50 {
+  z-index: 50;
+}
+.m-1 {
+  margin: 0.25rem;
+}
+.m-2 {
+  margin: 0.5rem;
+}
+.-mx-1 {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+}
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.mb-16 {
+  margin-bottom: 4rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
+.inline {
+  display: inline;
+}
+.flex {
+  display: flex;
+}
+.inline-flex {
+  display: inline-flex;
+}
+.table {
+  display: table;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+.size-10 {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.size-5 {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.size-full {
+  width: 100%;
+  height: 100%;
+}
+.h-10 {
+  height: 2.5rem;
+}
+.h-11 {
+  height: 2.75rem;
+}
+.h-12 {
+  height: 3rem;
+}
+.h-2 {
+  height: 0.5rem;
+}
+.h-3\.5 {
+  height: 0.875rem;
+}
+.h-4 {
+  height: 1rem;
+}
+.h-48 {
+  height: 12rem;
+}
+.h-9 {
+  height: 2.25rem;
+}
+.h-px {
+  height: 1px;
+}
+.min-h-8 {
+  min-height: 2rem;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+.w-10 {
+  width: 2.5rem;
+}
+.w-2 {
+  width: 0.5rem;
+}
+.w-3\.5 {
+  width: 0.875rem;
+}
+.w-4 {
+  width: 1rem;
+}
+.w-full {
+  width: 100%;
+}
+.min-w-\[8rem\] {
+  min-width: 8rem;
+}
+.max-w-2xl {
+  max-width: 42rem;
+}
+.max-w-4xl {
+  max-width: 56rem;
+}
+.max-w-max {
+  max-width: -moz-max-content;
+  max-width: max-content;
+}
+.max-w-xl {
+  max-width: 36rem;
+}
+.flex-auto {
+  flex: 1 1 auto;
+}
+.rotate-0 {
+  --tw-rotate: 0deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.rotate-90 {
+  --tw-rotate: 90deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.scale-0 {
+  --tw-scale-x: 0;
+  --tw-scale-y: 0;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.scale-100 {
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.cursor-default {
+  cursor: default;
+}
+.select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-1 {
+  gap: 0.25rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-x-4 {
+  -moz-column-gap: 1rem;
+       column-gap: 1rem;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.rounded-lg {
+  border-radius: var(--radius);
+}
+.rounded-md {
+  border-radius: calc(var(--radius) - 2px);
+}
+.rounded-sm {
+  border-radius: calc(var(--radius) - 4px);
+}
+.border {
+  border-width: 1px;
+}
+.border-4 {
+  border-width: 4px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-input {
+  border-color: hsl(var(--input));
+}
+.bg-background {
+  background-color: hsl(var(--background));
+}
+.bg-destructive {
+  background-color: hsl(var(--destructive));
+}
+.bg-muted {
+  background-color: hsl(var(--muted));
+}
+.bg-popover {
+  background-color: hsl(var(--popover));
+}
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+.bg-secondary {
+  background-color: hsl(var(--secondary));
+}
+.bg-secondary\/80 {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+.fill-current {
+  fill: currentColor;
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.p-1 {
+  padding: 0.25rem;
+}
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.py-1\.5 {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+.pl-8 {
+  padding-left: 2rem;
+}
+.pr-2 {
+  padding-right: 0.5rem;
+}
+.text-center {
+  text-align: center;
+}
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.leading-6 {
+  line-height: 1.5rem;
+}
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+.text-accent-foreground {
+  color: hsl(var(--accent-foreground));
+}
+.text-destructive-foreground {
+  color: hsl(var(--destructive-foreground));
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity, 1));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+.text-popover-foreground {
+  color: hsl(var(--popover-foreground));
+}
+.text-primary {
+  color: hsl(var(--primary));
+}
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+.text-secondary-foreground {
+  color: hsl(var(--secondary-foreground));
+}
+.text-secondary-foreground\/80 {
+  color: hsl(var(--secondary-foreground) / 0.8);
+}
+.underline {
+  text-decoration-line: underline;
+}
+.underline-offset-4 {
+  text-underline-offset: 4px;
+}
+.opacity-60 {
+  opacity: 0.6;
+}
+.shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.outline {
+  outline-style: solid;
+}
+.ring {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.ring-offset-background {
+  --tw-ring-offset-color: hsl(var(--background));
+}
+.brightness-75 {
+  --tw-brightness: brightness(.75);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.sepia {
+  --tw-sepia: sepia(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.backdrop-blur {
+  --tw-backdrop-blur: blur(8px);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+}
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.duration-300 {
+  transition-duration: 300ms;
+}
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes enter {
+
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+  }
+}
+@keyframes exit {
+
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+  }
+}
+.duration-300 {
+  animation-duration: 300ms;
+}
+.ease-in-out {
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.running {
+  animation-play-state: running;
+}
+.\[gist\:170131\] {
+  gist: 170131;
+}
+.\[gist\:172144\] {
+  gist: 172144;
+}
+.\[gist\:181843\] {
+  gist: 181843;
+}
+.\[gist\:426433\] {
+  gist: 426433;
+}
+.\[gist\:426434\] {
+  gist: 426434;
+}
+.\[gist\:426435\] {
+  gist: 426435;
+}
+.\[gist\:427597\] {
+  gist: 427597;
+}
+.\[gist\:43820\] {
+  gist: 43820;
+}
+.\[gist\:460157\] {
+  gist: 460157;
+}
+.\[gist\:523944\] {
+  gist: 523944;
+}
+.\[id\:ZIGOROu\] {
+  id: ZIGOROu;
+}
+.\[id\:amachang\] {
+  id: amachang;
+}
+.\[id\:brazil\] {
+  id: brazil;
+}
+.\[id\:cubick\] {
+  id: cubick;
+}
+.\[id\:dropdb\] {
+  id: dropdb;
+}
+.\[id\:dropdb\3055\3093\3068\3053\306E\30B3\30E1\30F3\30C8\] {
+  id: dropdbさんとこのコメント;
+}
+.\[id\:furyu-tei\] {
+  id: furyu-tei;
+}
+.\[id\:gothedistance\3055\3093\] {
+  id: gothedistanceさん;
+}
+.\[id\:gotow\] {
+  id: gotow;
+}
+.\[id\:hiro_y\3055\3093\306E\30D6\30C3\30AF\30DE\30FC\30AF\] {
+  id: hiro yさんのブックマーク;
+}
+.\[id\:ihag\] {
+  id: ihag;
+}
+.\[id\:kazuhooku\] {
+  id: kazuhooku;
+}
+.\[id\:lopnor\] {
+  id: lopnor;
+}
+.\[id\:maedana\3055\3093\306E\307E\3068\3081\30DA\30FC\30B8\] {
+  id: maedanaさんのまとめページ;
+}
+.\[id\:naoya\306E\306F\3066\306A\30C0\30A4\30A2\30EA\30FC\] {
+  id: naoyaのはてなダイアリー;
+}
+.\[id\:quill3\] {
+  id: quill3;
+}
+.\[id\:secondlife\] {
+  id: secondlife;
+}
+.\[id\:shinichitomita\] {
+  id: shinichitomita;
+}
+.\[id\:y0sh1kaw\] {
+  id: y0sh1kaw;
+}
+.\[id\:yappo\3055\3093\306E\30D6\30AF\30DE\] {
+  id: yappoさんのブクマ;
+}
+.\[id\:yto\3055\3093\306E\30B3\30E1\30F3\30C8\] {
+  id: ytoさんのコメント;
+}
+.\[past-progress\:11\] {
+  past-progress: 11;
+}
+.\[past-progress\:15\] {
+  past-progress: 15;
+}
+.\[past-progress\:4\] {
+  past-progress: 4;
+}
+.\[site\:machu\.jp\] {
+  site: machu.jp;
+}
+.\[sqlite\:db\/trac\.db\] {
+  sqlite: db/trac.db;
+}
+.dark\:prose-invert:is(.dark *) {
+  --tw-prose-body: var(--tw-prose-invert-body);
+  --tw-prose-headings: var(--tw-prose-invert-headings);
+  --tw-prose-lead: var(--tw-prose-invert-lead);
+  --tw-prose-links: var(--tw-prose-invert-links);
+  --tw-prose-bold: var(--tw-prose-invert-bold);
+  --tw-prose-counters: var(--tw-prose-invert-counters);
+  --tw-prose-bullets: var(--tw-prose-invert-bullets);
+  --tw-prose-hr: var(--tw-prose-invert-hr);
+  --tw-prose-quotes: var(--tw-prose-invert-quotes);
+  --tw-prose-quote-borders: var(--tw-prose-invert-quote-borders);
+  --tw-prose-captions: var(--tw-prose-invert-captions);
+  --tw-prose-kbd: var(--tw-prose-invert-kbd);
+  --tw-prose-kbd-shadows: var(--tw-prose-invert-kbd-shadows);
+  --tw-prose-code: var(--tw-prose-invert-code);
+  --tw-prose-pre-code: var(--tw-prose-invert-pre-code);
+  --tw-prose-pre-bg: var(--tw-prose-invert-pre-bg);
+  --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
+  --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
+}
+.placeholder\:text-muted-foreground::-moz-placeholder {
+  color: hsl(var(--muted-foreground));
+}
+.placeholder\:text-muted-foreground::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+.hover\:bg-accent:hover {
+  background-color: hsl(var(--accent));
+}
+.hover\:bg-destructive\/90:hover {
+  background-color: hsl(var(--destructive) / 0.9);
+}
+.hover\:bg-primary\/90:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+.hover\:bg-secondary\/80:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+.hover\:text-accent-foreground:hover {
+  color: hsl(var(--accent-foreground));
+}
+.hover\:underline:hover {
+  text-decoration-line: underline;
+}
+.hover\:shadow-lg:hover {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.hover\:shadow-black\/5:hover {
+  --tw-shadow-color: rgb(0 0 0 / 0.05);
+  --tw-shadow: var(--tw-shadow-colored);
+}
+.hover\:brightness-100:hover {
+  --tw-brightness: brightness(1);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.focus\:bg-accent:focus {
+  background-color: hsl(var(--accent));
+}
+.focus\:text-accent-foreground:focus {
+  color: hsl(var(--accent-foreground));
+}
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.focus\:ring-2:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.focus\:ring-ring:focus {
+  --tw-ring-color: hsl(var(--ring));
+}
+.focus-visible\:outline-none:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.focus-visible\:ring-2:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.focus-visible\:ring-ring:focus-visible {
+  --tw-ring-color: hsl(var(--ring));
+}
+.focus-visible\:ring-offset-2:focus-visible {
+  --tw-ring-offset-width: 2px;
+}
+.disabled\:pointer-events-none:disabled {
+  pointer-events: none;
+}
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+.data-\[disabled\]\:pointer-events-none[data-disabled] {
+  pointer-events: none;
+}
+.data-\[state\=open\]\:bg-accent[data-state="open"] {
+  background-color: hsl(var(--accent));
+}
+.data-\[disabled\]\:opacity-50[data-disabled] {
+  opacity: 0.5;
+}
+.data-\[state\=open\]\:animate-in[data-state="open"] {
+  animation-name: enter;
+  animation-duration: 150ms;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-rotate: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+}
+.data-\[state\=closed\]\:animate-out[data-state="closed"] {
+  animation-name: exit;
+  animation-duration: 150ms;
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-rotate: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+}
+.data-\[state\=closed\]\:fade-out-0[data-state="closed"] {
+  --tw-exit-opacity: 0;
+}
+.data-\[state\=open\]\:fade-in-0[data-state="open"] {
+  --tw-enter-opacity: 0;
+}
+.data-\[state\=closed\]\:zoom-out-95[data-state="closed"] {
+  --tw-exit-scale: .95;
+}
+.data-\[state\=open\]\:zoom-in-95[data-state="open"] {
+  --tw-enter-scale: .95;
+}
+.data-\[side\=bottom\]\:slide-in-from-top-2[data-side="bottom"] {
+  --tw-enter-translate-y: -0.5rem;
+}
+.data-\[side\=left\]\:slide-in-from-right-2[data-side="left"] {
+  --tw-enter-translate-x: 0.5rem;
+}
+.data-\[side\=right\]\:slide-in-from-left-2[data-side="right"] {
+  --tw-enter-translate-x: -0.5rem;
+}
+.data-\[side\=top\]\:slide-in-from-bottom-2[data-side="top"] {
+  --tw-enter-translate-y: 0.5rem;
+}
+.prose-h1\:text-2xl :is(:where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.prose-pre\:bg-inherit :is(:where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  background-color: inherit;
+}
+.prose-pre\:text-inherit :is(:where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
+  color: inherit;
+}
+.dark\:block:is(.dark *) {
+  display: block;
+}
+.dark\:hidden:is(.dark *) {
+  display: none;
+}
+.dark\:-rotate-90:is(.dark *) {
+  --tw-rotate: -90deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.dark\:rotate-0:is(.dark *) {
+  --tw-rotate: 0deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.dark\:scale-0:is(.dark *) {
+  --tw-scale-x: 0;
+  --tw-scale-y: 0;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.dark\:scale-100:is(.dark *) {
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+@media (min-width: 640px) {
+
+  .sm\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .sm\:my-16 {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .sm\:mb-16 {
+    margin-bottom: 4rem;
+  }
+
+  .sm\:h-56 {
+    height: 14rem;
+  }
+
+  .sm\:p-4 {
+    padding: 1rem;
+  }
+
+  .sm\:py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .sm\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+
+  .lg\:max-w-7xl {
+    max-width: 80rem;
+  }
+
+  .lg\:max-w-none {
+    max-width: none;
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+</style><script type="module" src="/@vite/client"></script>
+<script type="module" src="/@fs/Users/machu/src/astro/node_modules/.pnpm/astro@5.13.4_@types+node@24.3.0_jiti@1.21.7_rollup@4.49.0_typescript@5.9.2_yaml@2.8.1/node_modules/astro/dist/runtime/client/dev-toolbar/entrypoint.js?v=ea302b96"></script>
+<script>window.__astro_dev_toolbar__ = {"root":"/Users/machu/src/astro/","version":"5.13.4","debugInfo":"Astro                    v5.13.4\nNode                     v22.18.0\nSystem                   macOS (arm64)\nPackage Manager          pnpm\nOutput                   static\nAdapter                  none\nIntegrations             @astrojs/tailwind\n                         @astrojs/react"}</script>
+<script type="module" src="/src/styles/globals.css"></script></head> <body data-astro-source-file="/Users/machu/src/astro/src/layouts/Layout.astro" data-astro-source-loc="47:9"> <div class="flex min-h-screen w-full flex-col" data-astro-source-file="/Users/machu/src/astro/src/layouts/Layout.astro" data-astro-source-loc="48:52"> <header class="sticky top-0 z-10 bg-secondary/80 text-secondary-foreground backdrop-blur transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/5" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="7:2"> <div class="mx-auto flex h-12 items-center justify-between px-8" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="8:68"> <a href="/" class="text-lg font-bold sm:text-2xl" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="9:55">まちゅダイアリー</a> <nav class="flex items-center text-sm sm:text-base" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="10:57"> <a class="mx-2" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="11:23">過去の日記</a> <a class="mx-2" href="/tags" data-astro-source-file="/Users/machu/src/astro/src/components/Header.astro" data-astro-source-loc="12:36">タグ</a> <button id="themeToggle" class="inline-flex size-10 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" data-astro-source-file="/Users/machu/src/astro/src/components/ThemeToggle.astro" data-astro-source-loc="9:2"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="size-5 rotate-0 scale-100 transition-all dark:hidden dark:-rotate-90 dark:scale-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M448 256c0-106-86-192-192-192l0 384c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"></path></svg> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" class="hidden size-5 rotate-90 scale-0 transition-all dark:block dark:rotate-0 dark:scale-100" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg> <span class="sr-only" data-astro-source-file="/Users/machu/src/astro/src/components/ThemeToggle.astro" data-astro-source-loc="16:25">Toggle theme</span> </button> <script type="module" src="/src/components/ThemeToggle.astro?astro&type=script&index=0&lang.ts"></script> </nav> </div> </header> <main class="container max-w-max flex-auto px-4" data-astro-source-file="/Users/machu/src/astro/src/layouts/Layout.astro" data-astro-source-loc="50:56"> <div class="lg:max-w-7xl" data-astro-source-file="/Users/machu/src/astro/src/layouts/Layout.astro" data-astro-source-loc="51:35">  <div class="mb-4 border-b py-4 sm:mb-16" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="20:44"> <!-- トップページは非表示 --> <div class="hidden" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="22:61"> <div class="mx-auto flex w-full justify-center" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="17:49"> <div class="flex flex-row items-center gap-1 text-secondary-foreground/80" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="18:78"> <!-- for debug --> <!-- <div>
+      {page.currentPage} / {page.lastPage} / {page.total} / {page.start}
+      / {page.end} / {page.url.prev} / {page.url.next}
+    </div> --> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1" disabled="">  <a href="/" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="26:19"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"></path></svg> latest
+</a>  </button> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1" disabled="">  <a data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="31:31"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg> new
+</a>  </button> <select value="1" class="--page-select rounded-md border border-input bg-popover px-2 py-1 text-sm text-popover-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="39:6"> <option value="1" selected data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 1 </option><option value="2" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 2 </option><option value="3" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 3 </option><option value="4" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 4 </option><option value="5" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 5 </option><option value="6" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 6 </option><option value="7" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 7 </option><option value="8" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 8 </option><option value="9" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 9 </option><option value="10" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 10 </option><option value="11" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 11 </option><option value="12" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 12 </option><option value="13" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 13 </option><option value="14" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 14 </option><option value="15" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 15 </option><option value="16" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 16 </option><option value="17" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 17 </option><option value="18" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 18 </option><option value="19" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 19 </option><option value="20" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 20 </option><option value="21" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 21 </option><option value="22" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 22 </option><option value="23" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 23 </option><option value="24" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 24 </option><option value="25" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 25 </option><option value="26" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 26 </option><option value="27" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 27 </option><option value="28" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 28 </option><option value="29" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 29 </option><option value="30" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 30 </option><option value="31" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 31 </option><option value="32" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 32 </option><option value="33" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 33 </option><option value="34" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 34 </option><option value="35" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 35 </option><option value="36" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 36 </option><option value="37" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 37 </option><option value="38" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 38 </option><option value="39" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 39 </option><option value="40" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 40 </option><option value="41" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 41 </option><option value="42" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 42 </option><option value="43" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 43 </option><option value="44" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 44 </option><option value="45" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 45 </option><option value="46" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 46 </option><option value="47" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 47 </option><option value="48" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 48 </option><option value="49" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 49 </option><option value="50" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 50 </option><option value="51" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 51 </option> </select> <span class="text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="49:27"> / 51</span> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1">  <a href="/2" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="52:31">
+old <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg> </a>  </button> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1">  <a href="/51" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="57:37">
+oldest <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"></path></svg> </a>  </button> </div> </div> <script type="module" src="/src/components/Pagination.astro?astro&type=script&index=0&lang.ts"></script> </div> <h1 class="my-8 text-center text-2xl font-bold sm:text-4xl" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="25:65">
+まちゅダイアリー
+</h1> <div class="m-2 text-center" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="5:30"> <img src="/avatar.jpg" width="96" height="96" class="inline rounded-full border-4 text-center" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="6:4"> </div> <div class="m-2 text-center" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="13:30"> <h2 class="text-lg" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="14:23">RubyやLinuxなど、興味のあることについて</h2> </div> <div class="m-2 text-center text-2xl" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="16:39"> <a href="https://github.com/machu" class="px-1" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="17:51"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 480 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"></path></svg> </a> <a href="https://x.com/machu" class="px-1" data-astro-source-file="/Users/machu/src/astro/src/components/Profile.astro" data-astro-source-loc="20:46"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg> </a> </div> </div> <div class="mx-0 my-8" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="30:26"> <div class="grid max-w-2xl grid-cols-1 gap-4 sm:mx-auto lg:max-w-none lg:grid-cols-3" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="33:6"> <article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20240705/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2024-07-05T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2024-07-05 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20240705/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 画像ファイルのテスト </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">画像ファイルの貼り付けテスト。
+
+alt text
+
+alt text
+
+alt text
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20221018/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-10-18T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-10-18 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20221018/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Next.jsでmarkdownブログを構築 (2) </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Next.js を使って Markdown のブログサイトの構築を一から行なっていきます。
+
+Next.js の準備
+
+プロジェクトの作成
+
+npx create-next-app コマンドを利用して Next.js プロジェクトの作成を行います。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20221001/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-10-01T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-10-01 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/mac" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Mac </a><a href="/tags/windows" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Windows </a> </span> </div> </div> <a href="/posts/20221001/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Mac mini (M1 2020) からWindowsへ乗り換えた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Mac miniを
+
+2008.03 Macbook Pro 15インチ
+
+2013.01 Macbook Pro 13インチ
+
+2018.07 iMac 27インチ Retina 5K
+
+2020.10 Mac mini (M1)
+
+画像
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="/20221001/A7304435.jpg" alt="Mac mini (M1 2020) からWindowsへ乗り換えた" title="Mac mini (M1 2020) からWindowsへ乗り換えた" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20220621/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-06-21T11:54:45.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-06-21 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20220621/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 洗濯機を買い替えた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">これまで使っていた洗濯機がドラム型洗濯機 (NA-VX8700L) が壊れてしまった。日記を読み返すと、2017年5月に買い替えていた。今回はちょうど5年での買い替えになってしまった。
+ヤマダの長期保証に入っていたおかげで何度か修理してもらったものの、使用頻度が高くそろそろ限界とのこと。
+
+これまでPanasonicを続けて使ってきて、次に選んだのは東芝のZABOON。というか、半導体不足でほとんど選択の余地がなかった。今度は長く持ちますように。
+
+ZABOON TW-127XP1L(T) ボルドーブラウン
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20220409/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-04-09T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-04-09 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/tdiary" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   tDiary </a> </span> </div> </div> <a href="/posts/20220409/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> tDiaryの日記を静的サイトジェネレータで表示したい (2) </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">前回まででtDiaryの日記をHTML形式でエクスポートできるようになった。
+静的サイトジェネレータで取り回ししやすいように、日単位ではなくセクション単位でHTMLを出力している。
+
+ここで悩ましいのが、旧サイトからのリダイレクト設定。
+このサイトでも初期の日記は、1日に複数の記事を書いていた。
+例えば2008年3月2日の日記はこんな感じ。
+
+/diary/20080302.html#p01 … 暗号化と署名は対象じゃないよという話
+
+/diary/20080302.html#p02 … 署名はハッシュ関数やMACの延長で説明したほうがいいのでは？
+
+/diary/20080302.html#p03 … ツッコミへのお返事
+
+セクション単位でHTMLを分けたことにより、移行先のURLはそれぞれ別になる。
+
+/diary/20080302.html#p01 → /posts/20080302/p01/
+
+/diary/20080302.html#p02 → /posts/20080302/p02/
+
+/diary/20080302.html#p03 → /posts/20080302/p03/
+
+ここで問題になるのは、元のページは 20080302.html という1つであり、セクションアンカー (#p01, #p02,#p03) 単位ではリダイレクトできないこと。
+
+しばらく悩んだあげく、セクションごとのページとは別に、日のページも用意することにした。
+たしか、はてなダイアリーも同じ構成だったはず。
+
+/posts/20080302/p01/ … 2008年3月2日の1つ目の記事
+
+/posts/20080302/p02/ … 2008年3月2日の2つ目の記事
+
+/posts/20080302/p03/ … 2008年3月2日の3つ目の記事
+
+/posts/20080302/ … 上記3つの記事を含むページ
+
+以前のページからリダイレクトするときに、いちど日のページを経由する手間はあるが、仕方ない。
+
+hugoだと、以下のようにコンテンツとテンプレート (layouts) を作ることで、日のページを表示できる。
+
+content/posts/20080302/\_index.md
+
+layouts/section/day.html
+
+これでtDiaryの日記を静的サイトジェネレータで表示する目処がついたかな。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20220403/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-04-03T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-04-03 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/tdiary" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   tDiary </a> </span> </div> </div> <a href="/posts/20220403/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> tDiaryの日記を静的サイトジェネレータで表示したい (1) </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">最近は日記の更新頻度がすっかり減った。とはいえ、過去の日記は自分のためにも見返せるようにしておきたい。そこで、そろそろtDiaryで書いてきた日記を、tDiaryがなくても表示できるようにしておこう。
+
+考えることはいろいろある。
+
+日記をどのように表示するか
+
+日記データの取り出し方
+
+日記をどのように表示するか
+
+tDiaryが生成したHTMLファイルをそのままWebサーバでホスティングすることもできるが、今後のことを考えて静的サイトジェネレータ (SSG) を使うことにする。静的サイトジェネレータには、Hugo, Jekyll, Gatsby, Next.jsなどがある。それぞれ一通り触ってみたところ、すぐに動かすなら Hugo、細かくカスタマイズしたいなら Next.js が良さそうだった。まずは日記データを取り出せるところから確かめたいので、すぐに動かせるHugoを使ってみる。
+
+日記データを取り出す
+
+tDiaryは複数の記法（スタイル）に対応している。この日記は最近ではMarkdown (GFMスタイル)を使っていて、以前はHiki形式 (Wikiスタイル) を使っていた。
+
+1つ目は、Markdown形式でSSGツールに読み込ませる方法。これはHiki形式の日記をMarkdownに変換するのが大変そう。それから、インラインプラグインを使っている箇所は何らかの手段で変換しないといけない。
+
+2つ目は、tDiaryが出力したHTML形式をSSGツールに読み込ませる方法。日記のスタイル（Markdown, Hiki）に依存せず読み込めることがメリット。
+
+tDiaryには、生成したHTMLファイルをファイルで保存する squeeze.rb というプラグインがある。これを改造し、SSGツール (Hugo) での読み込みに必要なFrontMatter付きのHTMLを出力できるようにした。
+
+日単位ではなくセクション単位でHTMLを生成する
+
+FrontMatterにtDiaryのタグ情報を記載
+
+squeeze.rbの改造箇所
+
+hugo.rhtml
+
+tDiaryを設置してあるルートディレクトリでこのツールを動かす。
+
+FrontMatter付きのHTMLを生成できた。
+
+出力したHTMLファイルをhugoに取り込むと、ほぼカスタマイズなしでいい感じに表示された。タグもちゃんと引き継がれている。
+
+セクションごとにHTMLファイルを分けるようにしたので、次はURLをどうするかを考えないとな。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20220305/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2022-03-05T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2022-03-05 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20220305/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> PlayStation5を買った </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">PlayStation5は発売前の予約抽選に当選していたものの、当時はよく使っていたTorneがPS5への対応が未定ということがわかり予約をキャンセルしていた。PS4とPS5の2台を置くのもなんだかな、という。
+
+発売から1年強が過ぎ、グランツーリスモ7やHorizon Forbidden Westなど、遊びたいゲームが揃ってきたので、PS4からPS5に乗り換えることにした。相変わらずの品薄ではあるが、徐々に解消されているみたい。さくっとヨドバシカメラのクレジットカードを作り、当日の入荷状況をみて購入してきた。
+
+PS5で嬉しいのはビジュアルの向上よりも、高速SSDによるロード時間の短縮と、ハプティクスコントローラーでの触感。PS4でのゲーム資産もアップグレードできるし、なかなか良いゲーム体験を味わえる。
+
+PlayStation4を買ってから早6年。お疲れ様でした。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="/20220305/001.jpg" alt="PlayStation5を買った" title="PlayStation5を買った" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20180721/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2018-07-21T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2018-07-21 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20180721/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Surface Proのペン先を交換した </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Surface Pen
+
+昨年の1月に買ったSurface Pro 4、持ち運び用のWindows PCとしては最高。ただ、タブレット端末としては、どうもイマイチだなと思っていた。特にアップルストアでApple Pencilを使って見てからは、書き心地の違いが気になっていた。Surface Proのペンは柔らかく、Apple Pencilは硬い感じ。僕は力を入れずに書けるApple Pencilのほうが好みだった。
+
+で、ネットで調べていたら、Surfaceはペン先の硬さを交換できることがわかった。2H, H, HB, Bの4種類。いま使っているのはHBの硬さだった。さっそく注文して交換することに。
+
+交換するときに気がついたのは、今まで使っていたペン先がかなりダメになっていたこと。これじゃあ書き味がイマイチなのも当たり前だ。同じHBで新しいペン先に交換したところ、書き味が劇的に改善された。
+
+Surface Pen
+
+最終的に、いちばん硬い2Hを選んだ。これでしばらく使ってみよう。
+
+https\://www\.amazon.co.jp/dp/B016ZYWA2A
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm1.staticflickr.com/926/43555364241_a134ddb8e2.jpg" alt="Surface Proのペン先を交換した" title="Surface Proのペン先を交換した" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20180101/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2018-01-01T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2018-01-01 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20180101/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> tDiary 5.0.7 + Ruby 2.5.0へ更新 </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">この日記 のtDiaryとRubyを最新版にアップデートした。
+
+tDiary.org - tDiary-5.0.7 リリース
+
+Ruby 2.5.0 リリース
+
+サーバのインフラはDockerで動かしているので、アップデートもGitHubベースで管理できる。実質的にはGemfileとDockerfileを更新している。
+
+まずはローカル環境 (macOS) のRubyを最新版にアップデートする。
+
+tDiaryのバージョンを指定しているGemfile.lockを最新版にする。
+
+これでGemfile.lockが更新されてtDiaryの5.0.7を使うようになった。
+
+次にDockerfileを編集して、Ruby 2.5.0を使うようにする。
+
+git commit, git pushして変更内容をGitHubへプッシュする。コミットメッセージを間違ってtdiary-5.0.6にしていた…。
+
+upgrade to tdiary-5.0.6 and ruby-2.5.0 · machu/machu-jp\@1cc9c33 · GitHub
+
+ここまでできたら、あとはDockerを動かしているサーバ (さくらのVPS) でDockerイメージを更新する。
+
+これでtDiary 5.0.7 + Ruby2.5.0へのバージョンアップはおしまい。dockerの本来の使い方的にはデプロイ先でイメージを作るのではなく、事前にイメージを作っておくのが正解なんだろうけど。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20171231/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-12-31T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-12-31 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20171231/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Amazon EchoとNature Remoで家電を操作できるようにした </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">photo
+
+Amazon EchoとNature Remoを買ったので、声でテレビとtorne (PS4) と照明を操作できるようにした。両手がふさがっているときにもテレビを操作できるのは、思ったよりも便利。
+
+Google HomeだとIFTTT経由でいい感じにNature Remoを操作できる。でも、Amazon EchoはIFTTTを経由するときに「アレクサ、テレビを『トリガー』」と呼ばなければいけない。これが嫌だったので、いろいろ調べて「アレクサ、テレビをつけて」や「アレクサ、テレビを4にして」という言葉で操作できるようにした。詳しい顛末はQiitaに書いた。
+
+Amazon Echoで「○○をつけて」と言って家電を操作する - Qiita
+
+まだまだスマートスピーカー周りは黎明期。でもだからこそ面白いね。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://lh3.googleusercontent.com/-DtNOZaj5Fec/Wkna-A6q8hI/AAAAAAAEsEw/p_LHkqWhk8sPvf453yNI9me8ZEChcVXSACE0YBhgL/AmazonEcho.jpg" alt="Amazon EchoとNature Remoで家電を操作できるようにした" title="Amazon EchoとNature Remoで家電を操作できるようにした" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20171014/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-10-14T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-10-14 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/evernote" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Evernote </a> </span> </div> </div> <a href="/posts/20171014/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Evernoteの画面をシンプルに </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">最近のEvernoteは、UIがスッキリしたりMarkdown記法を一部サポートしたりと、技術的なメモ置き場としても使いやすくなってきた。せっかくなので、もう少しメモ書きに集中できるよう、Evernoteの画面をシンプルにした。
+
+変更前の画面がこちら。 photo
+
+変更後の画面がこちら。サイドバーとツールバーを隠してスッキリさせている。 photo
+
+サイドバーを隠すことで、ショートカットやノートブックへの移動が面倒になりそうだったけど、cmd + Jキーでの切り替えで代用できそう。Atomエディタなどでよく見るインタフェースだ。 photo
+
+変更内容メモ
+
+フォントを「Avenir Next Regular 14ポイント」に変更（環境設定→書式設定→フォント）
+
+サイドバーを隠す（表示→サイドバーを隠す）
+
+ツールバーを隠す（表示→ツールバーを隠す）
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://lh3.googleusercontent.com/-Huwhjcr2EVw/WeIo2rKb9CI/AAAAAAAEhxQ/AV0nWFk0JAUdImT-19aaUHfiyqdhOvtBwCLcBGAs/FA845C4F-82ED-4030-8107-5971E696593A.png" alt="Evernoteの画面をシンプルに" title="Evernoteの画面をシンプルに" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20171003/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-10-03T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-10-03 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20171003/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> iPhone6sからiPhone8へ機種変更 </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">iPhone6sにしてから2年間が経ち、また機種変更の季節がやってきた。この2年間でMVNOも普及したものの、いちばん使う通勤時間帯やお昼に遅くなるようで、引き続きキャリアを使うことに決めた。それなら2年ごとに新しい機種に変えるのが一番よい。今回はiPhone6s (64GB)からiPhone8 (64GB)への機種変更にした。
+
+端末代金(一括支払): 88,776円
+
+月々サポート: -57,024円
+
+下取りプログラム (iPhone6s) : -26,568円
+
+dポイント(機種変更応援プログラム): -7,200円
+
+家族まとめて割: -5,184円
+
+差額: -7,200円
+
+支払代金より割引のほうが多いという状態。
+
+2年前に考えていたとおり、今回はドコモオンラインでの申込みにした。オンラインで購入するメリットは結構ある。
+
+お店で待たなくていいし、オプションの加入も不要
+
+事務手数料が無料
+
+手元に新旧端末があるので、ゆっくりデータ移行できる
+
+古い端末からのデータ移行は、今回もiTunesを使った。iPhone6sのiOSを最新までバージョンアップしてから、iTunesでバックアップを取る。次にiPhone8のiOSも最新にバージョンアップ (11.0から11.0.1へ) してから、iTunesでデータを復元した。ちなみにiOS11だと初期設定 (Wi-Fi, Apple IDなど) を端末間で移行できるクイックスタートという機能が入っていて便利だった。
+
+参考: iPhone 8とXへの機種変はここがポイント。iOS 11で変わったデータ移行を解説、LINEとSuicaの引き継ぎも
+
+機種変更しての印象は、見事に変わらないな…というもの。今回はこんな感じかな。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20170610/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-06-10T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-06-10 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/tdiary" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   tDiary </a> </span> </div> </div> <a href="/posts/20170610/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Googleフォトの写真を日記に載せるためのtDiaryプラグインを書いた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Picasaがサービス終了し、Flickrの先行きも不透明になっている。そこで、Googleフォトの写真を日記に載せられるようにプラグインを作った。
+
+Googleフォトプラグイン
+
+こんな風に、Googleフォトにアップした写真を選択して、日記に貼り付けることができる。PC上の写真をGoogleフォトにアップロードすることもできる。
+
+photo
+
+プラグインはcontribパッケージに取り込まれたので、最新版を取得すれば利用可能。制約事項は、写真の最大サイズが512ピクセルまでということと、プラグインを使うためにGoogleのAPIキーを取得する必要があること。少しでも負担を減らそうと、APIキーの取得手順をスクリーンショット付きで書いてみた。
+
+技術的な話
+
+Picasa Webが突然止まったのでFlickrへ乗り換え中より引用。
+
+困るのはアルバムを「公開」にしてAPIから取得する手段がなくなったことだ。Google Photosにはそういう機能ないからな。これがないと、日記に写真を貼ることができないのだ。
+
+FlickrやPicasaは写真やアルバムの公開機能があったので、API経由で写真へのリンクを取得することができた。一方、GoogleフォトはAPIがなく、公式サイトでも宣言しているとおり、外部サイトへ写真を貼り付けることができない。
+
+Google フォトではご利用いただけない Picasa ウェブ アルバムの機能
+
+ウェブサイトへの写真やアルバムの埋め込み。
+
+代わりにGoogle Picker APIを使って、Googleフォトの写真を取得している。このAPIは、Googleに保存している情報をダイアログのように選択するライブラリで、JavaScriptで呼び出す仕組みになっている。プログラム的にはファイルダイアログを操作するようなコードを書くだけで良い。
+
+これでFlickrのように写真のURLとリンクが取得できれば良いのだけれど、残念ながらGoogle Picker APIで取得できるリンク先が picasaweb.google.com になっている。これだと、リンク先に飛んでも本人しか写真を見ることができない。代わりに、サムネイル用のURLが取得できるので、Googleフォトプラグインではサムネイル用の写真を直リンク的に日記へ埋め込む仕様としている。
+
+最近のAPIらしく、Google Picker APIを利用するためには事前にAPIキーの取得が必要。日記の設置者がそれぞれキーを取得しなくちゃいけないのはなんだかなーという感じ。
+
+参考にしたサイト
+
+Google Pickerを使ってWebサイトのUXを向上させよう
+
+Googleフォト埋め込みタグジェネレーター
+
+Picker API Developer's Guide
+
+Google各サービスの写真や動画などが簡単に紹介できる機能を追加しました - はてなブログ開発ブログ
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20170513/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-05-13T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-05-13 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20170513/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 単焦点レンズが修理から戻ってきた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">EOS Kiss X7で使っている単焦点レンズ (EF28mm F1.8 USM) が故障した。近くのモノにはピントが合うのに、遠くのモノにピントが合わなくなった。この単焦点レンズを買ったのは2009年の年末で、7年以上使っている。
+
+ボディは買い替えてもレンズは使い続けられるので、Canonのらくらく修理便を使って修理に出した。自宅まで引き取りに来てくれて、梱包までおまかせなので便利。修理に出してから一週間で戻ってきた。幸いにも部品交換はなく、故障箇所の調整だけで修理できていた模様。技術料金6,500円と運送費1,500円で、税抜8,000円。
+
+いまから買うなら手ブレ防止機能が付いたEF35mm F2 IS USMもあるけど、まだまだ X7 + EF28mm F1.8でやっていこう。
+
+https\://www\.amazon.co.jp/dp/B0001DQIF2
+
+https\://www\.amazon.co.jp/dp/B00A2I1EZK
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20170507/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-05-07T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-05-07 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20170507/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 洗濯機を買い替えた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">これまで使っていたドラム型洗濯機 (NA-VR1000) が故障した。乾燥機能がどんどん使えなくなり、いよいよタオル一枚も乾燥できなくなった。日記を読み返すと、2006年7月に購入していたのでもう11年近く使っていたのか。毎日、それなりの量の洗濯物がでるので、やっぱり乾燥機能がないと不便ということで、連休中に家電量販店で新機種へ買い替えた。
+
+次の機種はやはりパナソニックのNA-VX8700L。これまで使っていたNA-VR1000は初代ヒートポンプ機種で、ネットでも乾燥機能の不具合がよく報告されていた。最新機種ではこの辺はこなれてきていることを期待。実際に、乾燥時のフィルターはこれまで以上に埃が取れるようになっていた。これで時短していこう。
+
+価格コムで最安値の推移を確認してから、都心の量販店を何店舗か回って値引き交渉。ポイント分を考慮すると、最安値と変わらない価格で買えたので良かった。
+
+https\://www\.amazon.co.jp/dp/B01M06CX4D
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20170108/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-01-08T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-01-08 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   life </a> </span> </div> </div> <a href="/posts/20170108/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 持ち運び用にMicrosoft Surface Pro4を買った </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">普段使っているMacBook Pro (Mid 2012)は重さが2kgを超えている。たまに持ち出すにはいいけど、毎日はちょっとつらい。そこで、持ち運び用のPCをもう一台買うことにした。
+
+選定基準はこんな感じ。
+
+用途は文書書きとちょっとしたプログラミング。
+
+重さは1kg以下、毎日持ち運べるようにしたい。
+
+打つのが苦にならないキーボード。
+
+本格的な作業はMacBook Proでやるのでスペックはそこそこで良い。
+
+ネットや店舗でいくつか候補を探す。MacBook (12インチ) はキーボードが合わずに脱落。iPad Proは用途に合わない。代わりに候補になったのが、MicrosoftのSurface Pro4だった。
+
+キーボード（タイプカバー）をつけても1kgの重さ
+
+そこそこ打ちやすいキーボード
+
+タッチパネル+ペンで手書きメモが書ける
+
+本体とタイプカバーが別売りのため、値段がそれなりにするのがネックではある。これなら新しいMacBook Pro 13インチに手が届く。それでも、軽さとペンに惹かれて、購入することにした。12月末まではタイプカバーのキャッシュバックをやっていたのが悔やまれる。ただ、もうそろそろ新機種Pro5が出るからなのか、値段はだいぶ下がってきている。
+
+できれば家電量販店で買おうと思ったが、さすがに価格差があったのでAmazonで購入した。本体とキーボードを合わせて15万円弱。
+
+https\://www\.amazon.co.jp/dp/B016ZZIS2U
+
+https\://www\.amazon.co.jp/dp/B016ZYWBBK
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20170107/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2017-01-07T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2017-01-07 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/iphone" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   iPhone </a> </span> </div> </div> <a href="/posts/20170107/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> iPhone6Sのバッテリーを無償交換した </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">2015年9月に機種変したiPhone6Sが、のバッテリーを無償交換してきた。バッテリーが残り30%くらいで突然シャットダウンする症状がたまに発生していて、みごとにこの事象に該当していた。
+
+ごく一部の iPhone 6s が突然シャットダウンする (電源がオフになる) 場合があることが判明しました。これは安全性に関わる問題ではありません。この問題の影響が確認されているのは、2015 年 9 月から 10 月までの間に製造され、シリアル番号が特定の範囲内にある iPhone 6s のみです。
+
+お使いの iPhone 6s にこの問題が発生したことがある場合は、下のボックスにシリアル番号を入力して、その iPhone 6s が本ブログラムの適用対象かどうかをご確認ください。本プログラムの適用対象である場合は、その iPhone 6s のバッテリーを無償で交換させていただきます。
+
+iPhone 6s が突然シャットダウンする問題に対するプログラム
+
+上記のサイトにシリアル番号を入力し、対象の機器であることを確認
+
+Appleのサポートサイトで持ち込み修理を予約
+
+僕はApple渋谷のGeniusバーにした
+
+iPhoneをバックアップしたうえで、予約日にGeniusバーへ持ち込み
+
+2時間弱でバッテリー交換完了
+
+注意点として、バッテリー交換のために液晶面に強力な吸盤をくっつけるため、ガラス面が割れている機種は修理を受け付けられないそうだ。同じ理由で、画面の保護フィルムを剥がすこともあるらしい。幸い僕は、預けたままの状態で戻ってきた。
+
+移動も含めて約半日の手間ではあったけど、へたり始めていたバッテリーが新品になったので良しとしよう。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20161229/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-12-29T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-12-29 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20161229/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> このサイトをHTTPS対応させた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">そろそろHTTP2時代も本格的に近づいてくることから、このサイトをHTTPSに対応させた。証明書は無料で使えるLet's Encyriptのを利用させてもらった。
+
+このサイトはdockerで動かしている。Let's Encryptから証明書を取得してWebサーバ (nginx) に設定してくれる、 docker-letsencrypt-nginx-proxy-companion という便利なdockerイメージを追加するだけで、HTTPS対応ができた。
+
+docker-compose.yml ファイルに、 companion サービスを追加している。
+
+あとは、HTTPS対応させたいサービス側に LETSENCRYPT\_HOST と LETSENCRYPT\_EMAIL 環境変数を設定するだけで、自動的に証明書を取得してくれるようになる。
+
+dockerで動かすことで、各サービスが分離されるだけでなく、設定をGitHubリポジトリで管理できるようになるのも嬉しいところ。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20161217/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-12-17T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-12-17 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20161217/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Keynoteとムック本で年賀状を作った </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">今年も年賀状の季節がやってきた。
+
+今年はどうやって作ろうか。ここ数年はムック本の付属ソフトを使っていた。付属ソフトはWindowsでしか動かないものが多く、わざわざWindowsの仮想マシンを立ち上げるのも面倒なので、違うやり方を調べてみる。結論から言うと、ムック本の素材をKeynoteで加工して作ることになった。
+
+Keynoteで年賀状
+
+デザインを決める
+
+さすがに一からデザインするのは大変なので、年賀状のデザインテンプレートを探そう。インターネット上で探してみる。無料素材はたくさん見つかるが、デザインがイマイチ。有料サイトは数年前に閉鎖したものが多く、意外に見つからない。アフロモールというサイトのは良さそうだが、1枚1000円ほどの値段。これならムック本を買ってきたほうがお手軽だよなぁ。
+
+という訳で、年賀状の素材を入手するなら今でもムック本がベストとの結論になった。今年購入した本はこれ。
+
+https\://www\.amazon.co.jp/dp/477418313X
+
+Keynoteで年賀状を作る
+
+ムック本には年賀状作成ソフトが付属している。でも、年に1回しか使わないソフトを使うよりも、普段使い慣れているKeynoteで作ることにした。2009年にもKeynoteで年賀状を作っているので、ノウハウもある。
+
+Keynoteを起動し、まずはスライドのサイズをはがきの大きさに設定する。「書類」→「スライドのサイズ」でカスタムを選択し、縦横のピクセル数を入力する。今年は300dpiになるよう、横1748×縦1181で設定した。ムック本に付属の素材ファイル(PNG形式)もこの大きさだった。2009年のときは200dpiだったのにねぇ。
+
+setting page size in Keynote
+
+ムック本付属の年賀状テンプレートから、背景画像を貼り付ける。今年買った本は文字あり、文字なしのそれぞれの素材が収録されていた。せっかくKeynoteを使っているので、背景画像に文字なしを選び、文字はKeynote側で入力するようにした。こうすればフォントも選べるし、影などのエフェクトもつけられる。あとは、年賀状に入れる写真を貼り付け、さらに年号やニワトリのイラストなどをムック本の素材から貼り付けて、1時間ほどで完成した。
+
+実は年賀状を作るのに一番時間がかかるのは、貼り付ける写真を選ぶところだったりする。今年はスタジオで家族写真を撮っていたので、写真選びがすぐ終わったのが大きいなぁ。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm1.staticflickr.com/717/30866112304_dbc5dfcb54.jpg" alt="Keynoteとムック本で年賀状を作った" title="Keynoteとムック本で年賀状を作った" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20161211/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-12-11T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-12-11 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/tdiary" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   tDiary </a><a href="/tags/amp" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   amp </a> </span> </div> </div> <a href="/posts/20161211/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> tDiaryをAMP対応させモバイル表示を高速化した </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">最近、Google検索やはてなブックマークでAMPという技術が導入されている。AMPはモバイルでの表示速度を高速化するための仕様で、最初はニュースサイトから採用が始まっていた。この秋頃から、一般サイトの検索結果にもAMP対応サイトが表示されるようになってきたので、tDiaryもAMPに対応させてみた。
+
+この日記も数日前からAMPを導入していて、ようやくGoogleの検索結果にも反映されるようになった。スマートフォンでbrowsereidと検索すると、このように検索結果に⚡AMPマークが表示される。
+
+tDiary AMP support
+
+特にモバイル環境で試してみると分かるけど、AMP対応ページは一瞬で表示される。
+
+AMP対応ページ（キャッシュ）
+
+元のページ
+
+AMP対応ページが高速に表示される仕組み
+
+AMPでは、ページを高速化するためにいくつかの工夫と制約をかけている。AMPの公式ページに書かれているように、非同期のスクリプトのみ許可したり、スタイルシートを埋め込んだり、標準のHTMLに比べてできることをかなり制限している。さらに、コンテンツをCDNでキャッシュすることで、低遅延での配送を可能にしている。
+
+tDiaryもAMP対応してみた
+
+AMPはその制約上、静的なページに向いている。tDiaryはうってつけだろうと思い、AMP対応のプラグインを書いた。
+
+設計の基本方針として、既存のHTMLをAMP向けにカスタマイズするか、それともAMP専用ページを作るかの2案がある。AMPはまだ仕様が変わりそうなのと、制約が多く元ページを完全再現するのは難しいだろうと判断し、AMP専用ページを作ることにした。
+
+AMPはtDiaryのプラグインとして実装する。プラグインでは専用のコンテンツを返すための add\_content\_proc という仕組みがあるので、それを使う。既存ページに ?plugin=amp を付けるとAMPページが表示されるようにした。tDiaryの特徴であるセクションアンカーが反映されないけど、これはもう仕方ない。
+
+既存ページ: http\://www\.machu.jp/diary/20110722.html
+
+AMP対応ページ: http\://www\.machu.jp/diary/20110722.html?plugin=amp
+
+misc/plugin/amp.rbをつくり、以下の処理を書く。
+
+views/amp.rhtmlはAMP公式サイトのチュートリアルを見ながら雛形を作っていく。
+
+あとは、HTMLに埋め込みたいデータをプラグイン側でちょこちょこ書いていくだけ。
+
+スタイルシートはHTMLに埋め込まないと使えないので、プラグイン側でFile.readして埋め込んでいる
+
+img要素は使えないのでamp-img要素に置き換えている
+
+まだまだ基本だけだけど、これで一通り動くようになった。
+
+まだYouTubeなどの埋め込み系には対応できていない。Google Search Controlを使えば、どのページがAMPとして非対応なのかを教えてくれるので、それを見ながら修正していくつもり。これはボチボチやっていこう。
+
+tDiaryをお使いの方は、ぜひAMPプラグインを導入してフィードバックいただければ。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm6.staticflickr.com/5532/31469370541_d9c7a887c3.jpg" alt="tDiaryをAMP対応させモバイル表示を高速化した" title="tDiaryをAMP対応させモバイル表示を高速化した" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20161209/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-12-09T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-12-09 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37">   </span> </div> </div> <a href="/posts/20161209/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> デュアルディスプレイ環境のためにMacBook Proのスタンドを設置した </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">自宅のPC環境をちょっと改善したという話。これまでは、MacBook Proをクラムシェルモードにして外部ディスプレイに接続していた。せっかくMacBook Pro側にもディスプレイがあるのに使わないのはもったいない。そこで、PCスタンドを購入してデュアルディスプレイ環境を実現した。
+
+MacBook proのスタンド
+
+買ったのはSpinido社製のノートPCスタンド。アルミニウム製なので、MacBook Proを置くとちょうど馴染む。
+
+https\://www\.amazon.co.jp/dp/B015A2ECWY
+
+スタンドを使うことで、ディスプレイの高さと奥行きが揃ってなかなかいい感じになった。
+
+参考サイト
+
+デュアルディスプレイの作業効率アップにお勧め！「Spinidoノートパソコンスタンド」レビュー
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm1.staticflickr.com/331/31397163932_0f90fe3390_z.jpg" alt="デュアルディスプレイ環境のためにMacBook Proのスタンドを設置した" title="デュアルディスプレイ環境のためにMacBook Proのスタンドを設置した" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160924/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-09-24T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-09-24 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/docker" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   docker </a><a href="/tags/amazon" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   amazon </a><a href="/tags/ruby" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   ruby </a> </span> </div> </div> <a href="/posts/20160924/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Amazon認証リバースプロキシをAlpine Linuxベースのdockerイメージに移行した </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">docker上で動かしているProduct Advertising API リバースプロキシをAlpine Linuxベースのイメージに移行した。
+
+普通に置き換えるだけだと、bsonライブラリのビルドに失敗した。makeやgccなど、ビルドに必要なツールも削除されているのが原因だったので、これらのライブラリを事前に追加するようにした。
+
+これでdockerのイメージサイズが780MBから352MBへと、約半分のサイズになった。しばらく様子をみてみよう。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160523/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-23T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-23 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/mac" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Mac </a><a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   Life </a> </span> </div> </div> <a href="/posts/20160523/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Magic Trackpadのゴム足が見つかった </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">1ヶ月くらい前から無くなっていたのにマウスを買い換えたとたんに見つかるという。マーフィーの法則ですか。
+
+Magic Trackpad
+
+しかし、見つかったのはゴム部分だけで、プラスティック部分が無いのでまだ使えないのだった。これくらいなら代替品でどうにかなるかも。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm8.staticflickr.com/7656/26922182190_cbac5b4c6e.jpg" alt="Magic Trackpadのゴム足が見つかった" title="Magic Trackpadのゴム足が見つかった" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160520/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-20T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-20 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/mac" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   mac </a><a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   life </a> </span> </div> </div> <a href="/posts/20160520/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> Magic Trackpadからマウスに乗り換えた </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Logicool MX Anywhere 2
+
+Magic Trackpadを買ってから4年弱。Trackpadの裏にあるゴム足が無くなってしまった。 裏は取っていないが、どうやらゴム足だけの交換はできない模様。うーん。
+
+新しいMagic Trackpad2はさすがに高すぎる。これからもずっとMacを使うとは限らないし、マウスに戻すことにした。
+
+MacBook ProのUSBポートが埋まっているので、Bluetooth対応
+
+マウスパッド無しで使えるよう、赤外線ではなくレーザー対応
+
+あまり大きすぎないように
+
+で探したところ、ロジクールのMXAnywhere2を選んだ。コンパクトなサイズで、狭い机でも邪魔にならない。買ってから気がついたのが、マウスホイールをカチカチと段階的に動かすのと、無段階で動かすのを切り替えられるところ。ロジクールのドライバを入れることで、ボタン操作をカスタマイズすることもできる。僕はホイールの横スクロールを、マルチウィンドウの切り替えに使っている。これならトラックパッドでの4本指スクロールの代わりになる。あとは、ホイールのスクロール方向はWindowsと同じ方向にしている。
+
+https\://www\.amazon.co.jp/dp/B010N21JYA
+
+入力デバイスはこれで、だいたいいい感じになったなぁ。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm8.staticflickr.com/7681/26472454863_c37bbff920.jpg" alt="Magic Trackpadからマウスに乗り換えた" title="Magic Trackpadからマウスに乗り換えた" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160509/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-09T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-09 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/iphone" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   iPhone </a><a href="/tags/buy" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   buy </a> </span> </div> </div> <a href="/posts/20160509/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> iPhone 6s用のスマホケースを買い換え </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">去年の9月に買ったiPhone 6sのスマホケースが壊れてしまったので、新しいケースに買い換えた。今回はray-outのケースを選択した。
+
+Suicaを入れたいので今度も手帳型
+
+マグネット式でカバーを固定、ベロがないのでシンプル
+
+薄くてポケットにも入れやすい
+
+https\://www\.amazon.co.jp/dp/B014GZGLQ6
+
+あとは耐久性だな。今度はどれくらいもつだろう。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160507/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-07T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-07 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/tdiary" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   tDiary </a> </span> </div> </div> <a href="/posts/20160507/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> tDiaryのプレビュー画面を横並びで表示 </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">tDiaryのプレビュー画面をリアルタイムで更新するpreviewプラグインを、横並びでいい感じに表示できるようにした。これでまた、日記が書きやすくなったよ。
+
+tDiary preview plugin
+
+以前は縦に並んでいたので、更新するたびに画面がずれてちょっと使いにくかった。@NextSTEP2OSX さんの成果を参考にしながら、CSS3のflexboxを使って画面を揃えている。画面幅が狭い環境では、これまでどおりに縦に並べて表示されるなど、flexboxのいい勉強にもなった。
+
+やったー! tDiary のリアルタイムプレビュー横並びできたよー! 編集画面で preview プラグインを使ったとき、プレビューが上にあると再読込みで編集中のtextareaが上下に移動して不便だったんで満足 #tDiary pic.twitter.com/goOWKuQc0I
+
+— Nyoho (@NeXTSTEP2OSX) 2016年4月29日
+
+ついでに更新間隔も設定画面から変更できるようにした。更新間隔を0秒にすると本当にリアルタイムで更新されていく…がサーバに負荷がかかるのでローカルで試すだけにしたほうがいいね。
+
+contribパッケージに入れているので、contribを最新にしてpreviewプラグインを有効にするだけで使えます。
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm8.staticflickr.com/7406/26876189655_0fae7d1c62.jpg" alt="tDiaryのプレビュー画面を横並びで表示" title="tDiaryのプレビュー画面を横並びで表示" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160505/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-05T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-05 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   life </a> </span> </div> </div> <a href="/posts/20160505/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 食文化博 2016 in 駒沢公園 </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">家族みんなで近場に出かけようと、駒沢公園の食文化博へ行ってきた。早い時間だったからか、お台場の肉フェスほどは混んでなく、家族連れでも楽しむことができた。写真は後ほど。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160503/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-03T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-03 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/docker" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   docker </a> </span> </div> </div> <a href="/posts/20160503/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> docker上のmongodbをバージョンアップ </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">Amazon認証リバースプロキシで使っているmongodbを3.0.3から3.2へバージョンアップした。
+
+まずは現バージョンを確認。
+
+念のためにデータファイルのバックアップを取っておく。データファイルの場所を調べる。
+
+データファイルをホスト側のディレクトリへ書き出す。
+
+単純なファイルコピーだけでなく、mongodumpコマンドを使ってbson形式でエクスポートする。1回限りのコンテナを作り、動作中の rpaproxy\_mongodb\_1 コンテナと接続し、自コンテナ内の /dump ディレクトリへ書き出す。その /dump ディレクトリをdockerのvolume機能を使ってホスト側にマッピングしているという仕組み。この辺、dockerだと少し面倒だね。
+
+バックアップを取得できたので、最新のmongoイメージを取得。
+
+いきなり切り替えるのではなく、事前に別コンテナでリストアできるかをテストする。docker-composeコマンドの-pオプションで同じ環境をもう1セット作れる。この辺はdockerの便利なところ。
+
+だいたい動いているので、動作中の環境も新しいコンテナへ切り替える。
+
+これで切り替えおしまい。
+</span> </p>   </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160502/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-05-02T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-05-02 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   life </a> </span> </div> </div> <a href="/posts/20160502/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> 並木藪蕎麦 </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">連休のはざまの平日。久しぶりにカミさんと2人でお出かけ。ぶらぶら歩こうということで、浅草付近を散策してきた。1時間半ほど歩いてから、おなかが空いてきたので食べログで評判のよい並木藪蕎麦へ。開店の15分前でも、もう行列ができていた。
+
+並木藪蕎麦
+
+せっかくなので奮発して天ざる蕎麦を注文。海老がたくさん入っていて嬉しい。美味しい天ぷらはいいねぇ。
+
+並木藪蕎麦
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm8.staticflickr.com/7187/26878280335_1d0c3ce049_z.jpg" alt="並木藪蕎麦" title="並木藪蕎麦" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article><article class="flex max-w-xl flex-col items-start justify-start border-b pb-2 sm:p-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="18:2"> <div class="relative" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="19:25">  <div class="flex items-center justify-between gap-x-4" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="21:60"> <div class="inline font-mono text-lg font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="22:59"> <a href="/posts/20160429/p01/" class="inline" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="23:56"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg> <time datetime="2016-04-29T00:00:00.000Z" data-astro-source-file="/Users/machu/src/astro/src/components/FormattedDate.astro" data-astro-source-loc="9:37"> 2016-04-29 </time> </a> </div> <div class="inline text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="28:35"> <span class="text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="12:37"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5L0 80C0 53.5 21.5 32 48 32l149.5 0c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path></svg> <a href="/tags/life" class="text-sm font-semibold" data-astro-source-file="/Users/machu/src/astro/src/components/Tag.astro" data-astro-source-loc="17:78">   life </a> </span> </div> </div> <a href="/posts/20160429/p01/" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="32:37">  <h3 class="my-1 min-h-8 text-lg font-semibold leading-6 text-accent-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="36:8"> さがみ湖プレジャーフォレスト </h3>  <p class="line-clamp-3 text-sm leading-6 text-muted-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/PostCard.astro" data-astro-source-loc="40:71"> <span data-astro-source-file="/Users/machu/src/astro/src/components/Summary.astro" data-astro-source-loc="21:7">いい天気になりそうだったので、日帰りで相模湖プレジャーフォレストへ行くことにした。連休初日でかなりの渋滞を覚悟していたものの、思っていたほどではなく2時間弱で到着した。心配していた駐車場も空きがあって無事に車を停めることができた。アスレチック（ピカソのタマゴ）や公園の滑り台で遊ぶ程度なので、まだまだフリーパスではなく入場券で大丈夫。
+
+今年からGWも夜のイルミネーションをやっていた。昨年末に来た時は大盛況だったけど、今回はいい感じの空き具合。あんまり認知されていないのかなー。
+
+相模湖プレジャーフォレスト
+</span> </p>  <div class="relative my-2 h-48 w-full sm:h-56" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="11:52"><img src="https://farm8.staticflickr.com/7199/26764708376_6764103275_z.jpg" alt="さがみ湖プレジャーフォレスト" title="さがみ湖プレジャーフォレスト" class="size-full rounded-lg object-cover brightness-75 transition duration-300 ease-in-out hover:brightness-100" sizes="100vw" loading="lazy" data-astro-source-file="/Users/machu/src/astro/src/components/Thumbnail.astro" data-astro-source-loc="12:8"></div> </a> </div> </article> </div> <div class="mx-0 my-8" data-astro-source-file="/Users/machu/src/astro/src/pages/[...page].astro" data-astro-source-loc="37:28"> <div class="mx-auto flex w-full justify-center" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="17:49"> <div class="flex flex-row items-center gap-1 text-secondary-foreground/80" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="18:78"> <!-- for debug --> <!-- <div>
+      {page.currentPage} / {page.lastPage} / {page.total} / {page.start}
+      / {page.end} / {page.url.prev} / {page.url.next}
+    </div> --> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1" disabled="">  <a href="/" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="26:19"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"></path></svg> latest
+</a>  </button> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1" disabled="">  <a data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="31:31"> <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"></path></svg> new
+</a>  </button> <select value="1" class="--page-select rounded-md border border-input bg-popover px-2 py-1 text-sm text-popover-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="39:6"> <option value="1" selected data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 1 </option><option value="2" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 2 </option><option value="3" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 3 </option><option value="4" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 4 </option><option value="5" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 5 </option><option value="6" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 6 </option><option value="7" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 7 </option><option value="8" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 8 </option><option value="9" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 9 </option><option value="10" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 10 </option><option value="11" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 11 </option><option value="12" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 12 </option><option value="13" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 13 </option><option value="14" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 14 </option><option value="15" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 15 </option><option value="16" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 16 </option><option value="17" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 17 </option><option value="18" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 18 </option><option value="19" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 19 </option><option value="20" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 20 </option><option value="21" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 21 </option><option value="22" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 22 </option><option value="23" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 23 </option><option value="24" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 24 </option><option value="25" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 25 </option><option value="26" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 26 </option><option value="27" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 27 </option><option value="28" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 28 </option><option value="29" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 29 </option><option value="30" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 30 </option><option value="31" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 31 </option><option value="32" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 32 </option><option value="33" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 33 </option><option value="34" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 34 </option><option value="35" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 35 </option><option value="36" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 36 </option><option value="37" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 37 </option><option value="38" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 38 </option><option value="39" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 39 </option><option value="40" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 40 </option><option value="41" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 41 </option><option value="42" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 42 </option><option value="43" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 43 </option><option value="44" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 44 </option><option value="45" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 45 </option><option value="46" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 46 </option><option value="47" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 47 </option><option value="48" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 48 </option><option value="49" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 49 </option><option value="50" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 50 </option><option value="51" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="42:71"> 51 </option> </select> <span class="text-sm" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="49:27"> / 51</span> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1">  <a href="/2" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="52:31">
+old <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"></path></svg> </a>  </button> <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md gap-1 p-1">  <a href="/51" data-astro-source-file="/Users/machu/src/astro/src/components/Pagination.astro" data-astro-source-loc="57:37">
+oldest <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="inline" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"></path></svg> </a>  </button> </div> </div>  </div> </div>  </div> </main> <footer class="bg-secondary text-sm text-secondary-foreground" data-astro-source-file="/Users/machu/src/astro/src/components/Footer.astro" data-astro-source-loc="1:64"> <div class="mx-auto flex h-12 w-full max-w-4xl items-center justify-center" data-astro-source-file="/Users/machu/src/astro/src/components/Footer.astro" data-astro-source-loc="2:79"> <div data-astro-source-file="/Users/machu/src/astro/src/components/Footer.astro" data-astro-source-loc="3:10">
+Powered by <a href="https://astro.build/" data-astro-source-file="/Users/machu/src/astro/src/components/Footer.astro" data-astro-source-loc="4:49">Astro</a> | Theme - <a href="https://ui.shadcn.com/" data-astro-source-file="/Users/machu/src/astro/src/components/Footer.astro" data-astro-source-loc="5:39">shadcn/ui</a> 2003 - 2024 © machu
+</div> </div> </footer> </div> </body></html>

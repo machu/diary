@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { normalizeTag } from "@/lib/tags";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import TagBadges from "@/components/TagBadges.astro";
+import PostCard from "@/components/PostCard.astro";
 
 /**
  * タグ詳細ページ（/tags/:tag）
@@ -29,25 +30,20 @@ const posts = (await getCollection(
 ---
 <BaseLayout title={`タグ: ${tag}`}>
   <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
-  <ul class="space-y-4">
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {posts.map((entry) => {
       const dateDisplay = toDisplayDate(entry.data.date);
       const url = buildEntryUrl(entry.data.date, entry.slug);
-      const tags = entry.data.tags ?? [];
       return (
-        <li>
-          <div class="flex items-center justify-between gap-2">
-            <a href={url} class="min-w-0 flex-1 hover:underline">
-              <h2 class="truncate font-medium">{entry.data.title}</h2>
-            </a>
-            {tags.length > 0 && (
-              <div class="shrink-0 flex flex-wrap gap-1 justify-end">
-                <TagBadges tags={tags} />
-              </div>
-            )}
-          </div>
-          <p class="mt-1 text-xs text-muted-foreground">{dateDisplay}</p>
-        </li>
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={dateDisplay}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
       );
     })}
   </ul>

@@ -1,9 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import { buildEntryUrl, groupByDateYmd, ymdToDisplay } from "@/lib/dates";
-import { normalizeTag } from "@/lib/tags";
-import TagBadges from "@/components/TagBadges.astro";
+import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
+import PostCard from "@/components/PostCard.astro";
 
 /**
  * 年別ページ（/years/:year）
@@ -17,41 +16,46 @@ export async function getStaticPaths() {
   return Array.from(ys).map((y) => ({ params: { year: String(y) } }));
 }
 
-/** 指定年の投稿を取得して日付キーでまとめる */
+/** 指定年の投稿を取得して月単位でまとめる */
 const year = Number(Astro.params.year);
 const all = await getCollection("posts");
 const inYear = all.filter((p) => p.data.date.getFullYear() === year);
-
-// Group by YYYYMMDD for this year
-const byDate = groupByDateYmd(inYear);
-const days = Array.from(byDate.entries()).toSorted((a, b) => b[0].localeCompare(a[0]));
+// Group by YYYY-MM for this year
+const byMonth = new Map<string, typeof inYear>();
+for (const p of inYear) {
+  const m = String(p.data.date.getMonth() + 1).padStart(2, "0");
+  const key = `${year}-${m}`; // e.g. 2016-05
+  const list = byMonth.get(key) ?? [];
+  list.push(p);
+  byMonth.set(key, list);
+}
+const months = Array.from(byMonth.entries()).toSorted((a, b) => b[0].localeCompare(a[0]));
 ---
 <BaseLayout title={`${year}年のアーカイブ`}>
   <h1 class="mb-4 text-xl font-semibold">{year}年のアーカイブ</h1>
   <ul class="space-y-6">
-    {days.map(([d, list]) => (
+    {months.map(([month, list]) => (
       <li>
         <h2 class="mb-1 text-base font-medium">
-          {(() => { const disp = ymdToDisplay(d); return (
-            <a href={`/posts/${d}/`} class="hover:underline">{disp}</a>
-          ); })()}
+          {month}
           <span class="ml-2 text-xs text-muted-foreground">{list.length}件</span>
         </h2>
-        <ul class="ml-4 space-y-1">
+        <ul class="ml-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {list
-            .toSorted((a, b) => a.slug.localeCompare(b.slug))
+            .toSorted((a, b) => +b.data.date - +a.data.date || a.slug.localeCompare(b.slug))
             .map((entry) => {
               const url = buildEntryUrl(entry.data.date, entry.slug);
-              const tags = entry.data.tags ?? [];
+              const disp = toDisplayDate(entry.data.date);
               return (
-                <li class="text-sm">
-                  <a href={url} class="hover:underline">{entry.data.title}</a>
-                  {tags.length > 0 && (
-                    <span class="ml-2 inline-flex flex-wrap gap-1 align-middle">
-                      <TagBadges tags={tags} />
-                    </span>
-                  )}
-                </li>
+                <PostCard
+                  title={entry.data.title}
+                  url={url}
+                  dateDisplay={disp}
+                  tags={entry.data.tags ?? []}
+                  description={entry.data.description}
+                  image={entry.data.image}
+                  body={entry.body}
+                />
               );
             })}
         </ul>

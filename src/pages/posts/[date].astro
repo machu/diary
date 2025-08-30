@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { buildEntryUrl, ymdToDisplay, groupByDateYmd } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
 import TagBadges from "@/components/TagBadges.astro";
+import PostCard from "@/components/PostCard.astro";
 
 /**
  * 日付別一覧ページ（/posts/YYYYMMDD/）
@@ -30,23 +31,19 @@ const displayDate = ymdToDisplay(dateParam);
 ---
 <BaseLayout title={`まちゅダイアリー - ${displayDate}`}>
   <h1 class="mb-4 text-xl font-semibold">{displayDate} のエントリ</h1>
-  <ul class="space-y-4">
+  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {posts.map((entry) => {
       const url = buildEntryUrl(entry.data.date, entry.slug);
-      const tags = entry.data.tags ?? [];
       return (
-        <li>
-          <div class="flex items-center justify-between gap-2">
-            <a href={url} class="min-w-0 flex-1 hover:underline">
-              <h2 class="truncate font-medium">{entry.data.title}</h2>
-            </a>
-            {tags.length > 0 && (
-              <div class="shrink-0 flex flex-wrap gap-1 justify-end">
-                <TagBadges tags={tags} />
-              </div>
-            )}
-          </div>
-        </li>
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={displayDate}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
       );
     })}
   </ul>

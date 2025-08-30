@@ -10,18 +10,17 @@ const {
   /** 表示するタグ配列（任意。未指定時は空配列） */
   tags = [],
   /** バッジ要素に適用する Tailwind クラス（任意） */
-  badgeClass =
-    "inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80",
+  badgeClass = "inline-flex items-center rounded-full border bg-secondary px-2 py-0.5 text-sm text-secondary-foreground hover:bg-secondary/80",
 } = Astro.props as {
   tags?: string[];
   badgeClass?: string;
 };
 ---
-<!-- 各タグを正規化してリンク化（表示テキストは元のタグを保持） -->
-{tags.map((t) => (
-  <a
-    href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
-    class={badgeClass}
-    >#{t}</a
-  >
-))}
+
+<!-- 各タグを正規化してリンク化（表示テキストは元のタグを保持） -->{
+  tags.map((t) => (
+    <a href={`/tags/${encodeURIComponent(normalizeTag(t))}`} class={badgeClass}>
+      #{t}
+    </a>
+  ))
+}

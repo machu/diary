@@ -120,6 +120,70 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
 - 年詳細は、日付見出しを `YYYY-MM-DD`、各エントリはタイトル右端にタグバッジ。
 - タグ一覧は段組（`columns-2`〜）でバッジ表示し件数を併記。
 
+### 2025-08 デザインアップデート（PC向け3カラム＋カード化）
+
+- トップ（`src/pages/[...page].astro`）にヒーローを追加（1ページ目のみ表示）。
+  - タイトル中央、アバターは `public/avatar.jpg` を使用。
+  - GitHub/X へのリンクを表示（Font Awesomeのブランドアイコン）。
+- 一覧カードを導入し、全一覧ページを統一。
+  - コンポーネント: `src/components/PostCard.astro`
+  - レイアウト: モバイル1列、タブレット2列、PC3列（`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`）。
+  - 構成順: 上段に日付（FAカレンダーアイコン付）＋右端に小さめタグバッジ、中段にタイトルと `description`、下段にサムネイル。
+  - サムネイル: フロントマター `image`（任意）を利用。未指定なら非表示。`h-40 object-cover` でトリミング表示。
+- 適用範囲:
+  - トップ: `src/pages/[...page].astro`
+  - タグ詳細: `src/pages/tags/[tag].astro`
+  - 日付別: `src/pages/posts/[date].astro`
+  - 年別: `src/pages/years/[year].astro`（日付見出しごとにカードグリッドを表示）
+
+### アイコンとアセット
+
+- Font Awesome（6.5.2）をレイアウトでCDN読み込み（`src/layouts/BaseLayout.astro`）。
+  - 注意: SRIは環境により不一致でブロックされるため付与していません。CSP等で外部CSS不可の場合は `@fortawesome/fontawesome-free` を依存に追加してローカル配信へ切替してください。
+- 使用アイコン例:
+  - 日付: `<i class="fa-regular fa-calendar">`
+  - GitHub: `<i class="fa-brands fa-github">`
+  - X: `<i class="fa-brands fa-x-twitter">`
+- アバター: `public/avatar.jpg` をヒーローで使用（差し替え可）。
+
+### PostCard コンポーネント仕様
+
+- パス: `src/components/PostCard.astro`
+- Props:
+  - `title: string` — 記事タイトル
+  - `url: string` — 詳細へのリンク
+  - `dateDisplay: string` — 表示用日付（`YYYY-MM-DD`）
+  - `tags?: string[]` — タグ（右端に小バッジ）
+  - `description?: string` — 説明（任意）
+  - `image?: string` — サムネ（任意。外部/内部どちらも可）
+- 並び順: 日付行 → タイトル → 説明 → サムネ（下）
+- 拡張案: 説明の行数制限（`line-clamp-*`）、サムネ比率の変更、`<Image />` への置換など。
+
+### 2025-08 追加更新（カード操作性・高さ揃え・年別の月集計）
+
+- カード全面クリック/ホバー:
+  - `PostCard` はカード全面がリンク。実装はオーバーレイの `<a>` で実現（タグバッジは `pointer-events` により従来どおり個別クリック可）。
+  - `group-hover:bg-muted` により、カードホバーで背景色が下部ボタンと同調して変化。
+- タグバッジ色の統一変更:
+  - 既定クラスを `bg-secondary text-secondary-foreground` へ変更（`src/components/TagBadges.astro`）。
+  - カード内バッジも同系色に統一。
+- 抜粋の生成と表示:
+  - `description` が無い場合、本文（Markdown）先頭からプレーンテキスト化して120文字を抜粋し、超過時は末尾に「…」。
+  - 実装: `src/components/PostCard.astro` 内で `mdToPlainText()` → `excerpt` を生成。
+- 高さ揃えと行揃え:
+  - `PostCard` を `h-full flex flex-col` でフルハイト化、テキスト部を `grow` に。
+  - 抜粋は `line-clamp-3` で最大3行に制限。ユーティリティは `src/styles/globals.css` に追加。
+  - サムネ（`image`）はカード下部に常に配置され、タイトル高さが揃う。
+- 年別ページの仕様変更:
+  - 日別→月別のグルーピングに変更。見出しは `YYYY-MM`、件数は月毎の総件数を表示。
+  - 実装: `src/pages/years/[year].astro` で `YYYY-MM` キーのマップに変換し、各月配下は3カラムグリッドで `PostCard` を使用。
+
+関連ファイル
+- `src/components/PostCard.astro` — 全面リンク、ホバー、抜粋生成（120文字＋…）、フルハイト、サムネ下配置。
+- `src/components/TagBadges.astro` — 既定の色を secondary 系へ変更。
+- `src/styles/globals.css` — `line-clamp-2/3` ユーティリティ追加。
+- `src/pages/years/[year].astro` — 月別集計＋3カラム化。
+
 ## Build, Test, and Development Commands
 - `pnpm install` — install dependencies (Node `v22.x`; see `.nvmrc`).
 - `pnpm dev` (or `pnpm start`) — run the Astro dev server.

@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import { PAGE_SIZE } from "@/lib/constants";
 import TagBadges from "@/components/TagBadges.astro";
+import PostCard from "@/components/PostCard.astro";
 
 /**
  * トップページ（最新エントリのページネーション）
@@ -39,38 +40,97 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
 
 // common date helpers are provided by @/lib/dates
 ---
+
 <BaseLayout title="まちゅダイアリー" description="最新エントリ">
-  <h1 class="mb-4 text-xl font-semibold">最新エントリ</h1>
-  <ul class="space-y-4">
-    {slice.map((entry) => {
-      const dateDisplay = toDisplayDate(entry.data.date);
-      const url = buildEntryUrl(entry.data.date, entry.slug);
-      const tags = entry.data.tags ?? [];
-      return (
-        <li>
-          <div class="flex items-center justify-between gap-2">
-            <a href={url} class="min-w-0 flex-1 hover:underline">
-              <h2 class="truncate font-medium">{entry.data.title}</h2>
-            </a>
-            {tags.length > 0 && (
-              <div class="shrink-0 flex flex-wrap gap-1 justify-end">
-                <TagBadges tags={tags} />
-              </div>
-            )}
+  {
+    pageNum === 1 ? (
+      <section class="mb-8 text-center">
+        <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          まちゅダイアリー
+        </h1>
+        <div class="mt-4 flex justify-center">
+          <div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-muted ring-1 ring-border">
+            <img
+              src="/avatar.jpg"
+              alt="サイトアイコン"
+              class="h-full w-full object-cover"
+              loading="lazy"
+            />
           </div>
-          <p class="mt-1 text-xs text-muted-foreground">{dateDisplay}</p>
-        </li>
-      );
-    })}
+        </div>
+        <p class="mt-4 text-base text-muted-foreground">
+          RubyやLinuxなど、興味のあることについて
+        </p>
+        <div class="mt-2 flex items-center justify-center gap-4 text-foreground">
+          <a
+            href="https://github.com/machu"
+            class="inline-flex items-center gap-2 text-xs hover:underline"
+            aria-label="GitHub"
+          >
+            <i class="fa-brands fa-github text-xl" />
+          </a>
+          <a
+            href="https://x.com/machu"
+            class="inline-flex items-center gap-2 text-xs hover:underline"
+            aria-label="X"
+          >
+            <i class="fa-brands fa-x-twitter text-xl" />
+          </a>
+        </div>
+        <div class="mt-8 border-t" />
+      </section>
+    ) : (
+      <h1 class="mb-4 text-xl font-semibold">最新エントリ</h1>
+    )
+  }
+
+  <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      slice.map((entry) => {
+        const dateDisplay = toDisplayDate(entry.data.date);
+        const url = buildEntryUrl(entry.data.date, entry.slug);
+        return (
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={dateDisplay}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
+        );
+      })
+    }
   </ul>
 
   <nav class="mt-8 flex items-center justify-between text-sm">
-    {pageNum > 1 ? (
-      <a href={pageNum === 2 ? "/" : `/${pageNum - 1}`} class="hover:underline">← 前のページ</a>
-    ) : <span />}
-    <span>Page {pageNum} / {Math.max(1, Math.ceil(total / pageSize))}</span>
-    {pageNum * pageSize < total ? (
-      <a href={`/${pageNum + 1}`} class="hover:underline">次のページ →</a>
-    ) : <span />}
+    {
+      pageNum > 1 ? (
+        <a
+          href={pageNum === 2 ? "/" : `/${pageNum - 1}`}
+          class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+        >
+          ← 前のページ
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    <span class="text-xs text-muted-foreground"
+      >Page {pageNum} / {Math.max(1, Math.ceil(total / pageSize))}</span
+    >
+    {
+      pageNum * pageSize < total ? (
+        <a
+          href={`/${pageNum + 1}`}
+          class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+        >
+          次のページ →
+        </a>
+      ) : (
+        <span />
+      )
+    }
   </nav>
 </BaseLayout>

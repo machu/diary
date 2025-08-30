@@ -1,0 +1,85 @@
+---
+import TagBadges from "@/components/TagBadges.astro";
+
+const {
+  title,
+  url,
+  dateDisplay,
+  tags = [],
+  description,
+  image,
+  body,
+} = Astro.props as {
+  title: string;
+  url: string;
+  dateDisplay: string;
+  tags?: string[];
+  description?: string;
+  image?: string;
+  body?: string;
+};
+
+function mdToPlainText(md: string): string {
+  return md
+    // code blocks
+    .replace(/```[\s\S]*?```/g, " ")
+    // images ![alt](src)
+    .replace(/!\[[^\]]*\]\([^\)]*\)/g, " ")
+    // links [text](url) -> text
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+    // inline code `code`
+    .replace(/`([^`]+)`/g, "$1")
+    // blockquote markers
+    .replace(/^>\s?/gm, "")
+    // list markers
+    .replace(/^\s*[-*+]\s+/gm, "")
+    .replace(/^\s*\d+\.\s+/gm, "")
+    // headings
+    .replace(/^#{1,6}\s*/gm, "")
+    // emphasis markers
+    .replace(/[*_]/g, "")
+    // collapse whitespace
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+let excerpt: string | undefined = description;
+if (!excerpt && body) {
+  const plain = mdToPlainText(body);
+  const max = 120;
+  excerpt = plain.length > max ? plain.slice(0, max) + "…" : plain;
+}
+---
+
+<li class="relative group h-full">
+  <!-- 全面クリック用オーバーレイリンク（タグは個別にクリック可能） -->
+  <a href={url} aria-label={title} class="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"></a>
+
+  <div class="pointer-events-none rounded-md border bg-card p-4 transition-colors group-hover:bg-muted h-full flex flex-col">
+    <div class="flex items-center justify-between text-sm text-muted-foreground">
+      <span class="inline-flex items-center gap-1.5">
+        <i class="fa-regular fa-calendar text-base"></i>
+        {dateDisplay}
+      </span>
+      {tags.length > 0 && (
+        <span class="pointer-events-auto relative z-20 flex shrink-0 flex-wrap justify-end gap-1">
+          <TagBadges
+            tags={tags}
+            badgeClass="inline-flex items-center rounded-full border bg-secondary px-1.5 py-0.5 text-xs text-secondary-foreground hover:bg-secondary/80"
+          />
+        </span>
+      )}
+    </div>
+    <div class="mt-2 min-w-0 grow">
+      <h2 class="truncate text-base font-semibold sm:text-lg">{title}</h2>
+      {excerpt && (
+        <p class="mt-2 text-sm text-muted-foreground line-clamp-3">{excerpt}</p>
+      )}
+    </div>
+    {image && (
+      <div class="-mx-1 mt-3 overflow-hidden rounded">
+        <img src={image} alt={title} loading="lazy" class="h-40 w-full object-cover" />
+      </div>
+    )}
+  </div>
+</li>
