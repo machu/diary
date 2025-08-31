@@ -13,5 +13,11 @@ export default defineConfig({
     globals: true,
     restoreMocks: true,
     clearMocks: true,
+    coverage: {
+      enabled: true,
+      reporter: ['text', 'html'],
+      reportsDirectory: 'coverage',
+      exclude: ['**/node_modules/**', 'tests/**'],
+    },
   },
 });
