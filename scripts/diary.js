@@ -36,9 +36,8 @@ function nextPartIndex(dir, ymd) {
 
 function buildFrontmatter({ y_m_d }) {
   return `---\n` +
-    `title: \n` +
+    `title: ${y_m_d}の日記\n` +
     `date: "${y_m_d}"\n` +
-    `description: \n` +
     `tags: []\n` +
     `draft: true\n` +
     `---\n\n`;

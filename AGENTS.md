@@ -98,7 +98,7 @@ pnpm run diary -- 2025-09-01   # 任意日付（YYYY-MM-DD / YYYY/MM/DD）
 - 仕様:
   - 出力先: `src/content/posts/YYYY/`
   - 命名: `YYYYMMDDpNN.md`（同日内で `pNN` を自動インクリメント）
-  - 初期frontmatter: `title`, `date`, `description`, `tags`, `draft: true`
+  - 初期frontmatter: `title: 'YYYY-MM-DDの日記'`, `date`, `tags`, `draft: true`
   - 生成後に `code -r <path>` を実行して VS Code で開く（`code` 未導入環境では警告のみでスキップ）
 
 
