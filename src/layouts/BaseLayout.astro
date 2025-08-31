@@ -19,15 +19,25 @@ const {
 };
 
 // OGP用URL/画像の解決
-const SITE_ORIGIN: string | undefined = (import.meta as any).env?.PUBLIC_SITE_URL;
+// 優先順: `astro.config.mjs` の `site` → `PUBLIC_SITE_URL` → `Astro.url` の origin（開発/プレビュー時）
+const SITE_ORIGIN: string | undefined =
+  (Astro.site && Astro.site.origin) ||
+  (import.meta as any).env?.PUBLIC_SITE_URL ||
+  (Astro.url ? Astro.url.origin : undefined);
+
 const currentPath = Astro.url?.pathname ?? "/";
-const canonical = SITE_ORIGIN ? new URL(currentPath, SITE_ORIGIN).href : Astro.url?.href ?? undefined;
+const canonical = SITE_ORIGIN
+  ? new URL(currentPath, SITE_ORIGIN).href
+  : Astro.url?.href ?? undefined;
+
 const rawImage = image ?? "/avatar.jpg"; // 既定はサイトのアバター
 const ogImage = (() => {
   try {
     // 絶対URLならそのまま、相対ならオリジンがあれば絶対化
     if (/^https?:\/\//i.test(rawImage)) return rawImage;
-    return SITE_ORIGIN ? new URL(rawImage.startsWith("/") ? rawImage : `/${rawImage}`, SITE_ORIGIN).href : rawImage;
+    return SITE_ORIGIN
+      ? new URL(rawImage.startsWith("/") ? rawImage : `/${rawImage}`, SITE_ORIGIN).href
+      : rawImage; // 最後の手段として相対のまま
   } catch {
     return rawImage;
   }
