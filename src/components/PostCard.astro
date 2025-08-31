@@ -1,5 +1,7 @@
 ---
 import TagBadges from "@/components/TagBadges.astro";
+import { mdToPlainText } from "@/lib/markdown";
+import { EXCERPT_MAX } from "@/lib/constants";
 
 const {
   title,
@@ -19,35 +21,10 @@ const {
   body?: string;
 };
 
-function mdToPlainText(md: string): string {
-  return md
-    // code blocks
-    .replace(/```[\s\S]*?```/g, " ")
-    // images ![alt](src)
-    .replace(/!\[[^\]]*\]\([^\)]*\)/g, " ")
-    // links [text](url) -> text
-    .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
-    // inline code `code`
-    .replace(/`([^`]+)`/g, "$1")
-    // blockquote markers
-    .replace(/^>\s?/gm, "")
-    // list markers
-    .replace(/^\s*[-*+]\s+/gm, "")
-    .replace(/^\s*\d+\.\s+/gm, "")
-    // headings
-    .replace(/^#{1,6}\s*/gm, "")
-    // emphasis markers
-    .replace(/[*_]/g, "")
-    // collapse whitespace
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 let excerpt: string | undefined = description;
 if (!excerpt && body) {
-  const plain = mdToPlainText(body);
-  const max = 120;
-  excerpt = plain.length > max ? plain.slice(0, max) + "…" : plain;
+  const plain = await mdToPlainText(body);
+  excerpt = plain.length > EXCERPT_MAX ? plain.slice(0, EXCERPT_MAX) + "…" : plain;
 }
 ---
 
