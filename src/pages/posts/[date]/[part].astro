@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getAllPosts, type PostEntry } from "@/lib/posts";
-import { buildEntryUrl } from "@/lib/dates";
+import { buildEntryUrl, ymdToDisplay } from "@/lib/dates";
+import { normalizeTag } from "@/lib/tags";
 
 export async function getStaticPaths() {
   const all = await getAllPosts();
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: PostEntry };
 const { Content } = await entry.render();
 const dateParam = Astro.params.date!;
-const displayDate = `${dateParam.slice(0, 4)}-${dateParam.slice(4, 6)}-${dateParam.slice(6, 8)}`;
+const displayDate = ymdToDisplay(dateParam);
 
 // Build prev/next entries across all posts (oldest -> newest order)
 const all = await getAllPosts();
@@ -41,7 +42,7 @@ const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; 
         <div class="mb-1 flex flex-wrap gap-1">
           {entry.data.tags!.map((t) => (
             <a
-              href={`/tags/${encodeURIComponent(t.toLowerCase())}`}
+              href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
               class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
               >#{t}</a
             >

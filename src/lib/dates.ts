@@ -73,3 +73,27 @@ export function groupByDateYmd<T extends DatedEntry>(entries: T[]): Map<string, 
   }
   return byDate;
 }
+
+/**
+ * Date -> YYYY-MM 文字列に変換
+ */
+export function toYm(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`;
+}
+
+/**
+ * エントリ配列を YYYY-MM キーでグルーピング
+ * 戻り値: Map<YYYY-MM, entries[]>
+ */
+export function groupByMonth<T extends DatedEntry>(entries: T[]): Map<string, T[]> {
+  const byMonth = new Map<string, T[]>();
+  for (const e of entries) {
+    const key = toYm(e.data.date);
+    const list = byMonth.get(key) ?? [];
+    list.push(e);
+    byMonth.set(key, list);
+  }
+  return byMonth;
+}
