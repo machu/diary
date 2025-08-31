@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
+import { getAllPosts } from "@/lib/posts";
 import { groupByDateYmd, toYmd, getPartFromSlug } from "@/lib/dates";
 
 /**
@@ -7,7 +7,7 @@ import { groupByDateYmd, toYmd, getPartFromSlug } from "@/lib/dates";
  * - 全投稿を日付キーでグルーピングし、存在する日付のHTMLを用意
  */
 export const getStaticPaths = async () => {
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   const byDate = groupByDateYmd(all);
   return Array.from(byDate.keys()).map((date) => ({ params: { date } }));
 };
@@ -20,7 +20,7 @@ export const getStaticPaths = async () => {
  */
 export const GET: APIRoute = async ({ params, redirect }) => {
   const date = params.date!; // YYYYMMDD
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   const todays = all.filter((p) => toYmd(p.data.date) === date);
   todays.sort((a, b) => a.slug.localeCompare(b.slug));
   if (todays.length === 0) return new Response("Not found", { status: 404 });

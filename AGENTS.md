@@ -40,7 +40,9 @@
 │   ├── components/            # UIコンポーネント
 │   ├── layouts/               # レイアウトテンプレート
 │   └── lib/                   # ヘルパー群
-│       └── tags.ts            # タグの正規化（小文字化）
+│       ├── dates.ts           # 日付/URLユーティリティ
+│       ├── tags.ts            # タグの正規化（小文字化）
+│       └── posts.ts           # 投稿取得（draftフィルタ共通化）
 ├── public/                    # 静的アセット
 └── astro.config.mjs          # Astro設定
 ```
@@ -66,6 +68,11 @@ tags: [タグ1, タグ2]（オプション）
 image: 画像パス（オプション）
 ---
 ```
+
+### ドラフトの扱い
+
+- `draft: true` の投稿は、開発時（`pnpm dev`）のみ表示され、本番ビルドでは除外されます。
+- `src/lib/posts.ts` の `getAllPosts()` が `import.meta.env.DEV` を用いて共通的に制御します。
 
 ## ビルド・開発コマンド
 
@@ -216,6 +223,18 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
 ## Commit & Pull Request Guidelines
 - Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`.
 - PRs: include a summary, linked issues, and UI screenshots when relevant. Ensure `pnpm lint` and `pnpm build` pass. Describe any content migrations or alias changes.
+
+### Branching
+
+- 既定ブランチは `master` です（旧 `main` から移行）。
+- 既存のローカルで `main` が残っている場合の切替：
+
+```
+git fetch origin
+git branch -m main master
+git branch -u origin/master master
+git remote set-head origin -a
+```
 
 ## Security & Configuration Tips
 - Images: `astro.config.mjs` sets the image service to `noop` to avoid 404s. Review before enabling optimization.

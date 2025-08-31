@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import PostCard from "@/components/PostCard.astro";
 
@@ -10,7 +10,7 @@ import PostCard from "@/components/PostCard.astro";
  * - 各日付内はスラグ順（pNN）で表示
  */
 export async function getStaticPaths() {
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   const ys = new Set<number>();
   for (const p of all) ys.add(p.data.date.getFullYear());
   return Array.from(ys).map((y) => ({ params: { year: String(y) } }));
@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 /** 指定年の投稿を取得して月単位でまとめる */
 const year = Number(Astro.params.year);
-const all = await getCollection("posts");
+const all = await getAllPosts();
 const inYear = all.filter((p) => p.data.date.getFullYear() === year);
 // Group by YYYY-MM for this year
 const byMonth = new Map<string, typeof inYear>();

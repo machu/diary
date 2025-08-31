@@ -38,7 +38,9 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 │   ├── components/            # UIコンポーネント
 │   ├── layouts/               # レイアウトテンプレート
 │   └── lib/
-│       └── tags.ts            # タグ正規化ヘルパー（小文字化）
+│       ├── dates.ts           # 日付/URLヘルパー
+│       ├── tags.ts            # タグ正規化ヘルパー（小文字化）
+│       └── posts.ts           # 投稿取得ヘルパー（draftフィルタ共通化）
 ├── public/                    # 静的アセット
 └── astro.config.mjs           # Astro設定
 ```
@@ -82,6 +84,11 @@ image: 画像パス        # 任意
 
 命名規則: `YYYYMMDDpNN.md`（例: `20240707p01.md`）
 
+### ドラフトの扱い
+
+- `draft: true` を指定した投稿は、開発サーバー（`pnpm dev`）では表示されますが、本番ビルド（`pnpm build`）には含まれません。
+- 実装: `src/lib/posts.ts` の `getAllPosts()` が `import.meta.env.DEV` を用いて一括フィルタします（各ページはこのヘルパーを利用）。
+
 ## ビルド・開発コマンド（pnpm）
 
 ```
@@ -107,7 +114,7 @@ pnpm lint         # ESLint（Astro/TS/Tailwind）
 
 ## テストと実装方針
 
-- まだ自動テストはありません。新規ロジックは `src/lib` に純粋関数として切り出すことを推奨。将来的にVitest導入を検討。
+- ユニットテストは Vitest を使用。新規ロジックは `src/lib` に純粋関数として切り出し、テストしやすくします。
 - コンテンツ（Markdown）の変更と振る舞い（コード）変更は分けてコミット。
 
 ## テスト戦略 / 実装状況
@@ -128,6 +135,18 @@ pnpm lint         # ESLint（Astro/TS/Tailwind）
 
 - コミット: 簡潔・現在形・スコープ限定（例: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`）
 - PR: 概要・関連Issue・必要ならUIスクショを添付。`pnpm lint` と `pnpm build` を通すこと。コンテンツ移行やエイリアス変更があれば説明。
+
+### ブランチ運用
+
+- 既定ブランチは `master` です（旧 `main` からリネーム済み）。
+- 既存のローカルで `main` を利用している場合は以下で切替可能です。
+
+```
+git fetch origin
+git branch -m main master
+git branch -u origin/master master
+git remote set-head origin -a
+```
 
 ## セキュリティ/設定の注意
 

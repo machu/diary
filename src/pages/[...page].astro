@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, toDisplayDate } from "@/lib/dates";
 import { PAGE_SIZE } from "@/lib/constants";
 import TagBadges from "@/components/TagBadges.astro";
@@ -12,7 +12,7 @@ import PostCard from "@/components/PostCard.astro";
  * - 1ページあたりの件数は `PAGE_SIZE` を参照
  */
 export async function getStaticPaths() {
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   // Sort newest first by frontmatter date
   const posts = all.toSorted((a, b) => +b.data.date - +a.data.date);
   const pageSize = PAGE_SIZE;
@@ -35,7 +35,7 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
   pageNum: number;
   pageSize: number;
   total: number;
-  slice: Awaited<ReturnType<typeof getCollection>>;
+  slice: PostEntry[];
 };
 
 // common date helpers are provided by @/lib/dates

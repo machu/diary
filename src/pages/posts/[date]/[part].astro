@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts, type PostEntry } from "@/lib/posts";
+import { buildEntryUrl } from "@/lib/dates";
 
 export async function getStaticPaths() {
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   return all.map((entry) => {
     const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
     const date = slug.slice(0, 8);
@@ -15,12 +16,17 @@ export async function getStaticPaths() {
   });
 }
 
-const { entry } = Astro.props as {
-  entry: Awaited<ReturnType<typeof getCollection>>[number];
-};
+const { entry } = Astro.props as { entry: PostEntry };
 const { Content } = await entry.render();
 const dateParam = Astro.params.date!;
 const displayDate = `${dateParam.slice(0, 4)}-${dateParam.slice(4, 6)}-${dateParam.slice(6, 8)}`;
+
+// Build prev/next entries across all posts (oldest -> newest order)
+const all = await getAllPosts();
+const sorted = all.toSorted((a, b) => (+a.data.date - +b.data.date) || a.slug.localeCompare(b.slug));
+const idx = sorted.findIndex((e) => e.slug === entry.slug);
+const prev = idx > 0 ? sorted[idx - 1] : undefined; // older
+const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; // newer
 ---
 <BaseLayout title={entry.data.title}>
   <article class="prose prose-zinc dark:prose-invert max-w-none">
@@ -41,4 +47,22 @@ const displayDate = `${dateParam.slice(0, 4)}-${dateParam.slice(4, 6)}-${datePar
     </header>
     <Content />
   </article>
+  <nav class="mt-8 flex items-center justify-between text-sm">
+    {next ? (
+      <a
+        href={buildEntryUrl(next.data.date, next.slug)}
+        class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+      >
+        ← 次の日記
+      </a>
+    ) : <span />}
+    {prev ? (
+      <a
+        href={buildEntryUrl(prev.data.date, prev.slug)}
+        class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+      >
+        前の日記 →
+      </a>
+    ) : <span />}
+  </nav>
 </BaseLayout>

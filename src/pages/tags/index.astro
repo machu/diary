@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts } from "@/lib/posts";
 import { normalizeTag } from "@/lib/tags";
 
-const all = await getCollection("posts");
+const all = await getAllPosts();
 const counts = new Map<string, number>();
 for (const p of all) {
   for (const t of p.data.tags ?? []) {

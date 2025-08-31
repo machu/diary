@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, ymdToDisplay, groupByDateYmd } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
 import TagBadges from "@/components/TagBadges.astro";
@@ -13,7 +13,7 @@ import PostCard from "@/components/PostCard.astro";
  */
 
 export async function getStaticPaths() {
-  const all = await getCollection("posts");
+  const all = await getAllPosts();
   const byDate = groupByDateYmd(all);
   return Array.from(byDate.entries()).map(([date, list]) => ({
     params: { date },
@@ -22,9 +22,7 @@ export async function getStaticPaths() {
 }
 
 /** テンプレートに渡される当日エントリ配列 */
-const { posts } = Astro.props as {
-  posts: Awaited<ReturnType<typeof getCollection>>;
-};
+const { posts } = Astro.props as { posts: PostEntry[] };
 /** ルートパラメータ（YYYYMMDD）と表示用日付（YYYY-MM-DD） */
 const dateParam = Astro.params.date!;
 const displayDate = ymdToDisplay(dateParam);

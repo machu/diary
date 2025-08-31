@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getAllPosts } from "@/lib/posts";
 
-const all = await getCollection("posts");
+const all = await getAllPosts();
 const counts = new Map<number, number>();
 for (const p of all) {
   const y = p.data.date.getFullYear();
@@ -22,4 +22,3 @@ const years = Array.from(counts.entries()).toSorted((a, b) => b[0] - a[0]);
     ))}
   </ul>
 </BaseLayout>
-

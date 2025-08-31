@@ -19,6 +19,18 @@ const { title = "まちゅダイアリー", description = "tDiaryから移行し
     <meta name="description" content={description} />
     <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <!-- Theme init: avoid flash by applying .dark early -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefers)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <Header />
