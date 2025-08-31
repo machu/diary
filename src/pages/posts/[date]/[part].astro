@@ -28,7 +28,12 @@ const idx = sorted.findIndex((e) => e.slug === entry.slug);
 const prev = idx > 0 ? sorted[idx - 1] : undefined; // older
 const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; // newer
 ---
-<BaseLayout title={entry.data.title}>
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description ?? `${displayDate} の日記`}
+  image={entry.data.image}
+  ogType="article"
+>
   <article class="prose prose-zinc dark:prose-invert max-w-none">
     <header class="mb-6">
       <h1 class="mb-2 text-2xl font-semibold">{entry.data.title}</h1>

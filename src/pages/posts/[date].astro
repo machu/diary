@@ -27,7 +27,7 @@ const { posts } = Astro.props as { posts: PostEntry[] };
 const dateParam = Astro.params.date!;
 const displayDate = ymdToDisplay(dateParam);
 ---
-<BaseLayout title={`まちゅダイアリー - ${displayDate}`}>
+<BaseLayout title={`まちゅダイアリー - ${displayDate}`} description={`${displayDate} のエントリ一覧`}>
   <h1 class="mb-4 text-xl font-semibold">{displayDate} のエントリ</h1>
   <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {posts.map((entry) => {

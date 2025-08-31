@@ -6,10 +6,33 @@ import Header from "@/components/Header.astro";
  * - `<Header />` を含むページのベース枠
  * - `title`/`description` は `<head>` に反映
  */
-const { title = "まちゅダイアリー", description = "tDiaryから移行したAstroブログ" } = Astro.props as {
+const {
+  title = "まちゅダイアリー",
+  description = "tDiaryから移行したAstroブログ",
+  image,
+  ogType = "website",
+} = Astro.props as {
   title?: string;
   description?: string;
+  image?: string; // OGP/Twitter用の画像（絶対/相対どちらでも）
+  ogType?: "website" | "article";
 };
+
+// OGP用URL/画像の解決
+const SITE_ORIGIN: string | undefined = (import.meta as any).env?.PUBLIC_SITE_URL;
+const currentPath = Astro.url?.pathname ?? "/";
+const canonical = SITE_ORIGIN ? new URL(currentPath, SITE_ORIGIN).href : Astro.url?.href ?? undefined;
+const rawImage = image ?? "/avatar.jpg"; // 既定はサイトのアバター
+const ogImage = (() => {
+  try {
+    // 絶対URLならそのまま、相対ならオリジンがあれば絶対化
+    if (/^https?:\/\//i.test(rawImage)) return rawImage;
+    return SITE_ORIGIN ? new URL(rawImage.startsWith("/") ? rawImage : `/${rawImage}`, SITE_ORIGIN).href : rawImage;
+  } catch {
+    return rawImage;
+  }
+})();
+const siteName = "まちゅダイアリー";
 ---
 <html lang="ja">
   <head>
@@ -17,6 +40,21 @@ const { title = "まちゅダイアリー", description = "tDiaryから移行し
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <!-- Theme init: avoid flash by applying .dark early -->

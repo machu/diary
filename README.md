@@ -153,6 +153,17 @@ git remote set-head origin -a
 - 画像: image service `noop` は暫定措置。最適化を有効にする場合はサービス設定を必ず見直す。
 - パス: 深い相対パスより`@/`エイリアスを優先し、将来の移動に強くする。
 
+## OGP（Open Graph / Twitter Cards）
+
+- すべてのページで OGP/Twitter のメタタグを出力（`src/layouts/BaseLayout.astro`）。
+- 既定値:
+  - `og:site_name`: まちゅダイアリー
+  - `og:type`: 一覧・インデックスは `website`、記事詳細は `article`
+  - 画像未指定時は `/avatar.jpg` を利用
+- URLの絶対化（`og:url` と画像の絶対URL）には環境変数 `PUBLIC_SITE_URL` を使用します。
+  - 例: `.env` に `PUBLIC_SITE_URL=https://www.example.com` を設定
+  - 未設定時は開発中は `http://localhost` ベースになります。本番でのSNSプレビュー安定化のため、絶対URLの設定を推奨します。
+
 ## 表示ルール（UI）
 
 - 日付の表示形式: 画面表示は `YYYY-MM-DD`、URLは `YYYYMMDD` を維持。
