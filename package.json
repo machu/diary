@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "lint": "eslint .",
     "astro": "astro",
+    "diary": "node scripts/diary.js",
     "test": "vitest run"
   },
   "dependencies": {
