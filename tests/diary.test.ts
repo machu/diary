@@ -21,8 +21,10 @@ describe('diary generator CLI', () => {
       const filePath = join(yearDir, '20250102p01.md');
       expect(() => statSync(filePath)).not.toThrow();
       const content = readFileSync(filePath, 'utf8');
+      expect(content).toMatch(/title: 2025-01-02の日記/);
       expect(content).toMatch(/date: "2025-01-02"/);
       expect(content).toMatch(/draft: true/);
+      expect(content).not.toMatch(/description:/);
     } finally {
       rmSync(base, { recursive: true, force: true });
     }
@@ -61,4 +63,3 @@ describe('diary generator CLI', () => {
     }
   });
 });
-
