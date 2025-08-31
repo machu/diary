@@ -4,6 +4,7 @@
 
 import { mkdirSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 function pad(n, width = 2) {
   return String(n).padStart(width, '0');
@@ -59,7 +60,8 @@ function main() {
   }
 
   const parts = formatDateParts(date);
-  const yearDir = join('src', 'content', 'posts', String(parts.y));
+  const baseDir = process.env.DIARY_BASE_DIR || join('src', 'content', 'posts');
+  const yearDir = join(baseDir, String(parts.y));
   if (!existsSync(yearDir)) {
     mkdirSync(yearDir, { recursive: true });
   }
@@ -73,6 +75,25 @@ function main() {
   writeFileSync(fullpath, body, { encoding: 'utf8', flag: 'wx' });
   // Print relative path for convenience
   console.log(fullpath);
+
+  // Try to open the created file in VS Code using the `code` CLI
+  const noOpen = process.env.DIARY_NO_OPEN === '1' || process.env.CI === 'true' || process.env.NODE_ENV === 'test';
+  if (!noOpen) {
+    try {
+      const res = spawnSync('code', ['-r', fullpath], { stdio: 'ignore' });
+      if (res.error) {
+        if (res.error.code === 'ENOENT') {
+          console.error('`code` command not found. Skipping auto-open.');
+        } else {
+          console.error(`Failed to open with code: ${res.error.message}`);
+        }
+      } else if (typeof res.status === 'number' && res.status !== 0) {
+        console.error(`code exited with status ${res.status}.`);
+      }
+    } catch (e) {
+      console.error('Unable to launch `code`:', e instanceof Error ? e.message : String(e));
+    }
+  }
 }
 
 try {
@@ -81,4 +102,3 @@ try {
   console.error(err instanceof Error ? err.message : String(err));
   process.exit(1);
 }
-

@@ -99,6 +99,27 @@ pnpm preview      # 本番ビルドのローカルプレビュー
 pnpm lint         # ESLint（Astro/TS/Tailwind）
 ```
 
+## 日記の作成（CLI）
+
+- 今日のテンプレを作成し、VS Code で開く:
+
+```
+pnpm run diary
+```
+
+- 任意の日付で作成（`YYYY-MM-DD` or `YYYY/MM/DD`）:
+
+```
+pnpm run diary -- 2025-09-01
+```
+
+- 仕様:
+  - 生成先: `src/content/posts/YYYY/`
+  - ファイル名: `YYYYMMDDpNN.md`（同日に複数ある場合は `pNN` を自動インクリメント）
+  - フロントマター初期値: `title: ""`, `date: "YYYY-MM-DD"`, `description: ""`, `tags: []`, `draft: true`
+  - 生成後に `code -r <ファイルパス>` を実行して VS Code で開きます（`code` コマンドが無い場合は警告してスキップ）
+
+
 ## コーディング規約
 
 - フォーマット: Prettier（`prettier-plugin-astro`, `prettier-plugin-tailwindcss`）
