@@ -61,12 +61,18 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 - 振り分け:
   - 同日に1件のみ → `/posts/YYYYMMDD/pNN` へ 301
   - 複数件あり → `/posts/YYYYMMDD/` へ 301
+  - インデックス `/diary/` → `/` へ 301（トップへ）
 
 実装
 
 - ルート: `src/pages/diary/[date].html.ts`
 - 動作: 全投稿から日付（YYYYMMDD）ごとに静的生成し、当日の件数に応じて 301 で新URLへリダイレクトします。該当日がない場合は 404 を返します。
 - 備考: 新URLのスラグは不変（`/posts/YYYYMMDD/` と `/posts/YYYYMMDD/pNN`）。
+
+追加
+
+- `/diary/` 直下アクセス時はサイトトップ `/` へ 301 リダイレクトします。
+- ルート: `src/pages/diary/index.ts`
 
 ## コンテンツ構造（frontmatter）
 

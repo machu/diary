@@ -68,3 +68,17 @@ describe('legacy redirect /diary/YYYYMMDD.html', () => {
   });
 });
 
+describe('index redirect /diary/', () => {
+  it('redirects to / (site root)', async () => {
+    const mod = await import('@/pages/diary/index.ts');
+    const res = await mod.GET({
+      redirect: (location: string, status = 302) =>
+        new Response(null, {
+          status,
+          headers: { Location: new URL(location, 'https://example.test').toString() },
+        }),
+    } as any);
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://example.test/');
+  });
+});
