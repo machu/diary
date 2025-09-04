@@ -25,6 +25,3 @@ pnpm-debug.log*
 
 # test coverage
 coverage/
-
-/public/*/*.jpg
-flickr
