@@ -72,7 +72,7 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 追加
 
 - `/diary/` 直下アクセス時はサイトトップ `/` へ 301 リダイレクトします。
-- ルート: `src/pages/diary/index.ts`
+- ルート: `src/pages/diary/index.html.ts`
 
 ## コンテンツ構造（frontmatter）
 

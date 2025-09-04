@@ -70,7 +70,7 @@ describe('legacy redirect /diary/YYYYMMDD.html', () => {
 
 describe('index redirect /diary/', () => {
   it('redirects to / (site root)', async () => {
-    const mod = await import('@/pages/diary/index.ts');
+    const mod = await import('@/pages/diary/index.html.ts');
     const res = await mod.GET({
       redirect: (location: string, status = 302) =>
         new Response(null, {
