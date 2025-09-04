@@ -9,9 +9,10 @@ const __dirname = dirname(__filename);
 
 // https://astro.build/config
 export default defineConfig({
-  // 画像最適化を無効化（404エラーを回避）
+  // 画像を最適化する（Astro5.10以降で実装）
   image: {
-    service: { entrypoint: "astro/assets/services/noop" },
+    layout: "constrained",
+    responsiveStyles: true,
   },
   markdown: {
     shikiConfig: {
