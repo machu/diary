@@ -2,8 +2,6 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, ymdToDisplay, groupByDateYmd } from "@/lib/dates";
-import { normalizeTag } from "@/lib/tags";
-import TagBadges from "@/components/TagBadges.astro";
 import PostCard from "@/components/PostCard.astro";
 
 /**
