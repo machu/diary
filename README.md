@@ -209,6 +209,29 @@ git remote set-head origin -a
   - タグ詳細の絞り込みも正規化して比較
   - どのページでもタグリンクは小文字スラグに統一
 
+## 検索機能
+
+### サイト内検索（`/search`）
+
+- ビルド時に全記事から検索用JSONインデックス（`/api/search-index.json`）を自動生成
+- クライアントサイドJavaScriptによる全文検索（サーバー不要）
+- 検索対象: タイトル、本文（先頭500文字）、タグ
+- スコアリング: タイトル一致（+10）、タグ一致（+5）、本文一致（+1）
+- リアルタイム検索（300msデバウンス）、URLパラメータ対応（`?q=キーワード`）
+
+実装ファイル:
+- `src/pages/search.astro` — 検索ページUI
+- `src/pages/api/search-index.json.ts` — インデックス生成（Static File Endpoint）
+
+### 関連記事（記事詳細ページ下部）
+
+- タグの重複度（Jaccard係数）に基づく類似記事の表示
+- 同一日のエントリは除外、最大3件を表示
+- タグがない記事では非表示
+
+実装ファイル:
+- `src/components/RelatedPosts.astro` — 関連記事コンポーネント
+
 ## デモURL / スクリーンショット
 
 - デモURL: https://example.com （公開先が決まり次第更新）

@@ -1,0 +1,198 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+/**
+ * 検索ページ
+ * - ビルド時に生成された /api/search-index.json をクライアント側でフェッチ
+ * - クエリパラメータ ?q=... でURLから検索語を取得（ブックマーク共有可能）
+ * - タイトル + 本文テキスト + タグに対する部分一致検索
+ */
+---
+
+<BaseLayout title="検索 - まちゅダイアリー" description="記事を検索">
+  <div class="mx-auto max-w-2xl">
+    <h1 class="mb-6 text-2xl font-bold">記事を検索</h1>
+
+    <form id="search-form" class="mb-8" action="/search" method="get">
+      <div class="flex gap-2">
+        <input
+          id="search-input"
+          name="q"
+          type="search"
+          placeholder="キーワードを入力…"
+          autocomplete="off"
+          class="flex-1 rounded-md border bg-background px-4 py-2 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        />
+        <button
+          type="submit"
+          class="inline-flex items-center rounded-md border bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          <i class="fa-solid fa-magnifying-glass mr-2"></i>検索
+        </button>
+      </div>
+    </form>
+
+    <div id="search-status" class="mb-4 text-sm text-muted-foreground"></div>
+    <ul id="search-results" class="space-y-4"></ul>
+  </div>
+
+  <script>
+    interface SearchEntry {
+      title: string;
+      date: string;   // YYYYMMDD
+      tags: string[];
+      url: string;
+      excerpt: string;
+    }
+
+    let index: SearchEntry[] | null = null;
+
+    // YYYYMMDD → YYYY-MM-DD
+    function fmtDate(d: string): string {
+      if (d.length !== 8) return d;
+      return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    }
+
+    // テキスト中のキーワード周辺を抜き出す（KWIC）
+    function kwic(text: string, terms: string[], around = 60): string {
+      const lower = text.toLowerCase();
+      for (const t of terms) {
+        const idx = lower.indexOf(t.toLowerCase());
+        if (idx >= 0) {
+          const start = Math.max(0, idx - around);
+          const end = Math.min(text.length, idx + t.length + around);
+          let snippet = text.slice(start, end);
+          if (start > 0) snippet = "…" + snippet;
+          if (end < text.length) snippet += "…";
+          return snippet;
+        }
+      }
+      return text.slice(0, 120) + (text.length > 120 ? "…" : "");
+    }
+
+    // ハイライト
+    function highlight(text: string, terms: string[]): string {
+      if (!terms.length) return escapeHtml(text);
+      const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      const re = new RegExp(`(${escaped.join("|")})`, "gi");
+      return escapeHtml(text).replace(
+        new RegExp(`(${escaped.map(e => escapeHtml(e)).join("|")})`, "gi"),
+        '<mark class="bg-yellow-200 dark:bg-yellow-700 rounded px-0.5">$1</mark>'
+      );
+    }
+
+    function escapeHtml(s: string): string {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // スコアリング: term 一致数 + タイトル一致ボーナス
+    function score(entry: SearchEntry, terms: string[]): number {
+      let s = 0;
+      const titleLower = entry.title.toLowerCase();
+      const excerptLower = entry.excerpt.toLowerCase();
+      const tagsLower = entry.tags.join(" ").toLowerCase();
+      for (const t of terms) {
+        const tl = t.toLowerCase();
+        if (titleLower.includes(tl)) s += 10;
+        if (tagsLower.includes(tl)) s += 5;
+        if (excerptLower.includes(tl)) s += 1;
+      }
+      return s;
+    }
+
+    async function loadIndex(): Promise<SearchEntry[]> {
+      if (index) return index;
+      const res = await fetch("/api/search-index.json");
+      index = await res.json();
+      return index!;
+    }
+
+    async function doSearch(query: string) {
+      const status = document.getElementById("search-status")!;
+      const results = document.getElementById("search-results")!;
+
+      if (!query.trim()) {
+        status.textContent = "";
+        results.innerHTML = "";
+        return;
+      }
+
+      status.textContent = "検索中…";
+      const entries = await loadIndex();
+      const terms = query.trim().split(/\s+/).filter(Boolean);
+
+      const scored = entries
+        .map(e => ({ entry: e, score: score(e, terms) }))
+        .filter(r => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 50);
+
+      if (scored.length === 0) {
+        status.textContent = `「${query}」に一致する記事は見つかりませんでした`;
+        results.innerHTML = "";
+        return;
+      }
+
+      status.textContent = `${scored.length}件の記事が見つかりました`;
+      results.innerHTML = scored
+        .map(({ entry }) => {
+          const dateStr = fmtDate(entry.date);
+          const snippet = kwic(entry.excerpt, terms);
+          const tags = entry.tags.length
+            ? `<div class="mt-1 flex flex-wrap gap-1">${entry.tags.map(t =>
+                `<a href="/tags/${t}" class="inline-flex items-center rounded-full border bg-secondary px-1.5 py-0.5 text-xs text-secondary-foreground hover:bg-secondary/80">${escapeHtml(t)}</a>`
+              ).join("")}</div>`
+            : "";
+          return `<li class="rounded-md border bg-card p-4 transition-colors hover:bg-muted">
+            <a href="${entry.url}" class="block">
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <i class="fa-regular fa-calendar"></i>
+                <span>${dateStr}</span>
+              </div>
+              <h2 class="mt-1 text-base font-semibold">${highlight(entry.title, terms)}</h2>
+              <p class="mt-1 text-sm text-muted-foreground">${highlight(snippet, terms)}</p>
+            </a>
+            ${tags}
+          </li>`;
+        })
+        .join("");
+    }
+
+    // 初期化: URLパラメータから検索実行
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q") ?? "";
+      const input = document.getElementById("search-input") as HTMLInputElement;
+      if (q) {
+        input.value = q;
+        doSearch(q);
+      }
+
+      // フォーム送信でページリロードせずに検索
+      document.getElementById("search-form")!.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const val = input.value.trim();
+        const url = new URL(window.location.href);
+        if (val) {
+          url.searchParams.set("q", val);
+        } else {
+          url.searchParams.delete("q");
+        }
+        window.history.replaceState(null, "", url.toString());
+        doSearch(val);
+      });
+
+      // リアルタイム検索（300ms debounce）
+      let timer: ReturnType<typeof setTimeout>;
+      input.addEventListener("input", () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          const val = input.value.trim();
+          const url = new URL(window.location.href);
+          if (val) url.searchParams.set("q", val); else url.searchParams.delete("q");
+          window.history.replaceState(null, "", url.toString());
+          doSearch(val);
+        }, 300);
+      });
+    });
+  </script>
+</BaseLayout>

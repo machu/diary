@@ -2,7 +2,8 @@
 /**
  * サイト共通ヘッダー
  * - 左: サイトタイトル（トップへ）
- * - 右: 最新 / タグ / 年別 へのナビゲーション
+ * - 右: 最新 / 検索ボックス / タグ / 年別 へのナビゲーション
+ * - モバイルでは検索アイコンタップで検索ボックスを展開
  */
 ---
 <header class="border-b border-border bg-[#e9f4fb] dark:bg-[#0f1f2d]">
@@ -10,6 +11,26 @@
     <a href="/" class="text-lg font-bold">まちゅダイアリー</a>
     <nav class="text-sm flex items-center gap-4">
       <a href="/" class="hover:underline">最新</a>
+      
+      <!-- デスクトップ: 常に表示される検索ボックス -->
+      <form action="/search" method="get" class="hidden md:flex items-center gap-1">
+        <input
+          type="search"
+          name="q"
+          placeholder="検索..."
+          autocomplete="off"
+          class="w-32 lg:w-40 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        />
+        <button type="submit" class="text-muted-foreground hover:text-foreground" aria-label="検索">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </button>
+      </form>
+
+      <!-- モバイル: アイコンタップで展開 -->
+      <button id="search-toggle" class="md:hidden hover:text-foreground" aria-label="検索" type="button">
+        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+      </button>
+      
       <a href="/tags" class="hover:underline">タグ</a>
       <a href="/years" class="hover:underline">年別</a>
       <button id="theme-toggle" class="ml-2 inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted" aria-label="テーマ切り替え" title="テーマ切り替え">
@@ -17,6 +38,22 @@
         <i class="fa-solid fa-sun hidden dark:block"></i>
       </button>
     </nav>
+  </div>
+
+  <!-- モバイル展開検索ボックス -->
+  <div id="mobile-search" class="hidden container pb-4">
+    <form action="/search" method="get" class="flex items-center gap-2">
+      <input
+        type="search"
+        name="q"
+        placeholder="キーワードを入力..."
+        autocomplete="off"
+        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+      />
+      <button type="submit" class="rounded-md border bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+        検索
+      </button>
+    </form>
   </div>
 
   <script>
@@ -30,6 +67,20 @@
     btn?.addEventListener('click', () => {
       const next = root.classList.contains('dark') ? 'light' : 'dark';
       setTheme(next);
+    });
+
+    // モバイル検索ボックストグル
+    const searchToggle = document.getElementById('search-toggle');
+    const mobileSearch = document.getElementById('mobile-search');
+    searchToggle?.addEventListener('click', () => {
+      if (mobileSearch?.classList.contains('hidden')) {
+        mobileSearch.classList.remove('hidden');
+        // フォーカスを検索入力欄に移動
+        const input = mobileSearch.querySelector('input[type="search"]') as HTMLInputElement;
+        input?.focus();
+      } else {
+        mobileSearch?.classList.add('hidden');
+      }
     });
   </script>
 </header>

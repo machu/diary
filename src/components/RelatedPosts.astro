@@ -1,0 +1,93 @@
+---
+import { getAllPosts, type PostEntry } from "@/lib/posts";
+import { buildEntryUrl, ymdToDisplay, toYmd } from "@/lib/dates";
+
+/**
+ * 関連記事コンポーネント
+ * - タグ重複度ベースのスコアリングで類似記事を最大3件表示
+ * - 同一日のエントリは除外（同じ日の別パートは関連記事として不適切）
+ * - 将来的にQMD vsearchベースに拡張可能
+ */
+
+interface Props {
+  /** 現在の記事のslug（除外用） */
+  currentSlug: string;
+  /** 現在の記事のタグ */
+  tags: string[];
+  /** 現在の記事の日付 */
+  date: Date;
+  /** 表示件数（デフォルト3） */
+  count?: number;
+}
+
+const { currentSlug, tags, date, count = 3 } = Astro.props;
+
+// タグがない記事は関連記事を出さない
+const relatedPosts: Array<{ entry: PostEntry; score: number }> = [];
+
+if (tags.length > 0) {
+  const all = await getAllPosts();
+  const currentDateYmd = toYmd(date);
+  const tagSet = new Set(tags.map((t) => t.toLowerCase()));
+
+  for (const entry of all) {
+    // 自分自身 & 同日エントリを除外
+    if (entry.slug === currentSlug) continue;
+    const entryDateYmd = toYmd(entry.data.date);
+    if (entryDateYmd === currentDateYmd) continue;
+
+    const entryTags = (entry.data.tags ?? []).map((t) => t.toLowerCase());
+    if (entryTags.length === 0) continue;
+
+    // タグ重複数をスコアとする
+    let overlap = 0;
+    for (const t of entryTags) {
+      if (tagSet.has(t)) overlap++;
+    }
+    if (overlap === 0) continue;
+
+    // スコア = 重複タグ数 / (ユニオンタグ数) — Jaccard係数
+    const union = new Set([...tagSet, ...entryTags.map((t) => t.toLowerCase())]);
+    const score = overlap / union.size;
+
+    relatedPosts.push({ entry, score });
+  }
+
+  // スコア降順 → 日付降順でソート
+  relatedPosts.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return +b.entry.data.date - +a.entry.data.date;
+  });
+
+  // 上位N件に絞る
+  relatedPosts.splice(count);
+}
+---
+
+{relatedPosts.length > 0 && (
+  <aside class="mt-10 border-t pt-6">
+    <h2 class="mb-4 text-lg font-semibold">関連する記事</h2>
+    <ul class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {relatedPosts.map(({ entry }) => {
+        const url = buildEntryUrl(entry.data.date, entry.slug);
+        const displayDate = ymdToDisplay(toYmd(entry.data.date));
+        return (
+          <li class="group relative">
+            <a href={url} class="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={entry.data.title}></a>
+            <div class="pointer-events-none rounded-md border bg-card p-3 transition-colors group-hover:bg-muted">
+              <p class="text-xs text-muted-foreground">{displayDate}</p>
+              <h3 class="mt-1 truncate text-sm font-medium">{entry.data.title}</h3>
+              {(entry.data.tags?.length ?? 0) > 0 && (
+                <div class="mt-1 flex flex-wrap gap-1">
+                  {entry.data.tags!.slice(0, 3).map((t) => (
+                    <span class="inline-block rounded-full bg-secondary px-1.5 py-0.5 text-[10px] text-secondary-foreground">{t}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </aside>
+)}

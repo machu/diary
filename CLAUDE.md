@@ -42,6 +42,7 @@
 │   ├── components/            # UIコンポーネント
 │   │   ├── Header.astro       # サイトヘッダー
 │   │   ├── PostCard.astro     # 記事カード（全面リンク対応）
+│   │   ├── RelatedPosts.astro # 関連記事（タグJaccard係数）
 │   │   └── TagBadges.astro    # タグバッジ表示
 │   ├── layouts/               # レイアウトテンプレート
 │   │   └── BaseLayout.astro   # ベースレイアウト（OGP対応）
@@ -71,6 +72,8 @@
 4. **年別アーカイブ**: 年内の月別グルーピング表示
 5. **ダークモード**: テーマ切り替え機能（`.dark`クラス）
 6. **レスポンシブデザイン**: モバイル1列、タブレット2列、PC3列のカードグリッド
+7. **サイト内検索**: クライアントサイド全文検索（ビルド時JSONインデックス生成）
+8. **関連記事**: タグJaccard係数による類似記事表示
 
 ## コンテンツ構造
 
@@ -123,6 +126,28 @@ pnpm run diary 2025-09-01 # 任意日付（YYYY-MM-DD）
 - 初期frontmatter: `title: 'YYYY-MM-DDの日記'`, `date`, `tags`, `draft: true`
 - 生成後に `code -r <path>` を実行して VS Code で開く
 
+## 検索機能
+
+### サイト内検索（`/search`）
+
+- ビルド時に全記事から検索用JSONインデックスを自動生成（`/api/search-index.json`）
+- クライアントサイドJavaScriptで全文検索を実行（サーバー不要、SSG対応）
+- 検索対象: タイトル、本文（先頭500文字のプレーンテキスト）、タグ
+- スコアリング: タイトル一致（+10）、タグ一致（+5）、本文一致（+1）
+- リアルタイム検索（300msデバウンス）、URLパラメータ（`?q=`）でブックマーク共有可能
+
+実装:
+- `src/pages/search.astro` — 検索UI + クライアントJS
+- `src/pages/api/search-index.json.ts` — Astro Static File Endpointでビルド時生成
+
+### 関連記事（記事詳細ページ）
+
+- タグの重複度（Jaccard係数: 重複数÷ユニオン数）で類似記事をスコアリング
+- 同一日のエントリは除外、スコア上位3件を表示
+- タグがない記事では非表示
+
+実装: `src/components/RelatedPosts.astro`
+
 ## URL構造とリダイレクト
 
 | 用途 | URL形式 |
@@ -134,6 +159,7 @@ pnpm run diary 2025-09-01 # 任意日付（YYYY-MM-DD）
 | タグ別 | `/tags/{tag}` （小文字） |
 | 年一覧 | `/years/` |
 | 年別 | `/years/{YYYY}` |
+| 検索 | `/search` （`?q=`でクエリ指定） |
 
 ### 旧URLからの301リダイレクト
 

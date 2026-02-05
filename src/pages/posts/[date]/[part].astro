@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, ymdToDisplay } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
+import RelatedPosts from "@/components/RelatedPosts.astro";
 
 export async function getStaticPaths() {
   const all = await getAllPosts();
@@ -53,6 +54,11 @@ const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; 
     </header>
     <Content />
   </article>
+  <RelatedPosts
+    currentSlug={entry.slug}
+    tags={entry.data.tags ?? []}
+    date={entry.data.date}
+  />
   <nav class="mt-8 flex items-center justify-between text-sm">
     {next ? (
       <a

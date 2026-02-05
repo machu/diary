@@ -6,6 +6,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
+    "build:search": "bash scripts/build-search-index.sh",
+    "build:search:bm25": "bash scripts/build-search-index.sh --bm25",
     "preview": "astro preview",
     "lint": "eslint .",
     "astro": "astro",
