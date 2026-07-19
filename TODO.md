@@ -77,6 +77,7 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 - `vercel.mjs`で公開対象のMarkdownからVercel redirectsを動的生成し、全ルールの一意性、転送先、`statusCode: 301`を検証。Hobbyプランで利用できないBulk Redirectsは採用しない。
 - ChromiumのみのPlaywright E2Eで、トップから記事、ページ送り、タグ遷移、旧URLの単一記事日・複数記事日を検証。
 - `pnpm verify`とGitHub Actionsを追加。Vercel PreviewのHTTP確認は`pnpm test:redirects -- <preview-url>`で実行する。
+- PR #9のVercel Previewはデプロイに成功し、ログイン済みブラウザで`/diary/`、単一記事日、複数記事日の転送先が一致することを確認。Deployment Protectionが未認証HTTP要求を302でログインへ転送するため、301と`Location`の直接確認は保護解除またはAutomation Bypass設定後に実施する。
 
 ### 周辺ツールを個別に更新する
 

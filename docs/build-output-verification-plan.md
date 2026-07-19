@@ -15,6 +15,8 @@ Astro の静的ビルド後に生成される `dist/**/*.html` を自動検証�
 
 Vercelのredirectsはローカルの`astro preview`では再現できない。この制約は、`vercel.mjs`が生成するルールの全件検証と、デプロイ後の代表URLに対するHTTP確認を組み合わせて補う。
 
+Deployment Protectionが有効なPreviewでは、未認証のHTTP要求はアプリのredirectsより先にVercelのログインへ`302`で転送される。`pnpm test:redirects -- <preview-url>`で301を直接確認するには、対象Previewを保護対象外にするか、VercelのAutomation Bypassを設定して検証要求へ適用する必要がある。ログイン済みブラウザでは転送先の確認はできるが、これだけではレスポンスコードの確認を代替しない。
+
 ## 実装方針
 
 ### 1. ビルド出力テスト

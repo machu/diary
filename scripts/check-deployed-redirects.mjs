@@ -1,6 +1,8 @@
 import process from "node:process";
 
-const baseURL = process.argv[2] ?? process.env.E2E_BASE_URL;
+const baseURL =
+  process.argv.slice(2).find((argument) => argument !== "--") ??
+  process.env.E2E_BASE_URL;
 if (!baseURL) {
   throw new Error(
     "Vercel Preview の URL を指定してください: `pnpm test:redirects -- https://example.vercel.app`",
