@@ -66,9 +66,18 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 
 ### 出力検証を自動化する
 
-- [ ] `dist/**/*.html`を対象にしたビルド出力テストを追加する
-- [ ] 日付表記、タグURL、ページネーション、旧URLの301を検証する
-- [ ] 必要最小限のPlaywright E2Eを追加する
+- [x] `dist/**/*.html`を対象にしたビルド出力テストを追加する
+- [x] 日付表記、タグURL、ページネーション、旧URLの転送先と301ルールを検証する
+- [x] 必要最小限のPlaywright E2Eを追加する
+- [ ] Vercel Previewで旧URLが実際に301と正しい`Location`を返すことを確認する
+
+実装結果 (2026-07-20):
+
+- Vitestの成果物テストを通常のユニットテストから分離し、全HTML、日付、タグ、ページネーション、旧URLのリダイレクトHTMLを検証。
+- `vercel.mjs`で公開対象のMarkdownからVercel redirectsを動的生成し、全ルールの一意性、転送先、`statusCode: 301`を検証。Hobbyプランで利用できないBulk Redirectsは採用しない。
+- ChromiumのみのPlaywright E2Eで、トップから記事、ページ送り、タグ遷移、旧URLの単一記事日・複数記事日を検証。
+- `pnpm verify`とGitHub Actionsを追加。Vercel PreviewのHTTP確認は`pnpm test:redirects -- <preview-url>`で実行する。
+- PR #9のVercel Previewはデプロイに成功し、ログイン済みブラウザで`/diary/`、単一記事日、複数記事日の転送先が一致することを確認。Deployment Protectionが未認証HTTP要求を302でログインへ転送するため、301と`Location`の直接確認は保護解除またはAutomation Bypass設定後に実施する。
 
 ### 周辺ツールを個別に更新する
 
