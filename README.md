@@ -4,7 +4,7 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 
 ## 技術スタック
 
-- フレームワーク: Astro v5
+- フレームワーク: Astro v7.1
 - 言語: TypeScript
 - UI: Astroコンポーネント
 - スタイリング: Tailwind CSS
@@ -21,8 +21,8 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 ```
 /
 ├── src/
+│   ├── content.config.ts      # Content Layerコレクション定義
 │   ├── content/
-│   │   ├── config.ts          # コンテンツコレクション定義
 │   │   └── posts/             # 日記エントリ（年別に整理）
 │   │       ├── 2003/
 │   │       ├── 2004/
@@ -81,10 +81,10 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 title: 記事タイトル
 date: "YYYY-MM-DD"
 lastmod: "YYYY-MM-DD" # 任意
-draft: false          # 任意
-tags: [タグ1, タグ2]  # 任意
+draft: false # 任意
+tags: [タグ1, タグ2] # 任意
 description: 記事の説明 # 任意
-image: 画像パス        # 任意
+image: 画像パス # 任意
 ---
 ```
 
@@ -125,7 +125,6 @@ pnpm run diary -- 2025-09-01
   - フロントマター初期値: `title: 'YYYY-MM-DDの日記'`, `date: "YYYY-MM-DD"`, `tags: []`, `draft: true`
   - 生成後に `code -r <ファイルパス>` を実行して VS Code で開きます（`code` コマンドが無い場合は警告してスキップ）
 
-
 ## コーディング規約
 
 - フォーマット: Prettier（`prettier-plugin-astro`, `prettier-plugin-tailwindcss`）
@@ -136,8 +135,8 @@ pnpm run diary -- 2025-09-01
 
 ## 画像最適化
 
-- Astro 5.9+ の `experimental.responsiveImages` でMarkdown画像の自動最適化を想定（WebP変換・lazy・レスポンシブ・外部画像対応）。
-- 現状の設定では 404 回避のため image service を `noop` に設定しています（`astro.config.mjs`）。最適化を有効化する場合は image service の見直しと experimental フラグの適用を検討してください。
+- Astro 7 のレスポンシブ画像機能と Sharp により、Markdown画像を最適化します。
+- `astro.config.mjs` で `layout: "constrained"` と `responsiveStyles: true` を設定しています。
 
 ## テストと実装方針
 
@@ -177,7 +176,7 @@ git remote set-head origin -a
 
 ## セキュリティ/設定の注意
 
-- 画像: image service `noop` は暫定措置。最適化を有効にする場合はサービス設定を必ず見直す。
+- 画像: Sharp のビルド許可と、外部画像ドメインの設定を変更する際は生成結果を確認する。
 - パス: 深い相対パスより`@/`エイリアスを優先し、将来の移動に強くする。
 
 ## OGP（Open Graph / Twitter Cards）

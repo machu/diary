@@ -6,7 +6,7 @@ import PostCard from "@/components/PostCard.astro";
 
 /**
  * 日付別一覧ページ（/posts/YYYYMMDD/）
- * - 同一日のエントリをスラグ順（pNN）に並べて表示
+ * - 同一日のエントリを ID 順（pNN）に並べて表示
  * - getStaticPaths は全投稿を日付キー（YYYYMMDD）でグルーピング
  */
 
@@ -15,7 +15,7 @@ export async function getStaticPaths() {
   const byDate = groupByDateYmd(all);
   return Array.from(byDate.entries()).map(([date, list]) => ({
     params: { date },
-    props: { posts: list.toSorted((a, b) => a.slug.localeCompare(b.slug)) },
+    props: { posts: list.toSorted((a, b) => a.id.localeCompare(b.id)) },
   }));
 }
 
@@ -25,22 +25,28 @@ const { posts } = Astro.props as { posts: PostEntry[] };
 const dateParam = Astro.params.date!;
 const displayDate = ymdToDisplay(dateParam);
 ---
-<BaseLayout title={`まちゅダイアリー - ${displayDate}`} description={`${displayDate} のエントリ一覧`}>
+
+<BaseLayout
+  title={`まちゅダイアリー - ${displayDate}`}
+  description={`${displayDate} のエントリ一覧`}
+>
   <h1 class="mb-4 text-xl font-semibold">{displayDate} のエントリ</h1>
-  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {posts.map((entry) => {
-      const url = buildEntryUrl(entry.data.date, entry.slug);
-      return (
-        <PostCard
-          title={entry.data.title}
-          url={url}
-          dateDisplay={displayDate}
-          tags={entry.data.tags ?? []}
-          description={entry.data.description}
-          image={entry.data.image}
-          body={entry.body}
-        />
-      );
-    })}
+  <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      posts.map((entry) => {
+        const url = buildEntryUrl(entry.data.date, entry.id);
+        return (
+          <PostCard
+            title={entry.data.title}
+            url={url}
+            dateDisplay={displayDate}
+            tags={entry.data.tags ?? []}
+            description={entry.data.description}
+            image={entry.data.image}
+            body={entry.body}
+          />
+        );
+      })
+    }
   </ul>
 </BaseLayout>

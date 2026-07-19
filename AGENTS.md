@@ -6,7 +6,7 @@
 
 ## 技術スタック
 
-- **フレームワーク**: Astro v5
+- **フレームワーク**: Astro v7.1
 - **言語**: TypeScript
 - **UIライブラリ**: Astroコンポーネント
 - **スタイリング**: Tailwind CSS
@@ -23,8 +23,8 @@
 ```
 /
 ├── src/
+│   ├── content.config.ts      # Content Layerコレクション定義
 │   ├── content/
-│   │   ├── config.ts          # コンテンツコレクション定義
 │   │   └── posts/             # 日記エントリ（年別に整理）
 │   │       ├── 2003/
 │   │       ├── 2004/
@@ -101,7 +101,6 @@ pnpm run diary -- 2025-09-01   # 任意日付（YYYY-MM-DD / YYYY/MM/DD）
   - 初期frontmatter: `title: 'YYYY-MM-DDの日記'`, `date`, `tags`, `draft: true`
   - 生成後に `code -r <path>` を実行して VS Code で開く（`code` 未導入環境では警告のみでスキップ）
 
-
 ## URL構造とリダイレクト
 
 - 旧URL: `/diary/YYYYMMDD.html`
@@ -125,7 +124,9 @@ pnpm run diary -- 2025-09-01   # 任意日付（YYYY-MM-DD / YYYY/MM/DD）
 - 集計・絞り込みは `normalizeTag()`（`trim().toLowerCase()`）で正規化して比較。
 
 ## 画像最適化
-Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画像が自動的に最適化されます：
+
+Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像が自動的に最適化されます：
+
 - **WebP変換**: 自動的にWebP形式に変換して配信
 - **Lazy Loading**: `loading="lazy"`が自動追加
 - **レスポンシブ対応**: 適切なサイズでの配信
@@ -203,12 +204,14 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
   - 実装: `src/pages/years/[year].astro` で `YYYY-MM` キーのマップに変換し、各月配下は3カラムグリッドで `PostCard` を使用。
 
 関連ファイル
+
 - `src/components/PostCard.astro` — 全面リンク、ホバー、抜粋生成（120文字＋…）、フルハイト、サムネ下配置。
 - `src/components/TagBadges.astro` — 既定の色を secondary 系へ変更。
 - `src/styles/globals.css` — `line-clamp-2/3` ユーティリティ追加。
 - `src/pages/years/[year].astro` — 月別集計＋3カラム化。
 
 ## Build, Test, and Development Commands
+
 - `pnpm install` — install dependencies (Node `v22.x`; see `.nvmrc`).
 - `pnpm dev` (or `pnpm start`) — run the Astro dev server.
 - `pnpm build` — type-check (`astro check`) then build the static site.
@@ -216,12 +219,14 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
 - `pnpm lint` — run ESLint for Astro/TS/Tailwind.
 
 ## Coding Style & Naming Conventions
+
 - Languages: Astro, TypeScript, Tailwind CSS.
 - Formatting: Prettier with `prettier-plugin-astro` and `prettier-plugin-tailwindcss` (2-space indent). Commit formatted code.
 - Linting: ESLint with `eslint-plugin-astro` and Tailwind plugin; Tailwind class order rule is disabled.
 - Naming: Astro components in PascalCase (`Header.astro`); utilities use lowerCamelCase. Posts use `YYYYMMDDpNN` segments.
 
 ## Testing Guidelines
+
 - ユニット → 出力検証 → 最小E2Eの順で導入。
 - 既存の歴史データは極力触らず、テストはフィクスチャ/モック中心に。
 - コンテンツ（Markdown）変更と振る舞い（コード）変更は分けてコミット。
@@ -238,6 +243,7 @@ Astro 5.9の`experimental.responsiveImages`機能により、Markdown内の画�
   - E2E（必要最小）: `/diary/YYYYMMDD.html` の 301、トップ/ページ送り、タグ遷移など主要導線のみ。
 
 ## Commit & Pull Request Guidelines
+
 - Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`.
 - PRs: include a summary, linked issues, and UI screenshots when relevant. Ensure `pnpm lint` and `pnpm build` pass. Describe any content migrations or alias changes.
 
@@ -254,5 +260,6 @@ git remote set-head origin -a
 ```
 
 ## Security & Configuration Tips
-- Images: `astro.config.mjs` sets the image service to `noop` to avoid 404s. Review before enabling optimization.
+
+- Images: `astro.config.mjs` enables constrained responsive images backed by Sharp. Verify output when changing image domains or service settings.
 - Paths: Prefer the `@/` alias over deep relative imports to keep moves safe.

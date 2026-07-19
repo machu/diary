@@ -32,22 +32,21 @@ export function ymdToDisplay(ymd: string): string {
 
 // Entry 関連ヘルパー
 /**
- * スラグから part（pNN）を取り出す
+ * Content Layer の entry ID から part（pNN）を取り出す
  * 例: "20040927p03" -> "p03"
  */
-export function getPartFromSlug(slug: string): string {
-  // slug like "20040927p03" -> "p03"
-  const base = slug.split("/").pop() ?? slug;
+export function getPartFromEntryId(entryId: string): string {
+  const base = entryId.split("/").pop() ?? entryId;
   return base.slice(8);
 }
 
 /**
  * エントリ詳細のURLを生成
- * 例: date=2024-07-01, slug=...p02 -> "/posts/20240701/p02"
+ * 例: date=2024-07-01, entryId=...p02 -> "/posts/20240701/p02"
  */
-export function buildEntryUrl(date: Date, slug: string): string {
+export function buildEntryUrl(date: Date, entryId: string): string {
   const ymd = toYmd(date);
-  const part = getPartFromSlug(slug);
+  const part = getPartFromEntryId(entryId);
   return `/posts/${ymd}/${part}`;
 }
 
@@ -55,7 +54,7 @@ export function buildEntryUrl(date: Date, slug: string): string {
  * date プロパティを持つエントリの最小構造
  */
 export interface DatedEntry {
-  slug: string;
+  id: string;
   data: { date: Date } & Record<string, unknown>;
 }
 
@@ -63,7 +62,9 @@ export interface DatedEntry {
  * エントリ配列を YYYYMMDD キーでグルーピング
  * 戻り値: Map<YYYYMMDD, entries[]>
  */
-export function groupByDateYmd<T extends DatedEntry>(entries: T[]): Map<string, T[]> {
+export function groupByDateYmd<T extends DatedEntry>(
+  entries: T[],
+): Map<string, T[]> {
   const byDate = new Map<string, T[]>();
   for (const e of entries) {
     const key = toYmd(e.data.date);
@@ -87,7 +88,9 @@ export function toYm(d: Date): string {
  * エントリ配列を YYYY-MM キーでグルーピング
  * 戻り値: Map<YYYY-MM, entries[]>
  */
-export function groupByMonth<T extends DatedEntry>(entries: T[]): Map<string, T[]> {
+export function groupByMonth<T extends DatedEntry>(
+  entries: T[],
+): Map<string, T[]> {
   const byMonth = new Map<string, T[]>();
   for (const e of entries) {
     const key = toYm(e.data.date);

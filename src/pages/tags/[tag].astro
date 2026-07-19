@@ -13,36 +13,41 @@ import PostCard from "@/components/PostCard.astro";
 export async function getStaticPaths() {
   const all = await getAllPosts();
   const tags = new Set<string>();
-  for (const p of all) for (const t of p.data.tags ?? []) tags.add(normalizeTag(t));
+  for (const p of all)
+    for (const t of p.data.tags ?? []) tags.add(normalizeTag(t));
   return Array.from(tags).map((t) => ({ params: { tag: t } }));
 }
 
 /** ルートパラメータのタグを正規化し、該当エントリを最新順で抽出 */
 const tag = normalizeTag(Astro.params.tag!);
-const posts = (await getAllPosts({
-  predicate: (p) => (p.data.tags ?? []).some((t) => normalizeTag(t) === tag),
-}))
-  .toSorted((a, b) => +b.data.date - +a.data.date);
+const posts = (
+  await getAllPosts({
+    predicate: (p) => (p.data.tags ?? []).some((t) => normalizeTag(t) === tag),
+  })
+).toSorted((a, b) => +b.data.date - +a.data.date);
 
 // date helpers are provided by @/lib/dates
 ---
+
 <BaseLayout title={`タグ: ${tag}`} description={`タグ「${tag}」の記事一覧`}>
   <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
-  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {posts.map((entry) => {
-      const dateDisplay = toDisplayDate(entry.data.date);
-      const url = buildEntryUrl(entry.data.date, entry.slug);
-      return (
-        <PostCard
-          title={entry.data.title}
-          url={url}
-          dateDisplay={dateDisplay}
-          tags={entry.data.tags ?? []}
-          description={entry.data.description}
-          image={entry.data.image}
-          body={entry.body}
-        />
-      );
-    })}
+  <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      posts.map((entry) => {
+        const dateDisplay = toDisplayDate(entry.data.date);
+        const url = buildEntryUrl(entry.data.date, entry.id);
+        return (
+          <PostCard
+            title={entry.data.title}
+            url={url}
+            dateDisplay={dateDisplay}
+            tags={entry.data.tags ?? []}
+            description={entry.data.description}
+            image={entry.data.image}
+            body={entry.body}
+          />
+        );
+      })
+    }
   </ul>
 </BaseLayout>

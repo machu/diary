@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import tailwindcss from "@tailwindcss/vite";
@@ -9,12 +10,16 @@ const __dirname = dirname(__filename);
 // https://astro.build/config
 export default defineConfig({
   cacheDir: "./node_modules/.astro",
-  // 画像を最適化する（Astro5.10以降で実装）
+  // Astro 7 の JSX 空白規則への切り替えは、表示差分を検証してから別途行う。
+  compressHTML: true,
+  // Sharp を使い、Markdown画像をレスポンシブに最適化する。
   image: {
     layout: "constrained",
     responsiveStyles: true,
   },
   markdown: {
+    // 過去記事の表示を維持し、Sätteri への移行は独立した変更として扱う。
+    processor: unified(),
     shikiConfig: {
       theme: "github-dark",
     },

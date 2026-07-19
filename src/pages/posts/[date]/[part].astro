@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { render } from "astro:content";
 import { getAllPosts, type PostEntry } from "@/lib/posts";
 import { buildEntryUrl, ymdToDisplay } from "@/lib/dates";
 import { normalizeTag } from "@/lib/tags";
@@ -7,9 +8,9 @@ import { normalizeTag } from "@/lib/tags";
 export async function getStaticPaths() {
   const all = await getAllPosts();
   return all.map((entry) => {
-    const slug = entry.slug.split("/").pop()!; // e.g. 20040927p03
-    const date = slug.slice(0, 8);
-    const part = slug.slice(8); // pNN
+    const id = entry.id.split("/").pop()!; // e.g. 20040927p03
+    const date = id.slice(0, 8);
+    const part = id.slice(8); // pNN
     return {
       params: { date, part },
       props: { entry },
@@ -18,17 +19,20 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: PostEntry };
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 const dateParam = Astro.params.date!;
 const displayDate = ymdToDisplay(dateParam);
 
 // Build prev/next entries across all posts (oldest -> newest order)
 const all = await getAllPosts();
-const sorted = all.toSorted((a, b) => (+a.data.date - +b.data.date) || a.slug.localeCompare(b.slug));
-const idx = sorted.findIndex((e) => e.slug === entry.slug);
+const sorted = all.toSorted(
+  (a, b) => +a.data.date - +b.data.date || a.id.localeCompare(b.id),
+);
+const idx = sorted.findIndex((e) => e.id === entry.id);
 const prev = idx > 0 ? sorted[idx - 1] : undefined; // older
 const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; // newer
 ---
+
 <BaseLayout
   title={entry.data.title}
   description={entry.data.description ?? `${displayDate} の日記`}
@@ -38,37 +42,48 @@ const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : undefined; 
   <article class="prose prose-zinc dark:prose-invert max-w-none">
     <header class="mb-6">
       <h1 class="mb-2 text-2xl font-semibold">{entry.data.title}</h1>
-      {(entry.data.tags?.length ?? 0) > 0 && (
-        <div class="mb-1 flex flex-wrap gap-1">
-          {entry.data.tags!.map((t) => (
-            <a
-              href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
-              class="inline-flex items-center rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted/80"
-              >#{t}</a
-            >
-          ))}
-        </div>
-      )}
-      <p class="text-xs text-muted-foreground">{displayDate}</p>
+      {
+        (entry.data.tags?.length ?? 0) > 0 && (
+          <div class="mb-1 flex flex-wrap gap-1">
+            {entry.data.tags!.map((t) => (
+              <a
+                href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
+                class="bg-muted text-muted-foreground hover:bg-muted/80 inline-flex items-center rounded-full border px-2 py-0.5 text-xs"
+              >
+                #{t}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <p class="text-muted-foreground text-xs">{displayDate}</p>
     </header>
     <Content />
   </article>
   <nav class="mt-8 flex items-center justify-between text-sm">
-    {next ? (
-      <a
-        href={buildEntryUrl(next.data.date, next.slug)}
-        class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
-      >
-        ← 次の日記
-      </a>
-    ) : <span />}
-    {prev ? (
-      <a
-        href={buildEntryUrl(prev.data.date, prev.slug)}
-        class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
-      >
-        前の日記 →
-      </a>
-    ) : <span />}
+    {
+      next ? (
+        <a
+          href={buildEntryUrl(next.data.date, next.id)}
+          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        >
+          ← 次の日記
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      prev ? (
+        <a
+          href={buildEntryUrl(prev.data.date, prev.id)}
+          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        >
+          前の日記 →
+        </a>
+      ) : (
+        <span />
+      )
+    }
   </nav>
 </BaseLayout>

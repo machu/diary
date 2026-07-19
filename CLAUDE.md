@@ -6,7 +6,7 @@
 
 ## 技術スタック
 
-- **フレームワーク**: Astro v5
+- **フレームワーク**: Astro v7.1
 - **言語**: TypeScript
 - **UIコンポーネント**: Astro（.astroファイル）
 - **スタイリング**: Tailwind CSS v4（Viteプラグイン経由）
@@ -24,8 +24,8 @@
 ```
 /
 ├── src/
+│   ├── content.config.ts      # Content Layerコレクション定義
 │   ├── content/
-│   │   ├── config.ts          # コンテンツコレクション定義
 │   │   └── posts/             # 日記エントリ（年別に整理）
 │   │       ├── 2003/
 │   │       ├── 2004/
@@ -125,15 +125,15 @@ pnpm run diary 2025-09-01 # 任意日付（YYYY-MM-DD）
 
 ## URL構造とリダイレクト
 
-| 用途 | URL形式 |
-|------|---------|
-| 旧URL | `/diary/YYYYMMDD.html` |
-| 日付別 | `/posts/YYYYMMDD/` |
-| 単一エントリ | `/posts/YYYYMMDD/pNN` |
-| タグ一覧 | `/tags/` |
-| タグ別 | `/tags/{tag}` （小文字） |
-| 年一覧 | `/years/` |
-| 年別 | `/years/{YYYY}` |
+| 用途         | URL形式                  |
+| ------------ | ------------------------ |
+| 旧URL        | `/diary/YYYYMMDD.html`   |
+| 日付別       | `/posts/YYYYMMDD/`       |
+| 単一エントリ | `/posts/YYYYMMDD/pNN`    |
+| タグ一覧     | `/tags/`                 |
+| タグ別       | `/tags/{tag}` （小文字） |
+| 年一覧       | `/years/`                |
+| 年別         | `/years/{YYYY}`          |
 
 ### 旧URLからの301リダイレクト
 
@@ -149,7 +149,8 @@ pnpm run diary 2025-09-01 # 任意日付（YYYY-MM-DD）
 
 ## 画像最適化
 
-Astro 5のImage機能により、Markdown内の画像が自動的に最適化されます：
+Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像が自動的に最適化されます：
+
 - **WebP変換**: 自動的にWebP形式に変換して配信
 - **Lazy Loading**: `loading="lazy"`が自動追加
 - **レスポンシブ対応**: `layout: "constrained"` で適切なサイズ配信
