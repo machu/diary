@@ -9,12 +9,16 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/generate-vercel-redirects.mjs",
     "preview": "astro preview",
     "lint": "eslint .",
     "astro": "astro",
     "diary": "node scripts/diary.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:output": "vitest run --config vitest.output.config.ts",
+    "test:e2e": "playwright test",
+    "test:redirects": "node scripts/check-deployed-redirects.mjs",
+    "verify": "pnpm test && pnpm lint && pnpm build && pnpm test:output && pnpm test:e2e"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -36,8 +40,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/typography": "^0.5.19",
     "@vitest/coverage-v8": "^4.0.16",
+    "cheerio": "^1.2.0",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.5.0",
     "prettier": "^3.7.4",

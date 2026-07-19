@@ -154,8 +154,33 @@ pnpm run diary -- 2025-09-01
 - 設定: `vitest.config.ts`（`@/` エイリアス解決済み、Node環境、mocksリセット）。
 - 実行: `pnpm test`（CI想定）。
 - 次段階（案）:
-  - ビルド出力検証: `pnpm build` 後に `dist/**/*.html` をパースして日付表記、タグ小文字リンク、ページネーションを確認。
-  - E2E: `/diary/YYYYMMDD.html` の 301 と Location、トップ→エントリ、タグバッジの遷移などハッピーパスのみ。
+  - Vercel Preview: Bulk Redirects が旧 URL に対して実際に 301 と正しい `Location` を返すことを確認。
+
+### ビルド出力検証と E2E
+
+`pnpm build` は Astro の静的ビルド後に `dist/redirects.jsonl` を生成します。`pnpm test:output` は、生成済みの `dist/**/*.html` を対象に日付表記、タグの小文字 URL、ページネーション、旧 URL の転送先、Vercel Bulk Redirects の 301 ルールを検証します。
+
+```bash
+pnpm build
+pnpm test:output
+pnpm test:e2e
+```
+
+`pnpm test:e2e` は Chromium と `astro preview` を使い、トップから記事、ページ送り、タグ遷移、旧 URL の代表的な導線を確認します。初回のみ `pnpm exec playwright install chromium` でブラウザをインストールしてください。
+
+ユニットテスト、Lint、ビルド、成果物テスト、E2E をまとめて実行する場合は次を使います。
+
+```bash
+pnpm verify
+```
+
+静的な `astro preview` は旧 URL を meta refresh の HTML として `200 OK` で返します。本番の HTTP 301 は Vercel Bulk Redirects が担当します。Vercel Preview のデプロイ後、次のコマンドで代表 URL のステータスと `Location` を確認できます。
+
+```bash
+pnpm test:redirects -- https://example.vercel.app
+```
+
+設計と制約の詳細は `docs/build-output-verification-plan.md` を参照してください。
 
 ## コミット/PR 指針
 
