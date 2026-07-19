@@ -7,7 +7,7 @@ import PostCard from "@/components/PostCard.astro";
 /**
  * 年別ページ（/years/:year）
  * - 指定年の投稿を日付（YYYYMMDD）単位でグルーピング
- * - 各日付内はスラグ順（pNN）で表示
+ * - 各日付内は ID 順（pNN）で表示
  */
 export async function getStaticPaths() {
   const all = await getAllPosts();
@@ -20,37 +20,47 @@ export async function getStaticPaths() {
 const year = Number(Astro.params.year);
 const all = await getAllPosts();
 const inYear = all.filter((p) => p.data.date.getFullYear() === year);
-const months = Array.from(groupByMonth(inYear).entries()).toSorted((a, b) => b[0].localeCompare(a[0]));
+const months = Array.from(groupByMonth(inYear).entries()).toSorted((a, b) =>
+  b[0].localeCompare(a[0]),
+);
 ---
+
 <BaseLayout title={`${year}年のアーカイブ`}>
   <h1 class="mb-4 text-xl font-semibold">{year}年のアーカイブ</h1>
   <ul class="space-y-6">
-    {months.map(([month, list]) => (
-      <li>
-        <h2 class="mb-1 text-base font-medium">
-          {month}
-          <span class="ml-2 text-xs text-muted-foreground">{list.length}件</span>
-        </h2>
-        <ul class="ml-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {list
-            .toSorted((a, b) => +b.data.date - +a.data.date || a.slug.localeCompare(b.slug))
-            .map((entry) => {
-              const url = buildEntryUrl(entry.data.date, entry.slug);
-              const disp = toDisplayDate(entry.data.date);
-              return (
-                <PostCard
-                  title={entry.data.title}
-                  url={url}
-                  dateDisplay={disp}
-                  tags={entry.data.tags ?? []}
-                  description={entry.data.description}
-                  image={entry.data.image}
-                  body={entry.body}
-                />
-              );
-            })}
-        </ul>
-      </li>
-    ))}
+    {
+      months.map(([month, list]) => (
+        <li>
+          <h2 class="mb-1 text-base font-medium">
+            {month}
+            <span class="text-muted-foreground ml-2 text-xs">
+              {list.length}件
+            </span>
+          </h2>
+          <ul class="ml-0 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {list
+              .toSorted(
+                (a, b) =>
+                  +b.data.date - +a.data.date || a.id.localeCompare(b.id),
+              )
+              .map((entry) => {
+                const url = buildEntryUrl(entry.data.date, entry.id);
+                const disp = toDisplayDate(entry.data.date);
+                return (
+                  <PostCard
+                    title={entry.data.title}
+                    url={url}
+                    dateDisplay={disp}
+                    tags={entry.data.tags ?? []}
+                    description={entry.data.description}
+                    image={entry.data.image}
+                    body={entry.body}
+                  />
+                );
+              })}
+          </ul>
+        </li>
+      ))
+    }
   </ul>
 </BaseLayout>

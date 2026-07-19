@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { getAllPosts } from "@/lib/posts";
-import { groupByDateYmd, toYmd, getPartFromSlug } from "@/lib/dates";
+import { groupByDateYmd, toYmd, getPartFromEntryId } from "@/lib/dates";
 
 /**
  * 旧URL（/diary/YYYYMMDD.html）の静的パス生成
@@ -22,12 +22,11 @@ export const GET: APIRoute = async ({ params, redirect }) => {
   const date = params.date!; // YYYYMMDD
   const all = await getAllPosts();
   const todays = all.filter((p) => toYmd(p.data.date) === date);
-  todays.sort((a, b) => a.slug.localeCompare(b.slug));
+  todays.sort((a, b) => a.id.localeCompare(b.id));
   if (todays.length === 0) return new Response("Not found", { status: 404 });
   if (todays.length === 1) {
     const only = todays[0];
-    const slug = only.slug.split("/").pop()!; // e.g. 20040927p03
-    const part = getPartFromSlug(slug);
+    const part = getPartFromEntryId(only.id);
     return redirect(`/posts/${date}/${part}`, 301);
   }
   return redirect(`/posts/${date}/`, 301);

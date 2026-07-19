@@ -47,7 +47,7 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
           まちゅダイアリー
         </h1>
         <div class="mt-4 flex justify-center">
-          <div class="flex size-20 items-center justify-center overflow-hidden rounded-full bg-muted ring-1 ring-border">
+          <div class="bg-muted ring-border flex size-20 items-center justify-center overflow-hidden rounded-full ring-1">
             <img
               src="/avatar.jpg"
               alt="サイトアイコン"
@@ -56,10 +56,10 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
             />
           </div>
         </div>
-        <p class="mt-4 text-base text-muted-foreground">
+        <p class="text-muted-foreground mt-4 text-base">
           RubyやLinuxなど、興味のあることについて
         </p>
-        <div class="mt-2 flex items-center justify-center gap-4 text-foreground">
+        <div class="text-foreground mt-2 flex items-center justify-center gap-4">
           <a
             href="https://github.com/machu"
             class="inline-flex items-center gap-2 text-xs hover:underline"
@@ -86,17 +86,17 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
     {
       slice.map((entry) => {
         const dateDisplay = toDisplayDate(entry.data.date);
-        const url = buildEntryUrl(entry.data.date, entry.slug);
+        const url = buildEntryUrl(entry.data.date, entry.id);
         return (
-        <PostCard
-          title={entry.data.title}
-          url={url}
-          dateDisplay={dateDisplay}
-          tags={entry.data.tags ?? []}
-          description={entry.data.description}
-          image={entry.data.image}
-          body={entry.body}
-        />
+          <PostCard
+            title={entry.data.title}
+            url={url}
+            dateDisplay={dateDisplay}
+            tags={entry.data.tags ?? []}
+            description={entry.data.description}
+            image={entry.data.image}
+            body={entry.body}
+          />
         );
       })
     }
@@ -107,7 +107,7 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
       pageNum > 1 ? (
         <a
           href={pageNum === 2 ? "/" : `/${pageNum - 1}`}
-          class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
         >
           ← 前のページ
         </a>
@@ -115,14 +115,14 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
         <span />
       )
     }
-    <span class="text-xs text-muted-foreground"
+    <span class="text-muted-foreground text-xs"
       >Page {pageNum} / {Math.max(1, Math.ceil(total / pageSize))}</span
     >
     {
       pageNum * pageSize < total ? (
         <a
           href={`/${pageNum + 1}`}
-          class="inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted"
+          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
         >
           次のページ →
         </a>
