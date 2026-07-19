@@ -9,6 +9,7 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 - UI: Astroコンポーネント
 - スタイリング: Tailwind CSS
 - 画像処理: Sharp
+- サイト内検索: Pagefind
 - ビルドツール: Vite
 
 ## 開発環境
@@ -33,12 +34,14 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 │   │   ├── posts/[date]/[part].astro     # 単一エントリ（/posts/YYYYMMDD/pNN）
 │   │   ├── tags/index.astro              # タグ一覧
 │   │   ├── tags/[tag].astro              # タグ別一覧
+│   │   ├── search.astro                  # Pagefind全文検索
 │   │   ├── years/index.astro             # 年別一覧
 │   │   └── years/[year].astro            # 年内の日別＋エントリ一覧
 │   ├── components/            # UIコンポーネント
 │   ├── layouts/               # レイアウトテンプレート
 │   └── lib/
 │       ├── dates.ts           # 日付/URLヘルパー
+│       ├── related-posts.ts   # 本文類似度による関連記事を事前計算
 │       ├── tags.ts            # タグ正規化ヘルパー（小文字化）
 │       └── posts.ts           # 投稿取得ヘルパー（draftフィルタ共通化）
 ├── public/                    # 静的アセット
@@ -52,6 +55,7 @@ tDiaryで書いた日記をAstroにコンバートし、静的サイトとして
 - エントリページ: `/posts/YYYYMMDD/pNN`（Markdown本文を表示）
 - タグ一覧: `/tags`
 - タグ詳細: `/tags/:tag`（タグは小文字スラグ）
+- サイト内検索: `/search?q=キーワード`
 - 年別一覧: `/years`（年ごとの件数）
 - 年詳細: `/years/YYYY`（日付ごとに、当日のエントリ名とタグを表示）
 
@@ -95,12 +99,25 @@ image: 画像パス # 任意
 - `draft: true` を指定した投稿は、開発サーバー（`pnpm dev`）では表示されますが、本番ビルド（`pnpm build`）には含まれません。
 - 実装: `src/lib/posts.ts` の `getAllPosts()` が `import.meta.env.DEV` を用いて一括フィルタします（各ページはこのヘルパーを利用）。
 
+## サイト内検索と関連記事
+
+実装の詳細は[`docs/search-and-related-posts.md`](docs/search-and-related-posts.md)を参照してください。
+
+- `pnpm build`のAstroビルド後にPagefindが生成HTMLを索引化します。
+- 記事本文全体を対象にし、日本語の分かち書きに対応した静的検索を`/search`で提供します。
+- 検索フォームはヘッダーと検索ページにあり、`?q=`付きURLを共有できます。
+- `pnpm dev`では、直前の`pnpm build`が生成した`dist/pagefind`を配信します。初回とコンテンツ更新後は`pnpm build`を実行してから開発サーバーを再起動してください。
+- 記事下部の「関連記事」は、タイトルとMarkdown本文を日本語の単語単位に分割し、TF-IDFコサイン類似度が高い順に最大3件表示します。フロントマターのタグはランキングに使いません。
+- 多くの記事に現れる一般語、自分自身、同日エントリは候補から除外します。同点時は投稿日が近い記事を優先し、候補がない場合はその旨を表示します。
+- 関連候補と前後記事は`getStaticPaths()`で一度だけ計算し、各記事ページの生成時に渡します。
+
 ## ビルド・開発コマンド（pnpm）
 
 ```
 pnpm install      # 依存関係のインストール（必要なら pnpm approve-builds で esbuild/sharp を承認）
 pnpm dev          # 開発サーバー起動
-pnpm build        # 型チェック（astro check）→ 本番ビルド
+pnpm build        # 型チェック → Astroビルド → Pagefind索引生成
+pnpm run build:search # 生成済みdistからPagefind索引だけを再生成
 pnpm preview      # 本番ビルドのローカルプレビュー
 pnpm lint         # ESLint（Astro/TS/Tailwind）
 ```
@@ -158,15 +175,18 @@ pnpm run diary -- 2025-09-01
 
 ### ビルド出力検証と E2E
 
-`pnpm test:output`は、生成済みの`dist/**/*.html`を対象に日付表記、タグの小文字URL、ページネーション、旧URLの転送先、`vercel.mjs`が生成する301ルールを検証します。
+`pnpm test:output`は、生成済みの`dist/**/*.html`を対象に日付表記、タグの小文字URL、ページネーション、検索メタデータ、関連記事、旧URLの転送先、`vercel.mjs`が生成する301ルールを検証します。
 
 ```bash
 pnpm build
 pnpm test:output
 pnpm test:e2e
+pnpm test:e2e:dev
 ```
 
-`pnpm test:e2e` は Chromium と `astro preview` を使い、トップから記事、ページ送り、タグ遷移、旧 URL の代表的な導線を確認します。初回のみ `pnpm exec playwright install chromium` でブラウザをインストールしてください。
+`pnpm test:e2e` は Chromium と `astro preview` を使い、トップから記事、ページ送り、タグ遷移、全文検索、モバイル検索フォーム、旧 URL の代表的な導線を確認します。初回のみ `pnpm exec playwright install chromium` でブラウザをインストールしてください。
+
+`pnpm test:e2e:dev`は、`pnpm build`で生成済みのPagefind索引を`astro dev`から検索できることと、本文ベースの関連記事を確認します。
 
 ユニットテスト、Lint、ビルド、成果物テスト、E2E をまとめて実行する場合は次を使います。
 

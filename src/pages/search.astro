@@ -1,0 +1,246 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="検索 - まちゅダイアリー" description="日記の記事を全文検索">
+  <div class="mx-auto max-w-3xl">
+    <h1 class="mb-6 text-2xl font-bold">記事を検索</h1>
+
+    <form
+      id="search-form"
+      class="mb-6"
+      action="/search"
+      method="get"
+      role="search"
+    >
+      <div class="flex gap-2">
+        <label for="search-input" class="sr-only">検索キーワード</label>
+        <input
+          id="search-input"
+          name="q"
+          type="search"
+          placeholder="キーワードを入力…"
+          autocomplete="off"
+          class="bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-4 py-2 text-base focus:ring-2 focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium"
+        >
+          <i class="fa-solid fa-magnifying-glass mr-2"></i>検索
+        </button>
+      </div>
+    </form>
+
+    <p
+      id="search-status"
+      class="text-muted-foreground mb-4 text-sm"
+      aria-live="polite"
+    >
+      キーワードを入力してください。
+    </p>
+    <ul id="search-results" class="space-y-4"></ul>
+  </div>
+
+  <script>
+    import { normalizeTag } from "@/lib/tags";
+
+    interface PagefindData {
+      url: string;
+      plain_excerpt: string;
+      meta: Record<string, string | undefined>;
+    }
+
+    interface PagefindResult {
+      data: () => Promise<PagefindData>;
+    }
+
+    interface PagefindResponse {
+      results: PagefindResult[];
+    }
+
+    interface PagefindApi {
+      debouncedSearch: (
+        query: string,
+        options?: Record<string, unknown>,
+        debounceMs?: number,
+      ) => Promise<PagefindResponse | null>;
+    }
+
+    const MAX_RESULTS = 50;
+    const input = document.querySelector<HTMLInputElement>("#search-input");
+    const form = document.querySelector<HTMLFormElement>("#search-form");
+    const status = document.querySelector<HTMLElement>("#search-status");
+    const results = document.querySelector<HTMLUListElement>("#search-results");
+
+    let pagefindPromise: Promise<PagefindApi> | undefined;
+    let searchSequence = 0;
+
+    function loadPagefind(): Promise<PagefindApi> {
+      const pagefindUrl = "/pagefind/pagefind.js";
+      pagefindPromise ??= import(/* @vite-ignore */ pagefindUrl).then(
+        (module) => module as PagefindApi,
+      );
+      return pagefindPromise;
+    }
+
+    function queryTerms(query: string): string[] {
+      return query.trim().split(/\s+/).filter(Boolean);
+    }
+
+    function appendHighlightedText(
+      target: HTMLElement,
+      text: string,
+      terms: string[],
+    ): void {
+      if (terms.length === 0) {
+        target.textContent = text;
+        return;
+      }
+
+      const escaped = terms.map((term) =>
+        term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      );
+      const pattern = new RegExp(`(${escaped.join("|")})`, "giu");
+      for (const part of text.split(pattern)) {
+        if (!part) continue;
+        if (
+          terms.some(
+            (term) =>
+              term.toLocaleLowerCase("ja") === part.toLocaleLowerCase("ja"),
+          )
+        ) {
+          const mark = document.createElement("mark");
+          mark.className = "rounded bg-yellow-200 px-0.5 dark:bg-yellow-700";
+          mark.textContent = part;
+          target.append(mark);
+        } else {
+          target.append(document.createTextNode(part));
+        }
+      }
+    }
+
+    function parseTags(value: string | undefined): string[] {
+      if (!value) return [];
+      try {
+        const parsed: unknown = JSON.parse(value);
+        return Array.isArray(parsed)
+          ? parsed.filter((tag): tag is string => typeof tag === "string")
+          : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderResult(data: PagefindData, terms: string[]): HTMLLIElement {
+      const item = document.createElement("li");
+      item.className =
+        "rounded-md border bg-card p-4 transition-colors hover:bg-muted";
+
+      const link = document.createElement("a");
+      link.href = data.url;
+      link.className = "block";
+
+      const date = document.createElement("p");
+      date.className = "text-sm text-muted-foreground";
+      date.textContent = data.meta.date ?? "";
+      link.append(date);
+
+      const title = document.createElement("h2");
+      title.className = "mt-1 text-base font-semibold";
+      appendHighlightedText(title, data.meta.title ?? data.url, terms);
+      link.append(title);
+
+      const excerpt = document.createElement("p");
+      excerpt.className = "mt-1 text-sm text-muted-foreground";
+      appendHighlightedText(excerpt, data.plain_excerpt, terms);
+      link.append(excerpt);
+      item.append(link);
+
+      const tags = parseTags(data.meta.tags);
+      if (tags.length > 0) {
+        const tagList = document.createElement("div");
+        tagList.className = "mt-2 flex flex-wrap gap-1";
+        for (const tag of tags) {
+          const tagLink = document.createElement("a");
+          tagLink.href = `/tags/${encodeURIComponent(normalizeTag(tag))}`;
+          tagLink.className =
+            "inline-flex items-center rounded-full border bg-secondary px-1.5 py-0.5 text-xs text-secondary-foreground hover:bg-secondary/80";
+          tagLink.textContent = tag;
+          tagList.append(tagLink);
+        }
+        item.append(tagList);
+      }
+
+      return item;
+    }
+
+    async function search(query: string): Promise<void> {
+      if (!status || !results) return;
+      const trimmed = query.trim();
+      const sequence = ++searchSequence;
+      results.replaceChildren();
+
+      if (!trimmed) {
+        status.textContent = "キーワードを入力してください。";
+        return;
+      }
+
+      status.textContent = "検索中…";
+      try {
+        const pagefind = await loadPagefind();
+        const response = await pagefind.debouncedSearch(trimmed, {}, 300);
+        if (!response || sequence !== searchSequence) return;
+
+        const visible = response.results.slice(0, MAX_RESULTS);
+        const data = await Promise.all(visible.map((result) => result.data()));
+        if (sequence !== searchSequence) return;
+
+        if (response.results.length === 0) {
+          status.textContent = `「${trimmed}」に一致する記事は見つかりませんでした。`;
+          return;
+        }
+
+        status.textContent =
+          response.results.length > MAX_RESULTS
+            ? `${response.results.length}件の記事が見つかりました。先頭${MAX_RESULTS}件を表示しています。`
+            : `${response.results.length}件の記事が見つかりました。`;
+        const terms = queryTerms(trimmed);
+        results.append(...data.map((entry) => renderResult(entry, terms)));
+      } catch (error) {
+        console.error("Failed to load the Pagefind index", error);
+        if (sequence === searchSequence) {
+          status.textContent =
+            "検索インデックスを読み込めませんでした。pnpm buildを実行してから開発サーバーを再起動してください。";
+        }
+      }
+    }
+
+    function updateUrl(query: string): void {
+      const url = new URL(window.location.href);
+      if (query) url.searchParams.set("q", query);
+      else url.searchParams.delete("q");
+      window.history.replaceState(null, "", url);
+    }
+
+    if (input && form) {
+      const initialQuery =
+        new URLSearchParams(window.location.search).get("q") ?? "";
+      input.value = initialQuery;
+      if (initialQuery) void search(initialQuery);
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const query = input.value.trim();
+        updateUrl(query);
+        void search(query);
+      });
+
+      input.addEventListener("input", () => {
+        const query = input.value.trim();
+        updateUrl(query);
+        void search(query);
+      });
+    }
+  </script>
+</BaseLayout>

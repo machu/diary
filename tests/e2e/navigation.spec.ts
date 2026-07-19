@@ -41,3 +41,34 @@ test("keeps legacy single and multi-entry URLs navigable", async ({ page }) => {
     page.getByRole("heading", { name: "2004-02-01 のエントリ" }),
   ).toBeVisible();
 });
+
+test("searches the full-text index from the header", async ({ page }) => {
+  await page.goto("/");
+  const search = page.locator("#header-search-input");
+  await search.fill("OpenID");
+  await search.press("Enter");
+
+  await expect(page).toHaveURL(/\/search\?q=OpenID$/);
+  await expect(page.locator("#search-status")).toContainText(
+    /記事が見つかりました/,
+  );
+  await expect(
+    page.locator('#search-results a[href^="/posts/"]').first(),
+  ).toBeVisible();
+
+  const tagLink = page.locator('#search-results a[href^="/tags/"]').first();
+  await expect(tagLink).toBeVisible();
+  const href = await tagLink.getAttribute("href");
+  const slug = decodeURIComponent(href!.slice("/tags/".length));
+  expect(slug).toBe(slug.trim().toLowerCase());
+});
+
+test("opens the mobile search form", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "検索フォームを開く" }).click();
+
+  const input = page.locator("#mobile-search-input");
+  await expect(input).toBeVisible();
+  await expect(input).toBeFocused();
+});
