@@ -1,5 +1,4 @@
 import { defineConfig } from "astro/config";
-import { unified } from "@astrojs/markdown-remark";
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import tailwindcss from "@tailwindcss/vite";
@@ -18,8 +17,6 @@ export default defineConfig({
     responsiveStyles: true,
   },
   markdown: {
-    // 過去記事の表示を維持し、Sätteri への移行は独立した変更として扱う。
-    processor: unified(),
     shikiConfig: {
       theme: "github-dark",
     },
