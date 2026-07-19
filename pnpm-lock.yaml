@@ -11,9 +11,6 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.9
         version: 0.9.9(prettier-plugin-astro@0.14.1)(prettier@3.7.4)(typescript@5.9.3)
-      '@astrojs/markdown-remark':
-        specifier: 7.2.1
-        version: 7.2.1
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
@@ -3328,6 +3325,7 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@astrojs/markdown-satteri@0.3.4':
     dependencies:
@@ -4370,7 +4368,8 @@ snapshots:
 
   aria-query@5.3.2: {}
 
-  array-iterate@2.0.1: {}
+  array-iterate@2.0.1:
+    optional: true
 
   assertion-error@2.0.1: {}
 
@@ -4968,6 +4967,7 @@ snapshots:
   hast-util-is-element@3.0.0:
     dependencies:
       '@types/hast': 3.0.4
+    optional: true
 
   hast-util-parse-selector@4.0.0:
     dependencies:
@@ -4988,6 +4988,7 @@ snapshots:
       vfile: 6.0.3
       web-namespaces: 2.0.1
       zwitch: 2.0.4
+    optional: true
 
   hast-util-to-html@9.0.5:
     dependencies:
@@ -5012,6 +5013,7 @@ snapshots:
       space-separated-tokens: 2.0.2
       web-namespaces: 2.0.1
       zwitch: 2.0.4
+    optional: true
 
   hast-util-to-text@4.0.2:
     dependencies:
@@ -5019,6 +5021,7 @@ snapshots:
       '@types/unist': 3.0.3
       hast-util-is-element: 3.0.0
       unist-util-find-after: 5.0.0
+    optional: true
 
   hast-util-whitespace@3.0.0:
     dependencies:
@@ -5207,6 +5210,7 @@ snapshots:
       '@types/mdast': 4.0.4
       '@types/unist': 3.0.3
       unist-util-visit: 5.1.0
+    optional: true
 
   mdast-util-find-and-replace@3.0.2:
     dependencies:
@@ -5620,6 +5624,7 @@ snapshots:
       unist-util-modify-children: 4.0.0
       unist-util-visit-children: 3.0.0
       vfile: 6.0.3
+    optional: true
 
   parse5@7.3.0:
     dependencies:
@@ -5714,12 +5719,14 @@ snapshots:
       '@types/hast': 3.0.4
       hast-util-raw: 9.1.0
       vfile: 6.0.3
+    optional: true
 
   rehype-stringify@10.0.1:
     dependencies:
       '@types/hast': 3.0.4
       hast-util-to-html: 9.0.5
       unified: 11.0.5
+    optional: true
 
   remark-gfm@4.0.1:
     dependencies:
@@ -5748,6 +5755,7 @@ snapshots:
       mdast-util-to-hast: 13.2.1
       unified: 11.0.5
       vfile: 6.0.3
+    optional: true
 
   remark-smartypants@3.0.2:
     dependencies:
@@ -5755,6 +5763,7 @@ snapshots:
       retext-smartypants: 6.2.0
       unified: 11.0.5
       unist-util-visit: 5.1.0
+    optional: true
 
   remark-stringify@11.0.0:
     dependencies:
@@ -5779,6 +5788,7 @@ snapshots:
       '@types/nlcst': 2.0.3
       parse-latin: 7.0.0
       unified: 11.0.5
+    optional: true
 
   retext-smartypants@6.2.0:
     dependencies:
@@ -5791,6 +5801,7 @@ snapshots:
       '@types/nlcst': 2.0.3
       nlcst-to-string: 4.0.0
       unified: 11.0.5
+    optional: true
 
   retext@9.0.0:
     dependencies:
@@ -5798,6 +5809,7 @@ snapshots:
       retext-latin: 4.0.0
       retext-stringify: 4.0.0
       unified: 11.0.5
+    optional: true
 
   reusify@1.1.0: {}
 
@@ -6090,6 +6102,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       unist-util-is: 6.0.1
+    optional: true
 
   unist-util-is@6.0.1:
     dependencies:
@@ -6099,6 +6112,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       array-iterate: 2.0.1
+    optional: true
 
   unist-util-position@5.0.0:
     dependencies:
@@ -6108,6 +6122,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       unist-util-visit: 5.1.0
+    optional: true
 
   unist-util-stringify-position@4.0.0:
     dependencies:
@@ -6116,6 +6131,7 @@ snapshots:
   unist-util-visit-children@3.0.0:
     dependencies:
       '@types/unist': 3.0.3
+    optional: true
 
   unist-util-visit-parents@6.0.2:
     dependencies:
