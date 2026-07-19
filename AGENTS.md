@@ -256,6 +256,12 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 - Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`.
 - PRs: include a summary, linked issues, and UI screenshots when relevant. Ensure `pnpm lint` and `pnpm build` pass. Describe any content migrations or alias changes.
 
+### GitHub CLI認証
+
+- `gh`はmacOSのキーチェーンに保存された認証情報を使用するため、Codexの制限環境内では`gh auth status`が誤って未認証または無効なトークンと判定されることがある。
+- commit後のpush、PR作成、PR確認、mergeなどで`gh`を使用する場合は、ホスト環境で`gh auth status`を実行して認証状態を確認する。制限環境内の失敗だけを理由に再ログインしない。
+- ホスト環境でも認証に失敗した場合のみ、`gh auth login -h github.com`で再認証し、続けて`gh auth status`を確認する。
+
 ### Branching
 
 - 既定ブランチは `master` です（旧 `main` から移行）。

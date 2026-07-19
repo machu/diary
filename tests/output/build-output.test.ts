@@ -46,8 +46,15 @@ describe("generated HTML", () => {
 describe("site search", () => {
   it("emits the search page and Pagefind bundle", async () => {
     const { $ } = await readDocument("search/index.html");
-    expect($('form[role="search"][action="/search"]').length).toBe(1);
     expect($("#search-input").attr("name")).toBe("q");
+    expect(
+      $("#search-input").closest('form[role="search"][action="/search"]')
+        .length,
+    ).toBe(1);
+    expect($("#header-search-input").attr("role")).toBe("combobox");
+    expect($("#header-search-suggestions-list").attr("role")).toBe("listbox");
+    expect($("#mobile-search-input").attr("role")).toBe("combobox");
+    expect($("#mobile-search-suggestions-list").attr("role")).toBe("listbox");
     expect(await outputPathExists("pagefind/pagefind.js")).toBe(true);
     expect(await outputPathExists("pagefind/pagefind-worker.js")).toBe(true);
   });
