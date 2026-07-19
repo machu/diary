@@ -2,34 +2,114 @@
 /**
  * サイト共通ヘッダー
  * - 左: サイトタイトル（トップへ）
- * - 右: 最新 / タグ / 年別 へのナビゲーション
+ * - 右: 最新 / 検索 / タグ / 年別 へのナビゲーション
+ * - モバイルでは検索ボタンから検索フォームを展開
  */
 ---
-<header class="border-b border-border bg-[#e9f4fb] dark:bg-[#0f1f2d]">
+
+<header class="border-border border-b bg-[#e9f4fb] dark:bg-[#0f1f2d]">
   <div class="container flex items-center justify-between py-4">
     <a href="/" class="text-lg font-bold">まちゅダイアリー</a>
-    <nav class="text-sm flex items-center gap-4">
+    <nav class="flex items-center gap-2 text-sm sm:gap-4">
       <a href="/" class="hover:underline">最新</a>
+      <form
+        action="/search"
+        method="get"
+        class="hidden items-center gap-1 md:flex"
+      >
+        <label for="header-search-input" class="sr-only">記事を検索</label>
+        <input
+          id="header-search-input"
+          type="search"
+          name="q"
+          placeholder="検索…"
+          autocomplete="off"
+          class="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring w-32 rounded-md border px-2 py-1 text-sm focus:ring-2 focus:outline-none lg:w-40"
+        />
+        <button
+          type="submit"
+          class="text-muted-foreground hover:text-foreground"
+          aria-label="検索"
+        >
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </button>
+      </form>
+      <button
+        id="search-toggle"
+        type="button"
+        class="inline-flex items-center md:hidden"
+        aria-label="検索フォームを開く"
+        aria-controls="mobile-search"
+        aria-expanded="false"
+      >
+        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+      </button>
       <a href="/tags" class="hover:underline">タグ</a>
       <a href="/years" class="hover:underline">年別</a>
-      <button id="theme-toggle" class="ml-2 inline-flex items-center rounded-md border bg-background px-2 py-1 hover:bg-muted" aria-label="テーマ切り替え" title="テーマ切り替え">
+      <button
+        id="theme-toggle"
+        class="bg-background hover:bg-muted ml-2 inline-flex items-center rounded-md border px-2 py-1"
+        aria-label="テーマ切り替え"
+        title="テーマ切り替え"
+      >
         <i class="fa-solid fa-moon block dark:hidden"></i>
         <i class="fa-solid fa-sun hidden dark:block"></i>
       </button>
     </nav>
   </div>
 
+  <div id="mobile-search" class="container hidden pb-4 md:hidden">
+    <form action="/search" method="get" class="flex items-center gap-2">
+      <label for="mobile-search-input" class="sr-only">記事を検索</label>
+      <input
+        id="mobile-search-input"
+        type="search"
+        name="q"
+        placeholder="キーワードを入力…"
+        autocomplete="off"
+        class="border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring min-w-0 flex-1 rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+      />
+      <button
+        type="submit"
+        class="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md border px-3 py-2 text-sm font-medium"
+      >
+        検索
+      </button>
+    </form>
+  </div>
+
   <script>
     const root = document.documentElement;
-    const key = 'theme';
-    const btn = document.getElementById('theme-toggle');
-    function setTheme(t: 'light' | 'dark') {
-      if (t === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
-      try { localStorage.setItem(key, t); } catch (_) {}
+    const key = "theme";
+    const btn = document.getElementById("theme-toggle");
+    function setTheme(t: "light" | "dark") {
+      if (t === "dark") root.classList.add("dark");
+      else root.classList.remove("dark");
+      try {
+        localStorage.setItem(key, t);
+      } catch (_) {}
     }
-    btn?.addEventListener('click', () => {
-      const next = root.classList.contains('dark') ? 'light' : 'dark';
+    btn?.addEventListener("click", () => {
+      const next = root.classList.contains("dark") ? "light" : "dark";
       setTheme(next);
+    });
+
+    const searchToggle = document.getElementById("search-toggle");
+    const mobileSearch = document.getElementById("mobile-search");
+    searchToggle?.addEventListener("click", () => {
+      const willOpen = mobileSearch?.classList.contains("hidden") ?? false;
+      mobileSearch?.classList.toggle("hidden", !willOpen);
+      searchToggle.setAttribute("aria-expanded", String(willOpen));
+      searchToggle.setAttribute(
+        "aria-label",
+        willOpen ? "検索フォームを閉じる" : "検索フォームを開く",
+      );
+      if (willOpen) {
+        const input = mobileSearch?.querySelector<HTMLInputElement>(
+          'input[type="search"]',
+        );
+        input?.focus();
+      }
     });
   </script>
 </header>

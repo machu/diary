@@ -11,6 +11,7 @@
 - **UIライブラリ**: Astroコンポーネント
 - **スタイリング**: Tailwind CSS
 - **画像処理**: Sharp
+- **サイト内検索**: Pagefind
 - **ビルドツール**: Vite
 
 ## 開発環境
@@ -35,12 +36,14 @@
 │   │   ├── posts/[date]/[part].astro     # 単一エントリ（/posts/YYYYMMDD/pNN）
 │   │   ├── tags/index.astro              # タグ一覧
 │   │   ├── tags/[tag].astro              # タグ別一覧（小文字スラグ）
+│   │   ├── search.astro                  # Pagefind全文検索
 │   │   ├── years/index.astro             # 年別一覧
 │   │   └── years/[year].astro            # 年内の日別＋エントリ一覧
 │   ├── components/            # UIコンポーネント
 │   ├── layouts/               # レイアウトテンプレート
 │   └── lib/                   # ヘルパー群
 │       ├── dates.ts           # 日付/URLユーティリティ
+│       ├── related-posts.ts   # 本文類似度による関連記事を事前計算
 │       ├── tags.ts            # タグの正規化（小文字化）
 │       └── posts.ts           # 投稿取得（draftフィルタ共通化）
 ├── public/                    # 静的アセット
@@ -54,6 +57,10 @@
 3. **タグ機能**: タグによる記事の分類と一覧表示
 4. **ダークモード**: テーマ切り替え機能
 5. **レスポンシブデザイン**: モバイル対応
+6. **サイト内検索**: Pagefindによる日本語対応の全文検索
+7. **関連記事**: タイトル＋本文のTF-IDFコサイン類似度順で最大3件表示（タグは不使用）
+
+`pnpm dev`で検索を確認する場合は、先に`pnpm build`で`dist/pagefind`を生成し、開発サーバーを再起動してください。
 
 ## コンテンツ構造
 
@@ -80,7 +87,7 @@ image: 画像パス（オプション）
 
 ```bash
 pnpm dev      # 開発サーバー起動
-pnpm build    # 本番ビルド（型チェック含む）
+pnpm build    # 型チェック、Astroビルド、Pagefind索引生成
 pnpm preview  # ビルドプレビュー
 pnpm lint     # ESLintチェック
 ```
@@ -214,9 +221,11 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 
 - `pnpm install` — install dependencies (Node `v22.x`; see `.nvmrc`).
 - `pnpm dev` (or `pnpm start`) — run the Astro dev server.
-- `pnpm build` — type-check (`astro check`) then build the static site.
+- `pnpm build` — type-check, build the static site, then generate the Pagefind index.
+- `pnpm run build:search` — regenerate Pagefind from an existing `dist/`.
 - `pnpm preview` — serve the production build locally.
 - `pnpm lint` — run ESLint for Astro/TS/Tailwind.
+- `pnpm test:e2e:dev` — verify built Pagefind assets and related articles through `astro dev` (run `pnpm build` first).
 
 ## Coding Style & Naming Conventions
 

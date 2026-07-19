@@ -43,6 +43,37 @@ describe("generated HTML", () => {
   });
 });
 
+describe("site search", () => {
+  it("emits the search page and Pagefind bundle", async () => {
+    const { $ } = await readDocument("search/index.html");
+    expect($('form[role="search"][action="/search"]').length).toBe(1);
+    expect($("#search-input").attr("name")).toBe("q");
+    expect(await outputPathExists("pagefind/pagefind.js")).toBe(true);
+    expect(await outputPathExists("pagefind/pagefind-worker.js")).toBe(true);
+  });
+
+  it("marks every post detail for indexing with metadata", async () => {
+    const details = htmlFiles.filter((file) =>
+      /^posts\/\d{8}\/p\d+\/index\.html$/.test(file),
+    );
+
+    for (const file of details) {
+      const { $ } = await readDocument(file);
+      const article = $("article[data-pagefind-body]");
+      expect(article.length, file).toBe(1);
+      expect(
+        article.find('[data-pagefind-meta="title"]').text().trim(),
+        file,
+      ).not.toBe("");
+      expect(
+        article.find('[data-pagefind-meta="date"]').text().trim(),
+        file,
+      ).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(() => JSON.parse(article.attr("data-tags") ?? "")).not.toThrow();
+    }
+  });
+});
+
 describe("date display", () => {
   it("formats every post detail date as YYYY-MM-DD", async () => {
     const details = htmlFiles.filter((file) =>
@@ -99,6 +130,42 @@ describe("tag links", () => {
     }
 
     expect(tagLinkCount).toBeGreaterThan(0);
+  });
+});
+
+describe("related article links", () => {
+  it("emits at most three valid links outside the current date", async () => {
+    const details = htmlFiles.filter((file) =>
+      /^posts\/\d{8}\/p\d+\/index\.html$/.test(file),
+    );
+    let relatedLinkCount = 0;
+
+    for (const file of details) {
+      const currentDate = file.match(/^posts\/(\d{8})\//)?.[1];
+      const { $ } = await readDocument(file);
+      const related = $('aside[aria-labelledby="related-posts-heading"]');
+      const links = related.find("a");
+      expect(related.length, file).toBe(1);
+      expect(links.length, file).toBeLessThanOrEqual(3);
+
+      if (links.length === 0) {
+        expect(related.text(), file).toContain("関連する記事はありません。");
+      }
+
+      for (const element of links.toArray()) {
+        relatedLinkCount += 1;
+        const href = $(element).attr("href")!;
+        const targetDate = href.match(/^\/posts\/(\d{8})\/p\d+$/)?.[1];
+        expect(targetDate, `${file}: ${href}`).toBeDefined();
+        expect(targetDate, `${file}: ${href}`).not.toBe(currentDate);
+        expect(
+          await outputPathExists(urlToOutputPath(href)),
+          `${file}: ${href}`,
+        ).toBe(true);
+      }
+    }
+
+    expect(relatedLinkCount).toBeGreaterThan(1_000);
   });
 });
 

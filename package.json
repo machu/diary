@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && pagefind",
+    "build:search": "pagefind",
     "preview": "astro preview",
     "lint": "eslint .",
     "astro": "astro",
@@ -17,8 +18,9 @@
     "test": "vitest run",
     "test:output": "vitest run --config vitest.output.config.ts",
     "test:e2e": "playwright test",
+    "test:e2e:dev": "playwright test --config playwright.dev.config.ts",
     "test:redirects": "node scripts/check-deployed-redirects.mjs",
-    "verify": "pnpm test && pnpm lint && pnpm build && pnpm test:output && pnpm test:e2e"
+    "verify": "pnpm test && pnpm lint && pnpm build && pnpm test:output && pnpm test:e2e && pnpm test:e2e:dev"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -46,6 +48,7 @@
     "cheerio": "^1.2.0",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.5.0",
+    "pagefind": "^1.5.2",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
