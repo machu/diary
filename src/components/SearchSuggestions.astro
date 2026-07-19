@@ -1,0 +1,294 @@
+---
+interface Props {
+  id: string;
+  placeholder: string;
+  compact?: boolean;
+  wrapperClass?: string;
+}
+
+const { id, placeholder, compact = false, wrapperClass = "" } = Astro.props;
+const inputId = `${id}-input`;
+const panelId = `${id}-suggestions`;
+const listId = `${id}-suggestions-list`;
+---
+
+<div class:list={["relative", wrapperClass]} data-search-suggestions>
+  <form
+    action="/search"
+    method="get"
+    class="flex items-center gap-1"
+    role="search"
+  >
+    <label for={inputId} class="sr-only">記事を検索</label>
+    <input
+      id={inputId}
+      type="search"
+      name="q"
+      placeholder={placeholder}
+      autocomplete="off"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      aria-controls={listId}
+      aria-expanded="false"
+      data-search-suggestions-input
+      class:list={[
+        "border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring min-w-0 rounded-md border text-sm focus:ring-2 focus:outline-none",
+        compact ? "w-32 px-2 py-1 lg:w-40" : "flex-1 px-3 py-2",
+      ]}
+    />
+    <button
+      type="submit"
+      class:list={[
+        compact
+          ? "text-muted-foreground hover:text-foreground"
+          : "bg-primary text-primary-foreground hover:bg-primary/90 rounded-md border px-3 py-2 text-sm font-medium",
+      ]}
+      aria-label={compact ? "検索" : undefined}
+    >
+      {compact ? <i class="fa-solid fa-magnifying-glass text-xs" /> : "検索"}
+    </button>
+  </form>
+
+  <div
+    id={panelId}
+    data-search-suggestions-panel
+    class:list={[
+      "border-border bg-background absolute z-50 mt-2 hidden overflow-hidden rounded-md border shadow-xl",
+      compact ? "right-0 w-96" : "inset-x-0",
+    ]}
+  >
+    <p
+      class="text-muted-foreground px-3 py-3 text-sm"
+      data-search-suggestions-message
+      aria-live="polite"
+    >
+    </p>
+    <ul
+      id={listId}
+      role="listbox"
+      data-search-suggestions-list
+      class="max-h-96 overflow-y-auto py-1"
+    >
+    </ul>
+    <a
+      href="/search"
+      data-search-suggestions-all
+      class="border-border hover:bg-muted block border-t px-3 py-2 text-center text-sm font-medium"
+    >
+      すべての検索結果を見る
+    </a>
+  </div>
+</div>
+
+<script>
+  import {
+    searchPagefind,
+    warmPagefind,
+    type PagefindData,
+  } from "@/lib/pagefind-client";
+
+  const MIN_QUERY_LENGTH = 2;
+  const MAX_SUGGESTIONS = 5;
+
+  function createSuggestion(
+    data: PagefindData,
+    inputId: string,
+    index: number,
+  ): HTMLLIElement {
+    const item = document.createElement("li");
+    item.setAttribute("role", "none");
+
+    const link = document.createElement("a");
+    link.id = `${inputId}-option-${index}`;
+    link.href = data.url;
+    link.setAttribute("role", "option");
+    link.setAttribute("aria-selected", "false");
+    link.className = "block px-3 py-2 hover:bg-muted";
+
+    const date = document.createElement("p");
+    date.className = "text-xs text-muted-foreground";
+    date.textContent = data.meta.date ?? "";
+    link.append(date);
+
+    const title = document.createElement("p");
+    title.className = "mt-0.5 truncate text-sm font-semibold";
+    title.textContent = data.meta.title ?? data.url;
+    link.append(title);
+
+    const excerpt = document.createElement("p");
+    excerpt.className = "mt-0.5 text-xs text-muted-foreground line-clamp-2";
+    excerpt.textContent = data.plain_excerpt;
+    link.append(excerpt);
+
+    item.append(link);
+    return item;
+  }
+
+  function setupSuggestions(root: HTMLElement): void {
+    const inputElement = root.querySelector<HTMLInputElement>(
+      "[data-search-suggestions-input]",
+    );
+    const panelElement = root.querySelector<HTMLElement>(
+      "[data-search-suggestions-panel]",
+    );
+    const listElement = root.querySelector<HTMLUListElement>(
+      "[data-search-suggestions-list]",
+    );
+    const messageElement = root.querySelector<HTMLElement>(
+      "[data-search-suggestions-message]",
+    );
+    const allResultsElement = root.querySelector<HTMLAnchorElement>(
+      "[data-search-suggestions-all]",
+    );
+    if (
+      !inputElement ||
+      !panelElement ||
+      !listElement ||
+      !messageElement ||
+      !allResultsElement
+    )
+      return;
+
+    const input = inputElement;
+    const panel = panelElement;
+    const list = listElement;
+    const message = messageElement;
+    const allResults = allResultsElement;
+
+    let activeIndex = -1;
+    let searchSequence = 0;
+
+    function options(): HTMLAnchorElement[] {
+      return [...list.querySelectorAll<HTMLAnchorElement>('[role="option"]')];
+    }
+
+    function open(): void {
+      panel.classList.remove("hidden");
+      input.setAttribute("aria-expanded", "true");
+    }
+
+    function close(): void {
+      panel.classList.add("hidden");
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      activeIndex = -1;
+      for (const option of options()) {
+        option.setAttribute("aria-selected", "false");
+        option.classList.remove("bg-muted");
+      }
+    }
+
+    function setActive(index: number): void {
+      const candidates = options();
+      if (candidates.length === 0) return;
+      activeIndex = (index + candidates.length) % candidates.length;
+
+      candidates.forEach((candidate, candidateIndex) => {
+        const active = candidateIndex === activeIndex;
+        candidate.setAttribute("aria-selected", String(active));
+        candidate.classList.toggle("bg-muted", active);
+      });
+
+      const active = candidates[activeIndex];
+      input.setAttribute("aria-activedescendant", active.id);
+      active.scrollIntoView({ block: "nearest" });
+    }
+
+    function showMessage(text: string, showAllResults: boolean): void {
+      list.replaceChildren();
+      message.textContent = text;
+      message.classList.remove("hidden");
+      allResults.classList.toggle("hidden", !showAllResults);
+      activeIndex = -1;
+      input.removeAttribute("aria-activedescendant");
+      open();
+    }
+
+    async function updateSuggestions(): Promise<void> {
+      const query = input.value.trim();
+      const sequence = ++searchSequence;
+
+      if (!query) {
+        close();
+        return;
+      }
+
+      const searchUrl = `/search?q=${encodeURIComponent(query)}`;
+      allResults.href = searchUrl;
+      if ([...query].length < MIN_QUERY_LENGTH) {
+        showMessage("2文字以上入力すると候補を表示します。", true);
+        return;
+      }
+
+      showMessage("検索中…", false);
+      try {
+        const response = await searchPagefind(query, MAX_SUGGESTIONS, 300);
+        if (!response || sequence !== searchSequence) return;
+
+        list.replaceChildren(
+          ...response.entries.map((entry, index) =>
+            createSuggestion(entry, input.id, index),
+          ),
+        );
+        message.classList.toggle("hidden", response.total > 0);
+        message.textContent =
+          response.total > 0 ? "" : "一致する記事は見つかりませんでした。";
+        allResults.classList.remove("hidden");
+        activeIndex = -1;
+        input.removeAttribute("aria-activedescendant");
+        open();
+      } catch (error) {
+        console.error("Failed to load search suggestions", error);
+        if (sequence === searchSequence) {
+          showMessage("検索候補を読み込めませんでした。", true);
+        }
+      }
+    }
+
+    input.addEventListener("focus", () => {
+      void warmPagefind(input.value.trim()).catch(() => undefined);
+      if (
+        input.value.trim() &&
+        (list.childElementCount > 0 || message.textContent)
+      ) {
+        open();
+      }
+    });
+    input.addEventListener("input", () => void updateSuggestions());
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        close();
+        return;
+      }
+
+      if (panel.classList.contains("hidden")) return;
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setActive(activeIndex + 1);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setActive(activeIndex - 1);
+      } else if (event.key === "Enter" && activeIndex >= 0) {
+        const active = options()[activeIndex];
+        if (active) {
+          event.preventDefault();
+          window.location.assign(active.href);
+        }
+      }
+    });
+
+    root.addEventListener("focusout", () => {
+      window.setTimeout(() => {
+        if (!root.contains(document.activeElement)) close();
+      });
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (event.target instanceof Node && !root.contains(event.target)) close();
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLElement>("[data-search-suggestions]")
+    .forEach(setupSuggestions);
+</script>

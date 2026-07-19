@@ -63,6 +63,31 @@ test("searches the full-text index from the header", async ({ page }) => {
   expect(slug).toBe(slug.trim().toLowerCase());
 });
 
+test("shows and keyboard-navigates header search suggestions", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const search = page.locator("#header-search-input");
+  const panel = page.locator("#header-search-suggestions");
+  const options = page.locator("#header-search-suggestions-list [role=option]");
+
+  await search.fill("OpenID");
+  await expect(options).toHaveCount(5);
+  await expect(panel).toBeVisible();
+
+  await search.press("ArrowDown");
+  const activeId = await search.getAttribute("aria-activedescendant");
+  expect(activeId).toBe("header-search-input-option-0");
+  await expect(page.locator(`#${activeId}`)).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+
+  await search.press("Escape");
+  await expect(panel).toBeHidden();
+  await expect(search).not.toHaveAttribute("aria-activedescendant", /.+/);
+});
+
 test("opens the mobile search form", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -71,4 +96,9 @@ test("opens the mobile search form", async ({ page }) => {
   const input = page.locator("#mobile-search-input");
   await expect(input).toBeVisible();
   await expect(input).toBeFocused();
+
+  await input.fill("OpenID");
+  await expect(
+    page.locator("#mobile-search-suggestions-list [role=option]"),
+  ).toHaveCount(5);
 });

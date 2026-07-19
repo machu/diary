@@ -14,7 +14,7 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: `ASTRO_DEV_BACKGROUND=0 pnpm dev --host 127.0.0.1 --port ${port}`,
+    command: `ASTRO_DEV_BACKGROUND=0 pnpm dev --ignore-lock --host 127.0.0.1 --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

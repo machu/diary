@@ -44,28 +44,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
   <script>
     import { normalizeTag } from "@/lib/tags";
-
-    interface PagefindData {
-      url: string;
-      plain_excerpt: string;
-      meta: Record<string, string | undefined>;
-    }
-
-    interface PagefindResult {
-      data: () => Promise<PagefindData>;
-    }
-
-    interface PagefindResponse {
-      results: PagefindResult[];
-    }
-
-    interface PagefindApi {
-      debouncedSearch: (
-        query: string,
-        options?: Record<string, unknown>,
-        debounceMs?: number,
-      ) => Promise<PagefindResponse | null>;
-    }
+    import { searchPagefind, type PagefindData } from "@/lib/pagefind-client";
 
     const MAX_RESULTS = 50;
     const input = document.querySelector<HTMLInputElement>("#search-input");
@@ -73,16 +52,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     const status = document.querySelector<HTMLElement>("#search-status");
     const results = document.querySelector<HTMLUListElement>("#search-results");
 
-    let pagefindPromise: Promise<PagefindApi> | undefined;
     let searchSequence = 0;
-
-    function loadPagefind(): Promise<PagefindApi> {
-      const pagefindUrl = "/pagefind/pagefind.js";
-      pagefindPromise ??= import(/* @vite-ignore */ pagefindUrl).then(
-        (module) => module as PagefindApi,
-      );
-      return pagefindPromise;
-    }
 
     function queryTerms(query: string): string[] {
       return query.trim().split(/\s+/).filter(Boolean);
@@ -188,25 +158,22 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
       status.textContent = "検索中…";
       try {
-        const pagefind = await loadPagefind();
-        const response = await pagefind.debouncedSearch(trimmed, {}, 300);
+        const response = await searchPagefind(trimmed, MAX_RESULTS, 300);
         if (!response || sequence !== searchSequence) return;
 
-        const visible = response.results.slice(0, MAX_RESULTS);
-        const data = await Promise.all(visible.map((result) => result.data()));
-        if (sequence !== searchSequence) return;
-
-        if (response.results.length === 0) {
+        if (response.total === 0) {
           status.textContent = `「${trimmed}」に一致する記事は見つかりませんでした。`;
           return;
         }
 
         status.textContent =
-          response.results.length > MAX_RESULTS
-            ? `${response.results.length}件の記事が見つかりました。先頭${MAX_RESULTS}件を表示しています。`
-            : `${response.results.length}件の記事が見つかりました。`;
+          response.total > MAX_RESULTS
+            ? `${response.total}件の記事が見つかりました。先頭${MAX_RESULTS}件を表示しています。`
+            : `${response.total}件の記事が見つかりました。`;
         const terms = queryTerms(trimmed);
-        results.append(...data.map((entry) => renderResult(entry, terms)));
+        results.append(
+          ...response.entries.map((entry) => renderResult(entry, terms)),
+        );
       } catch (error) {
         console.error("Failed to load the Pagefind index", error);
         if (sequence === searchSequence) {

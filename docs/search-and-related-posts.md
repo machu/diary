@@ -15,7 +15,9 @@
 
 - `pagefind.yml`: Pagefindの索引対象を投稿詳細HTMLへ限定する。
 - `src/pages/search.astro`: Pagefind Search APIを使う検索画面。
-- `src/components/Header.astro`: PC・モバイル用の検索フォーム。
+- `src/components/Header.astro`: PC・モバイル用の検索候補UIの配置。
+- `src/components/SearchSuggestions.astro`: 検索候補の表示とキーボード操作。
+- `src/lib/pagefind-client.ts`: Pagefindの遅延ロードと検索処理を共通化するクライアント。
 - `astro.config.mjs`: ビルド済みPagefindバンドルを開発サーバーから配信するViteプラグイン。
 - `src/lib/related-posts.ts`: 本文類似度の計算とランキング。
 - `src/components/RelatedPosts.astro`: 関連記事の表示。
@@ -42,6 +44,20 @@ Pagefindは`dist/posts/**/p*/index.html`だけを読み、`data-pagefind-body`�
 
 検索画面は`/pagefind/pagefind.js`を遅延ロードし、300ミリ秒のデバウンス後に検索する。結果は最大50件で、日付、タイトル、本文抜粋、タグを表示する。DOMは`innerHTML`で組み立てず、テキストノードを使って検索語をハイライトする。
 
+### 入力途中の検索候補
+
+ヘッダーのPC・モバイル検索欄では、2文字以上の入力後にPagefindを検索し、上位5件を候補として表示する。別の索引やサーバーAPIは追加せず、検索画面と同じPagefind索引と`src/lib/pagefind-client.ts`を共有する。
+
+候補には日付、タイトル、本文抜粋を表示する。候補を選ばずEnterを押した場合は従来どおり`/search?q=...`へ移動し、「すべての検索結果を見る」からも全件表示へ移動できる。
+
+操作とアクセシビリティは次のとおり。
+
+- 入力欄はARIA combobox、候補一覧はlistboxとして公開する。
+- 上下キーで候補を移動し、Enterで選択した記事へ移動する。
+- Escapeまたは候補UIの外側をクリックすると閉じる。
+- 入力欄へフォーカスした時点でPagefindを先読みし、初回検索の待ち時間を短縮する。
+- 新しい入力が行われた場合は古い検索結果を破棄し、遅れて返った候補で表示を上書きしない。
+
 ### 開発サーバー
 
 Pagefindは生成済みHTMLから索引を作るため、`astro dev`だけでは索引を生成できない。ローカルでは次の順番で起動する。
@@ -51,7 +67,7 @@ pnpm build
 pnpm dev
 ```
 
-`astro.config.mjs`の開発専用Viteプラグインが、`dist/pagefind`内の実ファイルだけを`/pagefind/`から配信する。`dist`全体は公開せず、パスを正規化してディレクトリ外へのアクセスを拒否する。コンテンツ更新後は再度`pnpm build`を実行し、開発サーバーを再起動する。
+`astro.config.mjs`の開発専用Viteプラグインが、`dist/pagefind`内の実ファイルだけを`/pagefind/`から配信する。`dist`全体は公開せず、パスを正規化してディレクトリ外へのアクセスを拒否する。コンテンツ更新後は再度`pnpm build`を実行し、開発サーバーを再起動する。検索候補も同じ索引を使うため、この前提は共通である。
 
 ## 関連記事
 
@@ -128,4 +144,4 @@ pnpm test:e2e:dev    # astro devでビルド済み索引と関連記事を確認
 pnpm verify          # 上記を含む全検証
 ```
 
-`tests/related-posts.test.ts`は本文の類似度が高い記事を優先すること、自分自身と同日記事を除外すること、同点時の並び順を検証する。`tests/output/build-output.test.ts`は全生成記事について関連記事が最大3件で、存在する`/posts/YYYYMMDD/pNN`を指し、同日記事を含まないことを検証する。
+`tests/related-posts.test.ts`は本文の類似度が高い記事を優先すること、自分自身と同日記事を除外すること、同点時の並び順を検証する。`tests/output/build-output.test.ts`は全生成記事について関連記事が最大3件で、存在する`/posts/YYYYMMDD/pNN`を指し、同日記事を含まないことを検証する。PlaywrightのE2Eでは、PC・モバイルの候補表示、キーボード選択、Escapeで閉じる操作、および開発サーバーから候補を取得できることを確認する。

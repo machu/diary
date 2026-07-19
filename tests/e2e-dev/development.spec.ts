@@ -6,6 +6,9 @@ test("serves the built Pagefind index from the development server", async ({
   await page.goto("/");
   const search = page.locator("#header-search-input");
   await search.fill("OpenID");
+  await expect(
+    page.locator("#header-search-suggestions-list [role=option]"),
+  ).toHaveCount(5);
   await search.press("Enter");
 
   await expect(page).toHaveURL(/\/search\?q=OpenID$/);
