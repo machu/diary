@@ -8,7 +8,7 @@
 
 - 2026-07-19: 段階 1〜3 を完了し、Astro 7.1.1 へ更新した。
 - Content Layer API、Node.js/pnpm要件、Tailwind CSS、Markdown互換設定を反映済み。
-- 段階 4（SätteriとJSX空白規則への切り替え）は、表示差分を独立して検証するため保留する。
+- 2026-07-20: 段階 4のSätteriへの切り替えと`compressHTML: true`の削除を実施した。JSX空白規則の生成HTML比較は完了し、PC・モバイルのブラウザ目視のみ残っている。
 
 ## 基本方針
 

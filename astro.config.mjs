@@ -9,8 +9,6 @@ const __dirname = dirname(__filename);
 // https://astro.build/config
 export default defineConfig({
   cacheDir: "./node_modules/.astro",
-  // Astro 7 の JSX 空白規則への切り替えは、表示差分を検証してから別途行う。
-  compressHTML: true,
   // Sharp を使い、Markdown画像をレスポンシブに最適化する。
   image: {
     layout: "constrained",
