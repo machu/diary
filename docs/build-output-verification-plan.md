@@ -11,9 +11,9 @@ Astro の静的ビルド後に生成される `dist/**/*.html` を自動検証�
 旧 URL の実装は、静的ビルドでは `301` レスポンスではなく、meta refresh を含む HTML として出力される。`astro preview` もこのファイルを `200 OK` で返す。そのため、次の二層に分けて検証する。
 
 - ローカル・CI: meta refresh、canonical、代替リンク、転送先ファイルを検証する。
-- Vercel Preview: Bulk Redirects により実際に `301` と正しい `Location` が返ることを確認する。
+- Vercel Preview: 通常の redirects により実際に `301` と正しい `Location` が返ることを確認する。
 
-Vercel Bulk Redirects はローカルサーバーでは再現できない。この制約は、ビルド時に生成する JSONL の全件検証と、デプロイ後の代表 URL に対する HTTP 確認を組み合わせて補う。
+Vercelのredirectsはローカルの`astro preview`では再現できない。この制約は、`vercel.mjs`が生成するルールの全件検証と、デプロイ後の代表URLに対するHTTP確認を組み合わせて補う。
 
 ## 実装方針
 
@@ -39,18 +39,16 @@ HTML 全体のスナップショットは作らない。パスから期待値を
 
 ### 2. Vercel の HTTP 301
 
-Astro ビルド後の `dist/posts/` を走査し、公開対象だけを元に Bulk Redirects 用 JSONL を生成する。ソース Markdown のファイル名を直接使わないことで、`draft: true` の記事を誤って含めない。
+`vercel.mjs`をプログラマブル設定として使い、`src/content/posts/`から公開対象だけを抽出して通常のredirectsを生成する。frontmatterの`draft: true`を除外し、ファイル名から日付とパート番号を取得する。
+
+当初はBulk Redirectsを計画したが、Vercel Hobbyプランでは利用できずデプロイが拒否された。通常のredirectsはHobbyでも利用でき、Vercelの上限2,048ルートに対して現在必要なルールは1,096件なので、この方式へ変更した。上限超過時は設定評価時に明示的に失敗させる。
 
 追加する主なファイル:
 
-- `scripts/generate-vercel-redirects.mjs`
-- `vercel.json`
+- `scripts/legacy-redirects.mjs`
+- `vercel.mjs`
 
-生成物:
-
-- `dist/redirects.jsonl`
-
-各レコードは旧 URL、転送先、`statusCode: 301` を持つ。出力テストで、旧 URL HTML との件数・転送先の一致、source の一意性、転送先ファイルの存在を全件確認する。
+各ルールは旧URL、転送先、`statusCode: 301`を持つ。出力テストで、旧URL HTMLとの件数・転送先の一致、sourceの一意性、転送先ファイルの存在を全件確認する。
 
 ### 3. 最小 Playwright E2E
 
@@ -69,7 +67,7 @@ Chromium のみを使い、次の主要導線を検証する。
 
 ```bash
 pnpm test          # ユニットテスト
-pnpm build         # 型チェック、静的ビルド、redirects.jsonl 生成
+pnpm build         # 型チェック、静的ビルド
 pnpm test:output   # 既存 dist の契約テスト
 pnpm test:e2e      # astro preview + Playwright
 pnpm verify        # test → lint → build → test:output → test:e2e
@@ -81,7 +79,7 @@ pnpm verify        # test → lint → build → test:output → test:e2e
 
 1. ビルド出力用 Vitest 設定と HTML ヘルパーを追加する。
 2. 日付、タグ、ページネーション、旧 URL の成果物テストを追加する。
-3. Vercel Bulk Redirects の生成処理と設定を追加する。
+3. Vercel redirects の動的生成処理と設定を追加する。
 4. Playwright の設定と最小 E2E を追加する。
 5. `package.json`、README、TODO を更新する。
 6. `pnpm verify` を実行する。
@@ -92,5 +90,5 @@ pnpm verify        # test → lint → build → test:output → test:e2e
 - `pnpm verify` が成功する。
 - 日付、タグ URL、ページネーション、旧 URL の転送先が全生成対象について検証される。
 - E2E が Chromium で主要導線を検証する。
-- `dist/redirects.jsonl` が公開対象の記事だけから生成される。
+- `vercel.mjs`のredirectsが公開対象の記事だけから生成され、2,048ルート以内である。
 - Vercel Preview の代表的な旧 URL が `301` と正しい `Location` を返す。

@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { config as vercelConfig } from "../../vercel.mjs";
 import {
   listHtmlFiles,
   outputPathExists,
@@ -183,20 +184,9 @@ describe("legacy redirect documents", () => {
   });
 });
 
-describe("Vercel bulk redirects", () => {
+describe("Vercel redirects", () => {
   it("matches every generated legacy document with an HTTP 301 rule", async () => {
-    const manifest = await readOutput("redirects.jsonl");
-    const rules = manifest
-      .trim()
-      .split("\n")
-      .map(
-        (line) =>
-          JSON.parse(line) as {
-            source: string;
-            destination: string;
-            statusCode: number;
-          },
-      );
+    const rules = vercelConfig.redirects;
     const sources = new Set(rules.map((rule) => rule.source));
 
     expect(sources.size).toBe(rules.length);

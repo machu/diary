@@ -154,11 +154,11 @@ pnpm run diary -- 2025-09-01
 - 設定: `vitest.config.ts`（`@/` エイリアス解決済み、Node環境、mocksリセット）。
 - 実行: `pnpm test`（CI想定）。
 - 次段階（案）:
-  - Vercel Preview: Bulk Redirects が旧 URL に対して実際に 301 と正しい `Location` を返すことを確認。
+  - Vercel Preview: redirects が旧 URL に対して実際に 301 と正しい `Location` を返すことを確認。
 
 ### ビルド出力検証と E2E
 
-`pnpm build` は Astro の静的ビルド後に `dist/redirects.jsonl` を生成します。`pnpm test:output` は、生成済みの `dist/**/*.html` を対象に日付表記、タグの小文字 URL、ページネーション、旧 URL の転送先、Vercel Bulk Redirects の 301 ルールを検証します。
+`pnpm test:output`は、生成済みの`dist/**/*.html`を対象に日付表記、タグの小文字URL、ページネーション、旧URLの転送先、`vercel.mjs`が生成する301ルールを検証します。
 
 ```bash
 pnpm build
@@ -174,7 +174,7 @@ pnpm test:e2e
 pnpm verify
 ```
 
-静的な `astro preview` は旧 URL を meta refresh の HTML として `200 OK` で返します。本番の HTTP 301 は Vercel Bulk Redirects が担当します。Vercel Preview のデプロイ後、次のコマンドで代表 URL のステータスと `Location` を確認できます。
+静的な`astro preview`は旧URLをmeta refreshのHTMLとして`200 OK`で返します。本番のHTTP 301はVercelの通常redirectsが担当します。`vercel.mjs`は公開対象のMarkdownからルールを動的生成し、`draft: true`を除外します。Vercel Previewのデプロイ後、次のコマンドで代表URLのステータスと`Location`を確認できます。
 
 ```bash
 pnpm test:redirects -- https://example.vercel.app
