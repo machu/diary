@@ -9,6 +9,10 @@ const mockEntries = () => [
   { id: "2004/20040107p02", data: { date: new Date("2004-01-07") } },
 ];
 
+vi.mock("astro:content", () => ({
+  getCollection: async () => mockEntries(),
+}));
+
 // Helper redirect that mimics Astro's redirect() helper by returning a Response
 const makeRedirect =
   (base: string) =>
@@ -24,9 +28,6 @@ describe("legacy redirect /diary/YYYYMMDD.html", () => {
   });
 
   it("redirects to single entry when only one post exists that day", async () => {
-    vi.mock("astro:content", () => ({
-      getCollection: async () => mockEntries(),
-    }));
     const mod = await import("@/pages/diary/[date].html.ts");
     const res = await mod.GET({
       params: { date: "20040106" },
@@ -39,9 +40,6 @@ describe("legacy redirect /diary/YYYYMMDD.html", () => {
   });
 
   it("redirects to date page when multiple posts exist that day", async () => {
-    vi.mock("astro:content", () => ({
-      getCollection: async () => mockEntries(),
-    }));
     const mod = await import("@/pages/diary/[date].html.ts");
     const res = await mod.GET({
       params: { date: "20040107" },
@@ -54,9 +52,6 @@ describe("legacy redirect /diary/YYYYMMDD.html", () => {
   });
 
   it("returns 404 when date not found", async () => {
-    vi.mock("astro:content", () => ({
-      getCollection: async () => mockEntries(),
-    }));
     const mod = await import("@/pages/diary/[date].html.ts");
     const res = await mod.GET({
       params: { date: "20990101" },
@@ -66,9 +61,6 @@ describe("legacy redirect /diary/YYYYMMDD.html", () => {
   });
 
   it("getStaticPaths generates all legacy date paths", async () => {
-    vi.mock("astro:content", () => ({
-      getCollection: async () => mockEntries(),
-    }));
     const mod = await import("@/pages/diary/[date].html.ts");
     const paths = await mod.getStaticPaths();
     const dates = new Set(paths.map((p: any) => p.params.date));

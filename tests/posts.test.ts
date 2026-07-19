@@ -22,14 +22,12 @@ const samplePosts: Post[] = [
 ];
 
 // Provide a mock for astro:content that respects a filter predicate
-function mockGetCollection() {
-  vi.mock("astro:content", () => ({
-    getCollection: async (_name: string, filter?: (p: any) => boolean) => {
-      const arr = [...samplePosts];
-      return filter ? arr.filter((p) => filter(p)) : arr;
-    },
-  }));
-}
+vi.mock("astro:content", () => ({
+  getCollection: async (_name: string, filter?: (p: any) => boolean) => {
+    const arr = [...samplePosts];
+    return filter ? arr.filter((p) => filter(p)) : arr;
+  },
+}));
 
 describe("getAllPosts()", () => {
   beforeEach(() => {
@@ -37,7 +35,6 @@ describe("getAllPosts()", () => {
   });
 
   it("excludes drafts by default unless includeDrafts is true", async () => {
-    mockGetCollection();
     const { getAllPosts } = await import("@/lib/posts");
 
     // Explicitly exclude drafts
@@ -57,7 +54,6 @@ describe("getAllPosts()", () => {
   });
 
   it("applies an additional predicate when provided (e.g., tag filtering)", async () => {
-    mockGetCollection();
     const { getAllPosts } = await import("@/lib/posts");
 
     // Case-insensitive tag filter using provided predicate

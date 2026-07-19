@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "packageManager": "pnpm@10.15.0",
   "engines": {
-    "node": ">=22.12.0 <25"
+    "node": ">=22.22.3 <25"
   },
   "scripts": {
     "dev": "astro dev",
@@ -32,30 +32,30 @@
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "strip-markdown": "^6.0.0",
-    "tailwind-merge": "^3.4.0",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "unified": "^11.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
-    "@tailwindcss/typography": "^0.5.19",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@tailwindcss/typography": "^0.5.20",
+    "@vitest/coverage-v8": "^4.1.10",
     "cheerio": "^1.2.0",
-    "eslint": "^9.39.2",
-    "eslint-plugin-astro": "^1.5.0",
+    "eslint": "^10.7.0",
+    "eslint-plugin-astro": "^3.0.1",
     "pagefind": "^1.5.2",
-    "prettier": "^3.7.4",
+    "prettier": "^3.9.5",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "typescript-eslint": "^8.52.0",
-    "vitest": "^4.0.16"
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   },
   "volta": {
-    "node": "22.19.0"
+    "node": "22.22.3"
   }
 }
