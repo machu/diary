@@ -60,21 +60,19 @@ const tagsMetadata = JSON.stringify(entry.data.tags ?? []);
       <h1 class="mb-2 text-2xl font-semibold" data-pagefind-meta="title">
         {displayTitle}
       </h1>
-      {
-        (entry.data.tags?.length ?? 0) > 0 && (
-          <div class="mb-1 flex flex-wrap gap-1">
-            {entry.data.tags!.map((t) => (
-              <a
-                href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
-                class="bg-muted text-muted-foreground hover:bg-muted/80 inline-flex items-center rounded-full border px-2 py-0.5 text-xs"
-                data-pagefind-filter={`tag:${normalizeTag(t)}`}
-              >
-                #{t}
-              </a>
-            ))}
-          </div>
-        )
-      }
+      {(entry.data.tags?.length ?? 0) > 0 && (
+        <div class="mb-1 flex flex-wrap gap-1">
+          {entry.data.tags!.map((t) => (
+            <a
+              href={`/tags/${encodeURIComponent(normalizeTag(t))}`}
+              class="bg-muted text-muted-foreground hover:bg-muted/80 inline-flex items-center rounded-full border px-2 py-0.5 text-xs"
+              data-pagefind-filter={`tag:${normalizeTag(t)}`}
+            >
+              #{t}
+            </a>
+          ))}
+        </div>
+      )}
       <p class="text-muted-foreground text-xs" data-pagefind-meta="date">
         {displayDate}
       </p>
@@ -83,29 +81,25 @@ const tagsMetadata = JSON.stringify(entry.data.tags ?? []);
   </article>
   <RelatedPosts posts={related} />
   <nav class="mt-8 flex items-center justify-between text-sm">
-    {
-      next ? (
-        <a
-          href={buildEntryUrl(next.data.date, next.id)}
-          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
-        >
-          ← 次の日記
-        </a>
-      ) : (
-        <span />
-      )
-    }
-    {
-      prev ? (
-        <a
-          href={buildEntryUrl(prev.data.date, prev.id)}
-          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
-        >
-          前の日記 →
-        </a>
-      ) : (
-        <span />
-      )
-    }
+    {next ? (
+      <a
+        href={buildEntryUrl(next.data.date, next.id)}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+      >
+        ← 次の日記
+      </a>
+    ) : (
+      <span />
+    )}
+    {prev ? (
+      <a
+        href={buildEntryUrl(prev.data.date, prev.id)}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+      >
+        前の日記 →
+      </a>
+    ) : (
+      <span />
+    )}
   </nav>
 </BaseLayout>

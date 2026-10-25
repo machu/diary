@@ -24,13 +24,18 @@ const {
 let excerpt: string | undefined = description;
 if (!excerpt && body) {
   const plain = await mdToPlainText(body);
-  excerpt = plain.length > EXCERPT_MAX ? plain.slice(0, EXCERPT_MAX) + "…" : plain;
+  excerpt =
+    plain.length > EXCERPT_MAX ? plain.slice(0, EXCERPT_MAX) + "…" : plain;
 }
 ---
 
 <li class="relative group h-full">
   <!-- 全面クリック用オーバーレイリンク（タグは個別にクリック可能） -->
-  <a href={url} aria-label={title} class="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"></a>
+  <a
+    href={url}
+    aria-label={title}
+    class="absolute inset-0 z-10 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  ></a>
 
   <div class="pointer-events-none rounded-md border bg-card p-4 transition-colors group-hover:bg-muted h-full flex flex-col">
     <div class="flex items-center justify-between text-sm text-muted-foreground">
@@ -55,7 +60,12 @@ if (!excerpt && body) {
     </div>
     {image && (
       <div class="-mx-1 mt-3 overflow-hidden rounded">
-        <img src={image} alt={title} loading="lazy" class="h-40 w-full object-cover" />
+        <img
+          src={image}
+          alt={title}
+          loading="lazy"
+          class="h-40 w-full object-cover"
+        />
       </div>
     )}
   </div>
