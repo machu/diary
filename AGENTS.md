@@ -231,7 +231,7 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 - `pnpm test:output` — verify built HTML/output and Vercel redirect rules (run `pnpm build` first).
 - `pnpm test:e2e` — run Chromium E2E against the production preview (run `pnpm build` first).
 - `pnpm test:e2e:dev` — verify built Pagefind assets and related articles through `astro dev` (run `pnpm build` first).
-- `pnpm test:redirects -- <preview-url>` — verify legacy URL 301s on a Vercel Preview (Deployment Protection or Automation Bypass may be required).
+- `pnpm test:redirects -- <preview-url>` — verify legacy URL 301s on a Vercel Preview (Deployment Protection or Automation Bypass may be required). Set `VERCEL_AUTOMATION_BYPASS_SECRET` for protected previews.
 - `pnpm verify` — run test, lint, build (including `astro check`), test:output, test:e2e, and test:e2e:dev in order.
 
 ## Coding Style & Naming Conventions

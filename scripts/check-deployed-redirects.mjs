@@ -9,6 +9,11 @@ if (!baseURL) {
   );
 }
 
+const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+const headers = bypassSecret
+  ? { "x-vercel-protection-bypass": bypassSecret }
+  : undefined;
+
 const cases = [
   ["/diary/", "/"],
   ["/diary/20250831.html", "/posts/20250831/p01"],
@@ -17,6 +22,7 @@ const cases = [
 
 for (const [source, destination] of cases) {
   const response = await fetch(new URL(source, baseURL), {
+    headers,
     redirect: "manual",
   });
   const location = response.headers.get("location");

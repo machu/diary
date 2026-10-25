@@ -200,6 +200,8 @@ pnpm verify
 pnpm test:redirects -- https://example.vercel.app
 ```
 
+保護されたPreviewでは環境変数`VERCEL_AUTOMATION_BYPASS_SECRET`を設定してください。
+
 設計と制約の詳細は `docs/build-output-verification-plan.md` を参照してください。
 
 ## コミット/PR 指針
