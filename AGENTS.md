@@ -6,13 +6,15 @@
 
 ## 技術スタック
 
-- **フレームワーク**: Astro v7.1
-- **言語**: TypeScript
+- **フレームワーク**: Astro v7.4.2
+- **言語**: TypeScript v6.0.3
 - **UIライブラリ**: Astroコンポーネント
 - **スタイリング**: Tailwind CSS
 - **画像処理**: Sharp
 - **サイト内検索**: Pagefind
 - **ビルドツール**: Vite
+- **テスト**: Vitest v5.0.5
+- **リント**: ESLint v10.13
 
 ## 開発環境
 
@@ -38,7 +40,7 @@
 │   │   ├── tags/[tag].astro              # タグ別一覧（小文字スラグ）
 │   │   ├── search.astro                  # Pagefind全文検索
 │   │   ├── years/index.astro             # 年別一覧
-│   │   └── years/[year].astro            # 年内の日別＋エントリ一覧
+│   │   └── years/[year].astro            # 年内の月別＋エントリ一覧
 │   ├── components/            # UIコンポーネント
 │   ├── layouts/               # レイアウトテンプレート
 │   └── lib/                   # ヘルパー群
@@ -149,7 +151,7 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 
 - 日付の表示は `YYYY-MM-DD`。URLは `YYYYMMDD` を維持。
 - 一覧（トップ / タグ詳細 / 日付ページ）は、タイトルの右側にタグバッジ（同一行末尾）。タイトルのみ hover で下線、タグにホバーしてもタイトルは反応しない。
-- 年詳細は、日付見出しを `YYYY-MM-DD`、各エントリはタイトル右端にタグバッジ。
+- 年詳細は、月見出しを `YYYY-MM`、月ごとの件数を表示し、各月をカードグリッドで表示。
 - タグ一覧は段組（`columns-2`〜）でバッジ表示し件数を併記。
 
 ### 2025-08 デザインアップデート（PC向け3カラム＋カード化）
@@ -166,7 +168,7 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
   - トップ: `src/pages/[...page].astro`
   - タグ詳細: `src/pages/tags/[tag].astro`
   - 日付別: `src/pages/posts/[date].astro`
-  - 年別: `src/pages/years/[year].astro`（日付見出しごとにカードグリッドを表示）
+  - 年別: `src/pages/years/[year].astro`（月見出しごとにカードグリッドを表示）
 
 ### アイコンとアセット
 
@@ -225,7 +227,12 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 - `pnpm run build:search` — regenerate Pagefind from an existing `dist/`.
 - `pnpm preview` — serve the production build locally.
 - `pnpm lint` — run ESLint for Astro/TS/Tailwind.
+- `pnpm test` — run unit tests with Vitest.
+- `pnpm test:output` — verify built HTML/output and Vercel redirect rules (run `pnpm build` first).
+- `pnpm test:e2e` — run Chromium E2E against the production preview (run `pnpm build` first).
 - `pnpm test:e2e:dev` — verify built Pagefind assets and related articles through `astro dev` (run `pnpm build` first).
+- `pnpm test:redirects -- <preview-url>` — verify legacy URL 301s on a Vercel Preview (Deployment Protection or Automation Bypass may be required).
+- `pnpm verify` — run test, lint, build (including `astro check`), test:output, test:e2e, and test:e2e:dev in order.
 
 ## Coding Style & Naming Conventions
 
@@ -242,18 +249,24 @@ Astro 7のレスポンシブ画像機能とSharpにより、Markdown内の画像
 
 ## テスト戦略 / 実装状況
 
-- ツール: Vitest（`vitest.config.ts`。`@/` エイリアス対応、Node環境、mocksリセット）。
-- スクリプト: `pnpm test` でユニットテスト実行。
-- 実装済みユニット:
-  - `tests/tags.test.ts`: タグ正規化（trim + 小文字化）と等価判定。
-  - `tests/redirect.test.ts`: 旧URL → 新URLの301（単一/複数/未存在）と `getStaticPaths`。`astro:content` をモック。
+- ツール: Vitest（`vitest.config.ts`。`@/` エイリアス対応、Node環境、mocksリセット）とPlaywright。
+- スクリプト:
+  - `pnpm test` — ユニットテスト。
+  - `pnpm test:output` — `dist/**/*.html` の成果物検証（`vitest.output.config.ts`）。
+  - `pnpm test:e2e` — ビルド済みサイトに対するChromium E2E。
+  - `pnpm test:e2e:dev` — `astro dev` 上のPagefind配信と関連記事を確認。
+  - `pnpm test:redirects -- <preview-url>` — Vercel Previewの旧URL301と `Location` を確認。
+  - `pnpm verify` — 上記のユニット、lint、build、output、E2E、dev E2Eをまとめて実行。
+- 実装済み:
+  - ユニット: タグ正規化、旧URLのリダイレクトと `getStaticPaths`、日付、投稿取得、関連記事、日記作成。
+  - 成果物: 全HTML、日付表記、タグURL、ページネーション、旧URLのリダイレクトHTML、Vercelの301ルール。
+  - E2E: トップから記事、ページ送り、タグ遷移、旧URL、検索、モバイル検索。DevではPagefind配信と関連記事。
 - 今後の拡張（案）:
-  - ビルド出力検証: `dist/**/*.html` をパースし、日付表示形式（`YYYY-MM-DD`）、タグ小文字リンク、ページネーション、段組タグ一覧などを検証。
-  - E2E（必要最小）: `/diary/YYYYMMDD.html` の 301、トップ/ページ送り、タグ遷移など主要導線のみ。
+  - Vercel Previewの301確認は、Deployment Protection解除またはAutomation Bypass設定後に `pnpm test:redirects` で実施。
 
 ## Commit & Pull Request Guidelines
 
-- Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを5.13.3へアップデート`, `タグの大文字小文字を正規化`.
+- Commits: concise, present-tense messages (Japanese is fine), focused scope. Examples: `Astroを7.4.2へアップデート`, `タグの大文字小文字を正規化`.
 - PRs: include a summary, linked issues, and UI screenshots when relevant. Ensure `pnpm lint` and `pnpm build` pass. Describe any content migrations or alias changes.
 
 ### GitHub CLI認証
