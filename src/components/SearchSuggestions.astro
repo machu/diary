@@ -19,7 +19,9 @@ const listId = `${id}-suggestions-list`;
     class="flex items-center gap-1"
     role="search"
   >
-    <label for={inputId} class="sr-only">記事を検索</label>
+    <label for={inputId} class="sr-only">
+      記事を検索
+    </label>
     <input
       id={inputId}
       type="search"
@@ -62,15 +64,13 @@ const listId = `${id}-suggestions-list`;
       class="text-muted-foreground px-3 py-3 text-sm"
       data-search-suggestions-message
       aria-live="polite"
-    >
-    </p>
+    ></p>
     <ul
       id={listId}
       role="listbox"
       data-search-suggestions-list
       class="max-h-96 overflow-y-auto py-1"
-    >
-    </ul>
+    ></ul>
     <a
       href="/search"
       data-search-suggestions-all

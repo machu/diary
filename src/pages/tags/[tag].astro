@@ -32,22 +32,20 @@ const posts = (
 <BaseLayout title={`タグ: ${tag}`} description={`タグ「${tag}」の記事一覧`}>
   <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
   <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      posts.map((entry) => {
-        const dateDisplay = toDisplayDate(entry.data.date);
-        const url = buildEntryUrl(entry.data.date, entry.id);
-        return (
-          <PostCard
-            title={entry.data.title}
-            url={url}
-            dateDisplay={dateDisplay}
-            tags={entry.data.tags ?? []}
-            description={entry.data.description}
-            image={entry.data.image}
-            body={entry.body}
-          />
-        );
-      })
-    }
+    {posts.map((entry) => {
+      const dateDisplay = toDisplayDate(entry.data.date);
+      const url = buildEntryUrl(entry.data.date, entry.id);
+      return (
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={dateDisplay}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
+      );
+    })}
   </ul>
 </BaseLayout>

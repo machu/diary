@@ -32,21 +32,19 @@ const displayDate = ymdToDisplay(dateParam);
 >
   <h1 class="mb-4 text-xl font-semibold">{displayDate} のエントリ</h1>
   <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      posts.map((entry) => {
-        const url = buildEntryUrl(entry.data.date, entry.id);
-        return (
-          <PostCard
-            title={entry.data.title}
-            url={url}
-            dateDisplay={displayDate}
-            tags={entry.data.tags ?? []}
-            description={entry.data.description}
-            image={entry.data.image}
-            body={entry.body}
-          />
-        );
-      })
-    }
+    {posts.map((entry) => {
+      const url = buildEntryUrl(entry.data.date, entry.id);
+      return (
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={displayDate}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
+      );
+    })}
   </ul>
 </BaseLayout>

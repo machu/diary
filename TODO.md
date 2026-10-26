@@ -1,8 +1,8 @@
 # TODO
 
-最終更新: 2026-07-20
+最終更新: 2026-10-26
 
-Astro 7.1.1 へのアップグレード後に実施する作業。互換レイヤーの撤去と表示変更は、それぞれ独立したPRで扱う。
+Astro 7.4.2 へのアップグレード後に実施する作業。互換レイヤーの撤去と表示変更は、それぞれ独立したPRで扱う。
 
 ## 優先度: 高
 
@@ -65,7 +65,7 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 
 - [x] インライン要素、タグバッジ、前後リンクを含む代表ページを選ぶ
 - [x] `compressHTML: true`を外す
-- [ ] HTML差分とPC・モバイル表示を確認する
+- [x] HTML差分とPC・モバイル表示を確認する
 - [x] 意図しない空白の欠落や追加を修正する
 - [x] ビルド時間と生成物サイズの変化を記録する
 
@@ -78,6 +78,11 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 - 単発のローカル計測 (画像キャッシュ利用): ビルドは22.92秒から21.97秒、`dist/`は453,128 KiBから452,864 KiB。生成物はどちらも6,350ファイル、2,789ページ。
 - `pnpm test`、`pnpm lint`、`pnpm build`、`pnpm test:output`は成功。実行環境の権限制限でプレビューサーバーを起動できなかったため、PC・モバイルのブラウザ目視と`pnpm test:e2e`は未実施。
 
+実施結果 (2026-10-26):
+
+- `pnpm test:e2e`（7件）と`pnpm test:e2e:dev`（2件）が成功。Playwrightで`/`、`/tags/`、`/years/2025/`、`/posts/20220305/p01`をデスクトップ1280x900とモバイル390x844で確認し、ページエラーと水平オーバーフローなし。スクリーンショット上のレイアウトも問題なしと判断した。
+- 実機での目視確認は未実施（スクリーンショットによる代替）。
+
 ## 優先度: 低
 
 ### 出力検証を自動化する
@@ -85,7 +90,7 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 - [x] `dist/**/*.html`を対象にしたビルド出力テストを追加する
 - [x] 日付表記、タグURL、ページネーション、旧URLの転送先と301ルールを検証する
 - [x] 必要最小限のPlaywright E2Eを追加する
-- [ ] Vercel Previewで旧URLが実際に301と正しい`Location`を返すことを確認する
+- [ ] Vercel Previewで旧URLが実際に301と正しい`Location`を返すことを確認する（ユーザー対応待ち: Deployment Protection解除またはAutomation Bypass設定）
 
 実装結果 (2026-07-20):
 
@@ -95,21 +100,44 @@ Astro 7.1.1 へのアップグレード後に実施する作業。互換レイ�
 - `pnpm verify`とGitHub Actionsを追加。Vercel PreviewのHTTP確認は`pnpm test:redirects -- <preview-url>`で実行する。
 - PR #9のVercel Previewはデプロイに成功し、ログイン済みブラウザで`/diary/`、単一記事日、複数記事日の転送先が一致することを確認。Deployment Protectionが未認証HTTP要求を302でログインへ転送するため、301と`Location`の直接確認は保護解除またはAutomation Bypass設定後に実施する。
 
+実施状況 (2026-10-26):
+
+- `pnpm test:output`でVercelの全リダイレクトルール（301、転送先）をローカル検証済み。
+- Vercel Previewの確認は、Deployment Protectionにより302でログインへ転送されるため未実施。保護解除またはAutomation Bypass設定（バイパストークン指定）後に`pnpm test:redirects -- <preview-url>`を実行する。
+
 ### 周辺ツールを個別に更新する
 
-- [ ] TypeScriptの次期メジャー更新を調査する
-- [ ] ESLintの次期メジャー更新を調査する
-- [ ] Vitest、Prettier、Sharpの更新を個別に検証する
+- [x] TypeScriptの次期メジャー更新を調査する
+- [x] ESLintの次期メジャー更新を調査する
+- [x] Vitest、Prettier、Sharpの更新を個別に検証する
+
+実施結果 (2026-10-26):
+
+- TypeScriptは6.0.3を維持。TypeScript 7.0.2は存在するが、typescript-eslint 8.72.0のpeer範囲が`>=4.8.4 <6.1.0`、`@astrojs/check` 0.9.12が`^5.0.0 || ^6.0.0`のため見送り、対応後に再検討する。
+- ESLintは10系（10.13.0）が最新メジャーで、次期メジャーの調査事項はない。
+- 更新: astro 7.1.1→7.4.2、@astrojs/check 0.9.9→0.9.12、sharp 0.35.3→0.35.5、tailwind-merge 3.6.0→3.7.0、eslint 10.7.0→10.13.0、eslint-plugin-astro 3.0.1→3.2.1、typescript-eslint 8.64.0→8.72.0、prettier 3.9.5→3.9.10、@playwright/test 1.61.1→1.64.1、vitest/@vitest/coverage-v8 4.1.10→5.0.5、prettier-plugin-astro 0.14.1→1.1.2。
+- `pnpm verify`が成功。Sharp更新後も`dist/`の生成画像2,463ファイルは更新前とバイト単位で一致した。
+- prettier-plugin-astro更新で`prettier --check "src/**/*.astro"`の未整形検出が4件から14件に増えたが、設定変更はせずソースの再整形もしていない。
+
+### 壊れたサムネイルを修正する
+
+- [x] `/20220305/001.jpg`（2022-03-05「PlayStation5を買った」のカード画像）が404を返すため、画像を復元するか参照先を修正する
+
+依存更新前から存在する既存の問題。
+
+実施結果 (2026-10-26):
+
+- 元画像はリポジトリにもgit履歴にも存在しなかったため、`2022/20220305p01.md` のfrontmatterから `image: /20220305/001.jpg` を削除した。カードは画像なし（他の画像未指定記事と同じ表示）になり、404は解消した。
+- 他の投稿の `image:` を確認した結果、ローカルパスは `2022/20221001p01.md` の `/20221001/A7304435.jpg` のみだった。同URLは `public/` に存在しない（`src/assets/A7304435.jpg` に同名ファイルはあるが、`/20221001/` 配下として配信されていない）。ドラフト記事のため今回は変更していない。外部URL（Flickr・Google Photos）の画像は対象外とした。
 
 ## 共通の検証
 
 各変更で次を実行する。
 
 ```bash
-pnpm test
-pnpm lint
-pnpm exec astro check
-pnpm build
+pnpm verify
 ```
+
+`pnpm verify`は`pnpm test`、`pnpm lint`、`pnpm build`（`astro check`を含む）、`pnpm test:output`、`pnpm test:e2e`、`pnpm test:e2e:dev`を順に実行する。Vercel Previewの旧URLは`pnpm test:redirects -- <preview-url>`で確認する。
 
 表示変更を含む場合は、Vercel Previewで最新記事、古いHTMLを含む記事、タグ、年別、旧URLリダイレクトを確認する。

@@ -40,95 +40,87 @@ const { pageNum, pageSize, total, slice } = Astro.props as {
 ---
 
 <BaseLayout title="まちゅダイアリー" description="最新エントリ">
-  {
-    pageNum === 1 ? (
-      <section class="mb-8 text-center">
-        <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
-          まちゅダイアリー
-        </h1>
-        <div class="mt-4 flex justify-center">
-          <div class="bg-muted ring-border flex size-20 items-center justify-center overflow-hidden rounded-full ring-1">
-            <img
-              src="/avatar.jpg"
-              alt="サイトアイコン"
-              class="size-full object-cover"
-              loading="lazy"
-            />
-          </div>
+  {pageNum === 1 ? (
+    <section class="mb-8 text-center">
+      <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        まちゅダイアリー
+      </h1>
+      <div class="mt-4 flex justify-center">
+        <div class="bg-muted ring-border flex size-20 items-center justify-center overflow-hidden rounded-full ring-1">
+          <img
+            src="/avatar.jpg"
+            alt="サイトアイコン"
+            class="size-full object-cover"
+            loading="lazy"
+          />
         </div>
-        <p class="text-muted-foreground mt-4 text-base">
-          RubyやLinuxなど、興味のあることについて
-        </p>
-        <div class="text-foreground mt-2 flex items-center justify-center gap-4">
-          <a
-            href="https://github.com/machu"
-            class="inline-flex items-center gap-2 text-xs hover:underline"
-            aria-label="GitHub"
-          >
-            <i class="fa-brands fa-github text-xl" />
-          </a>
-          <a
-            href="https://x.com/machu"
-            class="inline-flex items-center gap-2 text-xs hover:underline"
-            aria-label="X"
-          >
-            <i class="fa-brands fa-x-twitter text-xl" />
-          </a>
-        </div>
-        <div class="mt-8 border-t" />
-      </section>
-    ) : (
-      <h1 class="mb-4 text-xl font-semibold">最新エントリ</h1>
-    )
-  }
+      </div>
+      <p class="text-muted-foreground mt-4 text-base">
+        RubyやLinuxなど、興味のあることについて
+      </p>
+      <div class="text-foreground mt-2 flex items-center justify-center gap-4">
+        <a
+          href="https://github.com/machu"
+          class="inline-flex items-center gap-2 text-xs hover:underline"
+          aria-label="GitHub"
+        >
+          <i class="fa-brands fa-github text-xl" />
+        </a>
+        <a
+          href="https://x.com/machu"
+          class="inline-flex items-center gap-2 text-xs hover:underline"
+          aria-label="X"
+        >
+          <i class="fa-brands fa-x-twitter text-xl" />
+        </a>
+      </div>
+      <div class="mt-8 border-t" />
+    </section>
+  ) : (
+    <h1 class="mb-4 text-xl font-semibold">最新エントリ</h1>
+  )}
 
   <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      slice.map((entry) => {
-        const dateDisplay = toDisplayDate(entry.data.date);
-        const url = buildEntryUrl(entry.data.date, entry.id);
-        return (
-          <PostCard
-            title={entry.data.title}
-            url={url}
-            dateDisplay={dateDisplay}
-            tags={entry.data.tags ?? []}
-            description={entry.data.description}
-            image={entry.data.image}
-            body={entry.body}
-          />
-        );
-      })
-    }
+    {slice.map((entry) => {
+      const dateDisplay = toDisplayDate(entry.data.date);
+      const url = buildEntryUrl(entry.data.date, entry.id);
+      return (
+        <PostCard
+          title={entry.data.title}
+          url={url}
+          dateDisplay={dateDisplay}
+          tags={entry.data.tags ?? []}
+          description={entry.data.description}
+          image={entry.data.image}
+          body={entry.body}
+        />
+      );
+    })}
   </ul>
 
   <nav class="mt-8 flex items-center justify-between text-sm">
-    {
-      pageNum > 1 ? (
-        <a
-          href={pageNum === 2 ? "/" : `/${pageNum - 1}`}
-          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
-        >
-          ← 前のページ
-        </a>
-      ) : (
-        <span />
-      )
-    }
-    <span class="text-muted-foreground text-xs"
-      >Page {pageNum} / {Math.max(1, Math.ceil(total / pageSize))}</span
-    >
-    {
-      pageNum * pageSize < total ? (
-        <a
-          href={`/${pageNum + 1}`}
-          class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
-        >
-          次のページ →
-        </a>
-      ) : (
-        <span />
-      )
-    }
+    {pageNum > 1 ? (
+      <a
+        href={pageNum === 2 ? "/" : `/${pageNum - 1}`}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+      >
+        ← 前のページ
+      </a>
+    ) : (
+      <span />
+    )}
+    <span class="text-muted-foreground text-xs">
+      Page {pageNum} / {Math.max(1, Math.ceil(total / pageSize))}
+    </span>
+    {pageNum * pageSize < total ? (
+      <a
+        href={`/${pageNum + 1}`}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+      >
+        次のページ →
+      </a>
+    ) : (
+      <span />
+    )}
   </nav>
 </BaseLayout>

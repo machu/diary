@@ -28,7 +28,7 @@ const SITE_ORIGIN: string | undefined =
 const currentPath = Astro.url?.pathname ?? "/";
 const canonical = SITE_ORIGIN
   ? new URL(currentPath, SITE_ORIGIN).href
-  : Astro.url?.href ?? undefined;
+  : (Astro.url?.href ?? undefined);
 
 const rawImage = image ?? "/avatar.jpg"; // 既定はサイトのアバター
 const ogImage = (() => {
@@ -36,7 +36,10 @@ const ogImage = (() => {
     // 絶対URLならそのまま、相対ならオリジンがあれば絶対化
     if (/^https?:\/\//i.test(rawImage)) return rawImage;
     return SITE_ORIGIN
-      ? new URL(rawImage.startsWith("/") ? rawImage : `/${rawImage}`, SITE_ORIGIN).href
+      ? new URL(
+          rawImage.startsWith("/") ? rawImage : `/${rawImage}`,
+          SITE_ORIGIN,
+        ).href
       : rawImage; // 最後の手段として相対のまま
   } catch {
     return rawImage;
@@ -44,6 +47,7 @@ const ogImage = (() => {
 })();
 const siteName = "まちゅダイアリー";
 ---
+
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
@@ -66,15 +70,20 @@ const siteName = "まちゅダイアリー";
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <!-- Font Awesome (icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
     <!-- Theme init: avoid flash by applying .dark early -->
     <script is:inline>
       (function () {
         try {
-          var stored = localStorage.getItem('theme');
-          var prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefers)) {
-            document.documentElement.classList.add('dark');
+          var stored = localStorage.getItem("theme");
+          var prefers =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (stored === "dark" || (!stored && prefers)) {
+            document.documentElement.classList.add("dark");
           }
         } catch (_) {}
       })();
@@ -86,5 +95,4 @@ const siteName = "まちゅダイアリー";
       <slot />
     </main>
   </body>
-  
 </html>

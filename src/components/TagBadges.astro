@@ -17,10 +17,9 @@ const {
 };
 ---
 
-<!-- 各タグを正規化してリンク化（表示テキストは元のタグを保持） -->{
-  tags.map((t) => (
-    <a href={`/tags/${encodeURIComponent(normalizeTag(t))}`} class={badgeClass}>
-      #{t}
-    </a>
-  ))
-}
+<!-- 各タグを正規化してリンク化（表示テキストは元のタグを保持） -->
+{tags.map((t) => (
+  <a href={`/tags/${encodeURIComponent(normalizeTag(t))}`} class={badgeClass}>
+    #{t}
+  </a>
+))}
