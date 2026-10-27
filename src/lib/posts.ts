@@ -4,14 +4,16 @@ export type PostEntry = CollectionEntry<"posts">;
 
 /**
  * Fetch all posts with consistent draft filtering.
- * - Drafts are included only in dev by default.
+ * - Drafts are included only in dev (or Vercel preview builds) by default.
  * - Optional predicate allows extra filtering (e.g., by tag).
  */
 export async function getAllPosts(options?: {
   includeDrafts?: boolean;
   predicate?: (p: PostEntry) => boolean;
 }): Promise<PostEntry[]> {
-  const includeDrafts = options?.includeDrafts ?? import.meta.env.DEV;
+  const includeDrafts =
+    options?.includeDrafts ??
+    (import.meta.env.DEV || process.env.VERCEL_ENV === "preview");
   const pred = options?.predicate;
   return getCollection(
     "posts",
