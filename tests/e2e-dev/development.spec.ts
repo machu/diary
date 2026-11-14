@@ -23,7 +23,9 @@ test("shows content-based related articles in development", async ({
 }) => {
   await page.goto("/posts/20250831/p01");
 
-  await expect(page.getByRole("heading", { name: "関連記事" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "関連記事", exact: true }),
+  ).toBeVisible();
   const links = page.locator("#related-posts-heading + ul a");
   await expect(links).toHaveCount(3);
   await expect(links.first()).toHaveAttribute("href", /^\/posts\/\d{8}\/p\d+$/);
