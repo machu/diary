@@ -1,0 +1,56 @@
+---
+/**
+ * 404 ページ
+ * - Astro の静的 404（dist/404.html）として出力される
+ * - 主要な入口（トップ / 検索 / タグ一覧 / 年別）へ誘導する
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const links = [
+  {
+    href: "/",
+    label: "トップ（最新エントリ）",
+    description: "いちばん新しい日記から",
+  },
+  {
+    href: "/search",
+    label: "サイト内検索",
+    description: "キーワードで記事を探す",
+  },
+  { href: "/tags", label: "タグ一覧", description: "タグから記事をたどる" },
+  { href: "/years", label: "年別アーカイブ", description: "年ごとに振り返る" },
+];
+---
+
+<BaseLayout
+  title="ページが見つかりません - まちゅダイアリー"
+  description="お探しのページは存在しないか、移動した可能性があります。"
+>
+  <div class="mx-auto max-w-2xl py-10 text-center">
+    <p class="text-muted-foreground text-sm font-semibold tracking-widest">
+      404 Not Found
+    </p>
+    <h1 class="mt-2 text-2xl font-bold sm:text-3xl">ページが見つかりません</h1>
+    <p class="text-muted-foreground mt-4 text-sm leading-relaxed">
+      URLが変わったか、ページが削除された可能性があります。
+      <br class="hidden sm:inline" />{" "}
+      以下のリンクから目的のページを探してみてください。
+    </p>
+
+    <ul class="mt-8 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="bg-background hover:bg-muted block rounded-md border px-4 py-3 no-underline"
+          >
+            <span class="block text-sm font-semibold">{link.label}</span>
+            <span class="text-muted-foreground mt-1 block text-xs">
+              {link.description}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

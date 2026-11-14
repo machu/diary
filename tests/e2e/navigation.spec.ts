@@ -20,7 +20,7 @@ test("moves to the next page and back to the first page", async ({ page }) => {
   await page.getByRole("link", { name: "前のページ" }).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(
-    page.getByRole("heading", { name: "まちゅダイアリー" }),
+    page.getByRole("heading", { name: "まちゅダイアリー", exact: true }),
   ).toBeVisible();
 });
 

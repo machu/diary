@@ -30,7 +30,30 @@ const posts = (
 ---
 
 <BaseLayout title={`タグ: ${tag}`} description={`タグ「${tag}」の記事一覧`}>
-  <h1 class="mb-4 text-xl font-semibold">タグ: {tag}</h1>
+  <nav aria-label="パンくずリスト" class="text-muted-foreground mb-2 text-xs">
+    <ol class="flex flex-wrap items-center gap-1">
+      <li>
+        <a href="/" class="hover:underline">
+          最新
+        </a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li>
+        <a href="/tags" class="hover:underline">
+          タグ一覧
+        </a>
+      </li>
+      <li aria-hidden="true">/</li>
+      <li aria-current="page">#{tag}</li>
+    </ol>
+  </nav>
+  <h1 class="mb-1 text-xl font-semibold">タグ: {tag}</h1>
+  <p class="text-muted-foreground mb-4 text-sm">
+    {posts.length}件のエントリ
+    <a href="/tags" class="ml-2 text-xs hover:underline">
+      タグ一覧へ戻る
+    </a>
+  </p>
   <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
     {posts.map((entry) => {
       const dateDisplay = toDisplayDate(entry.data.date);
