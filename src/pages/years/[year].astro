@@ -71,7 +71,7 @@ const nextYear = availableYears.find((y) => y > year);
   <ul class="space-y-6">
     {months.map(([month, list]) => (
       <li>
-        <h2 class="mb-1 text-base font-medium">
+        <h2 id={month} class="mb-1 text-base font-medium">
           {month}
           <span class="text-muted-foreground ml-2 text-xs">
             {list.length}件

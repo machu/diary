@@ -12,23 +12,132 @@ for (const p of all) {
   }
 }
 const tags = Array.from(counts.entries()).toSorted((a, b) => b[1] - a[1]);
+const popularTags = tags.filter(([, count]) => count >= 10);
 ---
 
 <BaseLayout title="タグ">
   <h1 class="mb-4 text-xl font-semibold">タグ一覧</h1>
-  <ul class="columns-2 gap-4 sm:columns-3 md:columns-4">
-    {tags.map(([tag, n]) => (
-      <li class="mb-2 break-inside-avoid">
-        <a
-          href={`/tags/${encodeURIComponent(tag)}`}
-          class="inline-flex items-center rounded-full border bg-muted px-2 py-1 text-xs text-muted-foreground hover:bg-muted/80"
+  <section class="mb-6" aria-labelledby="popular-tags-heading">
+    <h2 id="popular-tags-heading" class="mb-3 text-lg font-medium">
+      よく使うタグ
+    </h2>
+    <ul class="columns-2 gap-4 sm:columns-3 md:columns-4">
+      {popularTags.map(([tag, n]) => (
+        <li class="mb-2 break-inside-avoid">
+          <a
+            href={`/tags/${encodeURIComponent(tag)}`}
+            class="inline-flex items-center rounded-full border bg-muted px-2 py-1 text-xs text-muted-foreground hover:bg-muted/80"
+          >
+            #{tag}
+            <span class="ml-1 rounded-full bg-muted-foreground/10 px-1 text-[10px] text-muted-foreground">
+              {n}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <section aria-labelledby="all-tags-heading">
+    <h2 id="all-tags-heading" class="mb-3 text-lg font-medium">
+      すべてのタグ
+    </h2>
+    <div id="tag-controls" class="mb-4" hidden>
+      <label for="tag-filter" class="mr-2 text-sm">
+        タグを検索
+      </label>
+      <input
+        id="tag-filter"
+        type="search"
+        class="rounded-md border bg-background px-2 py-1"
+      />
+      <div class="mt-2 flex gap-2" aria-label="並び替え">
+        <button
+          type="button"
+          data-sort="count"
+          aria-pressed="true"
+          class="rounded-md border px-2 py-1 text-sm aria-pressed:bg-muted"
         >
-          #{tag}
-          <span class="ml-1 rounded-full bg-muted-foreground/10 px-1 text-[10px] text-muted-foreground">
-            {n}
-          </span>
-        </a>
-      </li>
-    ))}
-  </ul>
+          件数順
+        </button>
+        <button
+          type="button"
+          data-sort="name"
+          aria-pressed="false"
+          class="rounded-md border px-2 py-1 text-sm aria-pressed:bg-muted"
+        >
+          名前順
+        </button>
+      </div>
+      <p
+        id="tag-count"
+        class="mt-2 text-sm text-muted-foreground"
+        aria-live="polite"
+      ></p>
+      <p id="tag-empty" class="text-sm text-muted-foreground" hidden>
+        該当するタグがありません
+      </p>
+    </div>
+    <ul id="tag-list" class="columns-2 gap-4 sm:columns-3 md:columns-4">
+      {tags.map(([tag, n]) => (
+        <li class="mb-2 break-inside-avoid" data-tag={tag} data-count={n}>
+          <a
+            href={`/tags/${encodeURIComponent(tag)}`}
+            class="inline-flex items-center rounded-full border bg-muted px-2 py-1 text-xs text-muted-foreground hover:bg-muted/80"
+          >
+            #{tag}
+            <span class="ml-1 rounded-full bg-muted-foreground/10 px-1 text-[10px] text-muted-foreground">
+              {n}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 </BaseLayout>
+
+<script>
+  const controls = document.querySelector<HTMLElement>("#tag-controls");
+  const input = document.querySelector<HTMLInputElement>("#tag-filter");
+  const list = document.querySelector<HTMLUListElement>("#tag-list");
+  const count = document.querySelector<HTMLElement>("#tag-count");
+  const empty = document.querySelector<HTMLElement>("#tag-empty");
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-sort]");
+
+  if (controls && input && list && count && empty) {
+    const items = Array.from(
+      list.querySelectorAll<HTMLLIElement>("li[data-tag]"),
+    );
+    let sort = "count";
+    const update = () => {
+      const query = input.value.toLowerCase();
+      let hits = 0;
+      const sorted = items.toSorted((a, b) =>
+        sort === "name"
+          ? (a.dataset.tag ?? "").localeCompare(b.dataset.tag ?? "")
+          : Number(b.dataset.count) - Number(a.dataset.count),
+      );
+      for (const item of sorted) {
+        item.hidden = !(item.dataset.tag ?? "").toLowerCase().includes(query);
+        if (!item.hidden) hits++;
+        list.append(item);
+      }
+      count.textContent = `${hits}件`;
+      empty.hidden = hits !== 0;
+      buttons.forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.sort === sort),
+        ),
+      );
+    };
+    input.addEventListener("input", update);
+    buttons.forEach((button) =>
+      button.addEventListener("click", () => {
+        sort = button.dataset.sort ?? "count";
+        update();
+      }),
+    );
+    update();
+    controls.hidden = false;
+  }
+</script>
