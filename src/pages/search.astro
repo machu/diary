@@ -29,7 +29,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
           type="submit"
           class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium"
         >
-          <i class="fa-solid fa-magnifying-glass mr-2"></i>検索
+          <i class="fa-solid fa-magnifying-glass mr-2" aria-hidden="true"></i>
+          検索
         </button>
       </div>
     </form>
@@ -42,19 +43,84 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       キーワードを入力してください。
     </p>
     <ul id="search-results" class="space-y-4"></ul>
+    <div id="search-more-wrapper" class="mt-6 hidden text-center">
+      <button
+        id="search-more"
+        type="button"
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium"
+        aria-controls="search-results"
+        aria-describedby="search-status"
+        aria-live="polite"
+      >
+        もっと見る
+      </button>
+    </div>
   </div>
 
   <script>
     import { normalizeTag } from "@/lib/tags";
-    import { searchPagefind, type PagefindData } from "@/lib/pagefind-client";
+    import {
+      loadMorePagefind,
+      searchPagefind,
+      type PagefindData,
+    } from "@/lib/pagefind-client";
 
-    const MAX_RESULTS = 50;
+    /** 初回表示件数（「もっと見る」でこの件数ずつ追加する） */
+    const PAGE_SIZE = 50;
     const input = document.querySelector<HTMLInputElement>("#search-input");
     const form = document.querySelector<HTMLFormElement>("#search-form");
     const status = document.querySelector<HTMLElement>("#search-status");
     const results = document.querySelector<HTMLUListElement>("#search-results");
+    const moreWrapper = document.querySelector<HTMLElement>(
+      "#search-more-wrapper",
+    );
+    const moreButton =
+      document.querySelector<HTMLButtonElement>("#search-more");
 
     let searchSequence = 0;
+    /** 現在の検索語（「もっと見る」の対象） */
+    let currentQuery = "";
+    /** 現在の検索語の総ヒット件数 */
+    let totalResults = 0;
+    /** 画面に表示済みの件数 */
+    let shownCount = 0;
+
+    function setMoreVisible(visible: boolean): void {
+      moreWrapper?.classList.toggle("hidden", !visible);
+    }
+
+    /** 件数表示と「もっと見る」ボタンの状態を更新する */
+    function updateCounts(total: number): void {
+      totalResults = total;
+      const remaining = Math.max(0, total - shownCount);
+
+      if (status) {
+        status.textContent =
+          remaining > 0
+            ? `${total}件の記事が見つかりました。${shownCount}件を表示しています。`
+            : `${total}件の記事が見つかりました。`;
+      }
+
+      if (moreButton) {
+        moreButton.disabled = false;
+        moreButton.textContent =
+          remaining > 0 ? `もっと見る（残り${remaining}件）` : "もっと見る";
+        moreButton.setAttribute(
+          "aria-label",
+          remaining > 0
+            ? `検索結果をさらに${PAGE_SIZE}件表示（残り${remaining}件）`
+            : "検索結果をさらに表示",
+        );
+      }
+
+      setMoreVisible(remaining > 0);
+    }
+
+    function resetResults(): void {
+      shownCount = 0;
+      totalResults = 0;
+      setMoreVisible(false);
+    }
 
     function queryTerms(query: string): string[] {
       return query.trim().split(/\s+/).filter(Boolean);
@@ -151,7 +217,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       if (!status || !results) return;
       const trimmed = query.trim();
       const sequence = ++searchSequence;
+      currentQuery = trimmed;
       results.replaceChildren();
+      resetResults();
 
       if (!trimmed) {
         status.textContent = "キーワードを入力してください。";
@@ -160,7 +228,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
       status.textContent = "検索中…";
       try {
-        const response = await searchPagefind(trimmed, MAX_RESULTS, 300);
+        const response = await searchPagefind(trimmed, PAGE_SIZE, 300);
         if (!response || sequence !== searchSequence) return;
 
         if (response.total === 0) {
@@ -168,19 +236,50 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
           return;
         }
 
-        status.textContent =
-          response.total > MAX_RESULTS
-            ? `${response.total}件の記事が見つかりました。先頭${MAX_RESULTS}件を表示しています。`
-            : `${response.total}件の記事が見つかりました。`;
         const terms = queryTerms(trimmed);
         results.append(
           ...response.entries.map((entry) => renderResult(entry, terms)),
         );
+        shownCount = response.entries.length;
+        updateCounts(response.total);
       } catch (error) {
         console.error("Failed to load the Pagefind index", error);
         if (sequence === searchSequence) {
           status.textContent =
             "検索インデックスを読み込めませんでした。pnpm buildを実行してから開発サーバーを再起動してください。";
+        }
+      }
+    }
+
+    /** 「もっと見る」: 表示済みの続きを PAGE_SIZE 件追加する */
+    async function loadMore(): Promise<void> {
+      if (!status || !results || !moreButton || !currentQuery) return;
+      const sequence = searchSequence;
+      const query = currentQuery;
+
+      moreButton.disabled = true;
+      moreButton.textContent = "読み込み中…";
+
+      try {
+        const response = await loadMorePagefind(query, shownCount, PAGE_SIZE);
+        // 読み込み中に検索語が変わっていたら、新しい検索の表示を優先する
+        if (sequence !== searchSequence) return;
+
+        if (!response) {
+          updateCounts(totalResults);
+          return;
+        }
+
+        const terms = queryTerms(query);
+        results.append(
+          ...response.entries.map((entry) => renderResult(entry, terms)),
+        );
+        shownCount += response.entries.length;
+        updateCounts(response.total);
+      } catch (error) {
+        console.error("Failed to load more Pagefind results", error);
+        if (sequence === searchSequence) {
+          updateCounts(totalResults);
         }
       }
     }
@@ -211,5 +310,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         void search(query);
       });
     }
+
+    moreButton?.addEventListener("click", () => {
+      void loadMore();
+    });
   </script>
 </BaseLayout>

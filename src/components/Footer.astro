@@ -1,0 +1,64 @@
+---
+/**
+ * サイト共通フッター
+ * - 主要ナビゲーション（最新 / タグ / 年別 / 検索）
+ * - 外部リンク（GitHub / X）
+ * - サイト名とコピーライト年
+ */
+const pathname = Astro.url?.pathname ?? "/";
+const isHome = pathname === "/" || /^\/\d+\/?$/.test(pathname);
+const isTags = pathname === "/tags" || pathname.startsWith("/tags/");
+const isYears = pathname === "/years" || pathname.startsWith("/years/");
+const isSearch = pathname === "/search" || pathname.startsWith("/search/");
+
+const links = [
+  { href: "/", label: "最新", current: isHome },
+  { href: "/tags", label: "タグ", current: isTags },
+  { href: "/years", label: "年別", current: isYears },
+  { href: "/search", label: "検索", current: isSearch },
+];
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-border mt-12 border-t bg-[#e9f4fb] dark:bg-[#0f1f2d]">
+  <div class="container flex flex-col gap-4 py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+    <nav
+      aria-label="フッターナビゲーション"
+      class="text-muted-foreground flex flex-wrap items-center gap-3"
+    >
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="hover:text-foreground hover:underline"
+          aria-current={link.current ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="text-muted-foreground flex items-center gap-4">
+      <a
+        href="https://github.com/machu"
+        class="hover:text-foreground inline-flex items-center gap-1 hover:underline"
+        aria-label="GitHub (外部サイト)"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <i class="fa-brands fa-github text-base" aria-hidden="true"></i>
+      </a>
+      <a
+        href="https://x.com/machu"
+        class="hover:text-foreground inline-flex items-center gap-1 hover:underline"
+        aria-label="X (外部サイト)"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <i class="fa-brands fa-x-twitter text-base" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <p class="text-muted-foreground">© {currentYear} まちゅダイアリー</p>
+  </div>
+</footer>

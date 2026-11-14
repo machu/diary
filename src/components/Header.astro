@@ -6,6 +6,12 @@
  * - モバイルでは検索ボタンから検索フォームを展開
  */
 import SearchSuggestions from "@/components/SearchSuggestions.astro";
+
+const pathname = Astro.url?.pathname ?? "/";
+// "/" とページネーション（"/2" など）を最新一覧として扱う
+const isHome = pathname === "/" || /^\/\d+\/?$/.test(pathname);
+const isTags = pathname === "/tags" || pathname.startsWith("/tags/");
+const isYears = pathname === "/years" || pathname.startsWith("/years/");
 ---
 
 <header class="border-border border-b bg-[#e9f4fb] dark:bg-[#0f1f2d]">
@@ -13,8 +19,15 @@ import SearchSuggestions from "@/components/SearchSuggestions.astro";
     <a href="/" class="text-lg font-bold">
       まちゅダイアリー
     </a>
-    <nav class="flex items-center gap-2 text-sm sm:gap-4">
-      <a href="/" class="hover:underline">
+    <nav
+      aria-label="メインナビゲーション"
+      class="flex items-center gap-2 text-sm sm:gap-4"
+    >
+      <a
+        href="/"
+        class="hover:underline"
+        aria-current={isHome ? "page" : undefined}
+      >
         最新
       </a>
       <SearchSuggestions
@@ -31,12 +44,20 @@ import SearchSuggestions from "@/components/SearchSuggestions.astro";
         aria-controls="mobile-search"
         aria-expanded="false"
       >
-        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        <i class="fa-solid fa-magnifying-glass text-xs" aria-hidden="true"></i>
       </button>
-      <a href="/tags" class="hover:underline">
+      <a
+        href="/tags"
+        class="hover:underline"
+        aria-current={isTags ? "page" : undefined}
+      >
         タグ
       </a>
-      <a href="/years" class="hover:underline">
+      <a
+        href="/years"
+        class="hover:underline"
+        aria-current={isYears ? "page" : undefined}
+      >
         年別
       </a>
       <button
@@ -45,8 +66,8 @@ import SearchSuggestions from "@/components/SearchSuggestions.astro";
         aria-label="テーマ切り替え"
         title="テーマ切り替え"
       >
-        <i class="fa-solid fa-moon block dark:hidden"></i>
-        <i class="fa-solid fa-sun hidden dark:block"></i>
+        <i class="fa-solid fa-moon block dark:hidden" aria-hidden="true"></i>
+        <i class="fa-solid fa-sun hidden dark:block" aria-hidden="true"></i>
       </button>
     </nav>
   </div>

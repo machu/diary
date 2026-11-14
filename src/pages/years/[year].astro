@@ -23,10 +23,51 @@ const inYear = all.filter((p) => p.data.date.getFullYear() === year);
 const months = Array.from(groupByMonth(inYear).entries()).toSorted((a, b) =>
   b[0].localeCompare(a[0]),
 );
+
+/** 記事が存在する年だけを前後ナビの候補にする */
+const availableYears = Array.from(
+  new Set(all.map((p) => p.data.date.getFullYear())),
+).toSorted((a, b) => a - b);
+const prevYear = availableYears.filter((y) => y < year).at(-1);
+const nextYear = availableYears.find((y) => y > year);
 ---
 
 <BaseLayout title={`${year}年のアーカイブ`}>
   <h1 class="mb-4 text-xl font-semibold">{year}年のアーカイブ</h1>
+  <nav
+    aria-label="年別アーカイブの前後ナビゲーション"
+    class="mb-6 flex items-center justify-between gap-4 text-sm"
+  >
+    {prevYear !== undefined ? (
+      <a
+        href={`/years/${prevYear}`}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        rel="prev"
+      >
+        ← {prevYear}年
+      </a>
+    ) : (
+      <span class="text-muted-foreground px-2 py-1 text-xs">
+        前の年はありません
+      </span>
+    )}
+    <a href="/years" class="text-muted-foreground text-xs hover:underline">
+      年別アーカイブ一覧
+    </a>
+    {nextYear !== undefined ? (
+      <a
+        href={`/years/${nextYear}`}
+        class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        rel="next"
+      >
+        {nextYear}年 →
+      </a>
+    ) : (
+      <span class="text-muted-foreground px-2 py-1 text-xs">
+        次の年はありません
+      </span>
+    )}
+  </nav>
   <ul class="space-y-6">
     {months.map(([month, list]) => (
       <li>

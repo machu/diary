@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import { render } from "astro:content";
 import { getAllPosts, type PostEntry } from "@/lib/posts";
-import { buildEntryUrl, ymdToDisplay } from "@/lib/dates";
+import { buildEntryUrl, toDisplayDate, ymdToDisplay } from "@/lib/dates";
 import { buildRelatedPostsMap } from "@/lib/related-posts";
 import { normalizeTag } from "@/lib/tags";
 
@@ -74,19 +74,29 @@ const tagsMetadata = JSON.stringify(entry.data.tags ?? []);
         </div>
       )}
       <p class="text-muted-foreground text-xs" data-pagefind-meta="date">
-        {displayDate}
+        <a
+          href={`/years/${entry.data.date.getFullYear()}`}
+          class="hover:underline"
+          aria-label={`${displayDate} の年別アーカイブ (${entry.data.date.getFullYear()}年)`}
+        >
+          {displayDate}
+        </a>
       </p>
     </header>
     <Content />
   </article>
   <RelatedPosts posts={related} />
-  <nav class="mt-8 flex items-center justify-between text-sm">
+  <nav
+    aria-label="日記の前後ナビゲーション"
+    class="mt-8 flex items-center justify-between text-sm"
+  >
     {next ? (
       <a
         href={buildEntryUrl(next.data.date, next.id)}
         class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        title={`${toDisplayDate(next.data.date)} の新しい日記`}
       >
-        ← 次の日記
+        ← 新しい日記 ({toDisplayDate(next.data.date)})
       </a>
     ) : (
       <span />
@@ -95,8 +105,9 @@ const tagsMetadata = JSON.stringify(entry.data.tags ?? []);
       <a
         href={buildEntryUrl(prev.data.date, prev.id)}
         class="bg-background hover:bg-muted inline-flex items-center rounded-md border px-2 py-1"
+        title={`${toDisplayDate(prev.data.date)} の古い日記`}
       >
-        前の日記 →
+        古い日記 ({toDisplayDate(prev.data.date)}) →
       </a>
     ) : (
       <span />
